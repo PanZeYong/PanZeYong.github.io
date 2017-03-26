@@ -161,208 +161,34 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-第一章-Activity-的生命周期和启动模式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
+  
     
-      <header class="article-header">
-        
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2017" class="archive-year">2017</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2017/03/26/第一章-Activity-的生命周期和启动模式/" class="archive-article-date">
+  	<time datetime="2017-03-26T08:41:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-26</time>
+</a>
+        </div>
+    	 
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/26/第一章-Activity-的生命周期和启动模式/">第一章 Activity 的生命周期和启动模式</a>
+      <a class="archive-article-title" href="/2017/03/26/第一章-Activity-的生命周期和启动模式/">第一章 Activity 的生命周期和启动模式</a>
     </h1>
   
 
-        
-        <a href="/2017/03/26/第一章-Activity-的生命周期和启动模式/" class="archive-article-date">
-  	<time datetime="2017-03-26T08:41:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-      
-
-        <p><br></p>
-<h3 id="Activity-正常情况下生命周期"><a href="#Activity-正常情况下生命周期" class="headerlink" title="Activity 正常情况下生命周期"></a>Activity 正常情况下生命周期</h3><p><img src="/images/explore/activity_lifecycle.png" alt=""></p>
-<ul>
-<li><p>生命周期方法分析</p>
-<ul>
-<li><p>onCreate()：Activity 创建时调用，可以做一些初始化工作。</p>
-</li>
-<li><p>onRestart()：Activity 正在重新启动，由不可见状态变为可见状态。</p>
-</li>
-<li><p>onStart()：Activity 正在被启动，这时已经处于可见状态，但是还没出现在前台，而是在后台，无法与用户交互。</p>
-</li>
-<li><p>onResume()：Activity 已经处于可见状态，并且出现在前台。</p>
-</li>
-<li><p>onPause()：Activity 暂停，位于后台，可以做一些存储数据、停止动画等工作，但是不能太耗时。</p>
-</li>
-<li><p>onStop()：Activity 停止，不可见状态，可以做一些资源回收工作，但不能太耗时。</p>
-</li>
-<li><p>onDestroy()：Activity 销毁，可以做一些回收工作和资源释放。</p>
-</li>
-</ul>
-</li>
-<li><p>Activity 生命周期方法不同情况下调用</p>
-<ul>
-<li><p>Activity 第一次启动：onCreate() —&gt; onStart() —&gt; onResume()。</p>
-</li>
-<li><p>打开新的 Activity 或者切换到桌面：onPause() —&gt; onStop()。</p>
-</li>
-<li><p>回到原来 Activity：onRestart() —&gt; onStart() —&gt; onResume()。</p>
-</li>
-<li><p>按 back 键：onPause() —&gt; onStop() —&gt; onDestroy()。</p>
-</li>
-</ul>
-</li>
-<li><p>注意（提示、问题）</p>
-<ul>
-<li><p>onCreate() 与 onDestroy() 是配对的，表示 Activity 的创建和销毁,并且只有可能一次调用。</p>
-</li>
-<li><p>onStart() 与 onStop() 是配对的，从是否可见这个角度来回调。</p>
-</li>
-<li><p>onResume() 与 onPause() 是配对的，从是否位于前台这个角度来回调。</p>
-</li>
-<li><p>如果新 Activity 采用了透明主题，那么当前 Activity 不会回到 onStop()（原因：处于可见状态，但是失去焦点，无法与用户进行交互）。</p>
-</li>
-<li><p>假设当前 Activity A，用户打开新的 Activity B，此时 A 的 onPause() 先调用，再调用 B 的 onResume()。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Activity异常情况下生命周期"><a href="#Activity异常情况下生命周期" class="headerlink" title="Activity异常情况下生命周期"></a>Activity异常情况下生命周期</h3><ul>
-<li><p>系统配置发生改变导致 Activity 被杀死并重新创建</p>
-<ul>
-<li><p>系统配置文件发生改变时，Activity 会被重新创建，生命周期方法调用顺序 onPause() —&gt; onSaveInstanceState() —&gt; onStop() —&gt; onDestroy() —&gt; onCreate() —&gt; onStart() —&gt; onRestoreInstanceState() —&gt; onResume()。</p>
-</li>
-<li><p>Activity 被异常终止情况下，onSaveInstanceState() 方法才会被调用，正常情况下是不会的；该方法调用时机是在 onStop() 之前，至于在 onPause() 之前或者之后并不确定。</p>
-</li>
-<li><p>Activity 被异常终止情况下，Activity 会被重建，此时 onRestoreInstanceState() 会被调用，调用时机在 onStart() 之后。</p>
-</li>
-<li><p>onCreate() 与 onRestoreInstanceState() 区别：onRestoreInstanceState() 一旦被调用，其参数  savedInstanceState 一定是有值的，不用判断是否为空；但 onCreate() 不一样，如果是正常启动时，其参数 savedInstanceState 为 null，所以需要额外判空。</p>
-</li>
-<li><p>可以通过设置<code>android:configChanges</code>属性让屏幕旋转时不重新创建。</p>
-</li>
-</ul>
-</li>
-<li><p>资源内存不足导致低优先级的 Activity 被杀死</p>
-<ul>
-<li><p>前台 Activity：正在和用户交互的 Activity，优先级最高。</p>
-</li>
-<li><p>可见但非前台 Activity：可见但是位于后台无法与用户进行交互，优先级次之。</p>
-</li>
-<li><p>后台 Activity：优先级最低。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Activity四种启动模式"><a href="#Activity四种启动模式" class="headerlink" title="Activity四种启动模式"></a>Activity四种启动模式</h3><ul>
-<li><p>启动模式</p>
-<ul>
-<li><p>standard：标准模式，这也是系统默认模式。每当启动一个 Activity 创建一个实例，谁启动谁就在谁任务栈。</p>
-</li>
-<li><p>singleTop：栈顶复用模式。如果新 Activity 已经位于任务栈栈顶，那么此 Activity 不会被创建，同时 onNewIntent() 方法被调用，随后 onResume() 方法也被调用；反之则会重新创建 Activity。</p>
-</li>
-<li><p>singleTask：栈内复用模式，这是一种实例模式。</p>
-<p><img src="/images/explore/singTask.png" alt=""></p>
-</li>
-<li><p>singleInstance：单实例模式，singleTask 加强版。Activity 启动时，系统会单独为其创建任务栈，然后此 Activity 就在这个任务栈中，后续跟 singleTask 相同。</p>
-</li>
-</ul>
-</li>
-<li><p>Activity 的 Flags</p>
-<ul>
-<li><p><code>FLAG_ACTIVITY_NEW_TASK</code>：为 Activity 指定 singleTask 启动模式。</p>
-</li>
-<li><p><code>FLAG_ACTIVITY_SINGLE_TOP</code>：为 Activity 指定 singleTop 启动模式。</p>
-</li>
-<li><p><code>FLAG_ACTIVITY_CLEAR_TOP</code>：与 singleTask 启动模式异同出现，作用相同。</p>
-</li>
-<li><p><code>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</code>：具有该标记的 Activity 不会出现在历史 Activity 列表中。</p>
-</li>
-</ul>
-</li>
-<li><p>注意点</p>
-<ul>
-<li><p>TaskAffinity 属性主要和 singleTask 启动模式或者 allowTaskReparenting 属性配对使用才起作用，其它情况下没用。</p>
-</li>
-<li><p>TaskAffinity 与 singleTask 启动模式配对使用时，此时 Activity 运行 TaskAffinity 属性所指定的任务栈。</p>
-</li>
-<li><p>TaskAffinity 与 allowTaskReparenting 配对使用时，情况比较复杂，会产生特殊效果。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="IntentFilter-匹配规则"><a href="#IntentFilter-匹配规则" class="headerlink" title="IntentFilter 匹配规则"></a>IntentFilter 匹配规则</h3><ul>
-<li><p>action 的匹配规则</p>
-<ul>
-<li><p>匹配规则：Intent 中的 action 必须能够和过滤规则中的任何一个action 匹配。</p>
-</li>
-<li><p>区分大小写。</p>
-</li>
-<li><p>注意与 category 匹配规则不一样。</p>
-</li>
-</ul>
-</li>
-<li><p>category 的匹配规则</p>
-<ul>
-<li><p>匹配规则：Intent 所包含的 category 必须与过滤规则中的任何一个 category 相同（可理解为一对一关系）。</p>
-</li>
-<li><p>特殊情况是 Intent 可以没有 category，但是系统默认会加上<code>android.intent.category.DEFAULT</code>，这也是隐式调用所要求的。</p>
-</li>
-</ul>
-</li>
-<li><p>data 匹配规则</p>
-<ul>
-<li><p>data 的结构</p>
-<ul>
-<li><p><code>android:scheme</code>：URI 模式，比如 http、file、content 等。</p>
-</li>
-<li><p><code>android:port</code>：URI 中的端口号，需要指定 scheme 和 host 才有作用。</p>
-</li>
-<li><p><code>android:host</code>：URI 主机名。</p>
-</li>
-<li><p><code>android:path</code>：完整的路径。</p>
-</li>
-<li><p><code>android:pathPattern</code>：完整的路径信息，也可以包含通配符 *。</p>
-</li>
-<li><p><code>android:pathPrefix</code>：路径的前缀信息。</p>
-</li>
-<li><p><code>android:mimeType</code>：媒体类型。</p>
-</li>
-</ul>
-</li>
-<li><p>匹配规则：Intent 包含的 data 数据必须与过滤规则中某一个匹配（Intent 是过滤规则的子集），与 action 类似。</p>
-</li>
-<li><p>过滤规则有默认URI值：content 和 file。</p>
-</li>
-</ul>
-</li>
-<li><p>注意点</p>
-<ul>
-<li><p>判断是否能匹配隐式 Intent 方法</p>
-<ul>
-<li><p>调用 PackageManager 的 resolveActivity 方法。</p>
-</li>
-<li><p>Intent 的 resolveActivity 方法。</p>
-</li>
-</ul>
-</li>
-<li><p>PackageManager 中 queryIntentActivies 方法。    </p>
-</li>
-</ul>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -374,7 +200,7 @@ var _hmt = _hmt || [];
 		</ul>
 	</div>
 
-      
+          
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -387,27 +213,18 @@ var _hmt = _hmt || [];
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/03/26/第一章-Activity-的生命周期和启动模式/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
+        </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-
-
-
-
-
-
-
   
   
+    </div></section>
+  
+
+    
+
 
           </div>
         </div>
