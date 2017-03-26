@@ -185,7 +185,8 @@ var _hmt = _hmt || [];
       
 
         <p><br></p>
-<h3 id="Activity-正常情况下生命周期"><a href="#Activity-正常情况下生命周期" class="headerlink" title="Activity 正常情况下生命周期"></a>Activity 正常情况下生命周期</h3><p><img src="/Users/Pan/Github/Blog/source/images/explore/activity_lifecycle.png" alt=""></p>
+<h3 id="Activity-正常情况下生命周期"><a href="#Activity-正常情况下生命周期" class="headerlink" title="Activity 正常情况下生命周期"></a>Activity 正常情况下生命周期</h3><!--![](/Users/Pan/Github/Blog/source/images/explore/activity_lifecycle.png)-->
+<p><img src="https://github.com/PanZeYong/PanZeYong.github.io/blob/master/images/explore/activity_lifecycle.png" alt=""></p>
 <ul>
 <li><p>生命周期方法分析</p>
 <ul>
@@ -265,7 +266,9 @@ var _hmt = _hmt || [];
 </li>
 <li><p>singleTop：栈顶复用模式。如果新 Activity 已经位于任务栈栈顶，那么此 Activity 不会被创建，同时 onNewIntent() 方法被调用，随后 onResume() 方法也被调用；反之则会重新创建 Activity。</p>
 </li>
-<li><p>singleTask：栈内复用模式，这是一种实例模式。<br><img src="/Users/Pan/Github/Blog/source/images/explore/singTask.png" alt=""></p>
+<li><p>singleTask：栈内复用模式，这是一种实例模式。</p>
+<!--![](/Users/Pan/Github/Blog/source/images/explore/singTask.png)-->
+<p><img src="https://github.com/PanZeYong/PanZeYong.github.io/blob/master/images/explore/singTask.png" alt=""></p>
 </li>
 <li><p>singleInstance：单实例模式，singleTask 加强版。Activity 启动时，系统会单独为其创建任务栈，然后此 Activity 就在这个任务栈中，后续跟 singleTask 相同。</p>
 </li>
