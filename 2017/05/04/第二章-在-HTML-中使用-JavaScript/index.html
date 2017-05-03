@@ -7,17 +7,30 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://panzeyong.github.io">
-  <title>Archives: 2017/5 | PANJU&#39;s Note</title>
+  <title>第二章 在 HTML 中使用 JavaScript | PANJU&#39;s Note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="笔记——记录工作和学习中的点点滴滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="PANJU's Note">
-<meta property="og:url" content="https://panzeyong.github.io/archives/2017/05/index.html">
+  <meta name="description" content="标签\：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：
+
+async：可选。表示应该立即下载脚本，但不应妨碍页面中的其它内容加载。只对外部脚本文件有效。标记为 async 的脚本并不能保证按照指定的的先后顺序执行，一定会在页面的 load 事件前执行，但是对于 DOMContentLoaded 事件就不一定了。建议异步脚本不要在加载期间修改 DOM。
+
+charset：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第二章 在 HTML 中使用 JavaScript">
+<meta property="og:url" content="https://panzeyong.github.io/2017/05/04/第二章-在-HTML-中使用-JavaScript/index.html">
 <meta property="og:site_name" content="PANJU's Note">
-<meta property="og:description" content="笔记——记录工作和学习中的点点滴滴">
+<meta property="og:description" content="标签\：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：
+
+async：可选。表示应该立即下载脚本，但不应妨碍页面中的其它内容加载。只对外部脚本文件有效。标记为 async 的脚本并不能保证按照指定的的先后顺序执行，一定会在页面的 load 事件前执行，但是对于 DOMContentLoaded 事件就不一定了。建议异步脚本不要在加载期间修改 DOM。
+
+charset：">
+<meta property="og:updated_time" content="2017-05-03T23:42:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PANJU's Note">
-<meta name="twitter:description" content="笔记——记录工作和学习中的点点滴滴">
+<meta name="twitter:title" content="第二章 在 HTML 中使用 JavaScript">
+<meta name="twitter:description" content="标签\：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：
+
+async：可选。表示应该立即下载脚本，但不应妨碍页面中的其它内容加载。只对外部脚本文件有效。标记为 async 的脚本并不能保证按照指定的的先后顺序执行，一定会在页面的 load 事件前执行，但是对于 DOMContentLoaded 事件就不一定了。建议异步脚本不要在加载期间修改 DOM。
+
+charset：">
   
     <link rel="alternative" href="/atom.xml" title="PANJU&#39;s Note" type="application/atom+xml">
   
@@ -159,36 +172,68 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-第二章-在-HTML-中使用-JavaScript" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/04/第二章-在-HTML-中使用-JavaScript/" class="archive-article-date">
-  	<time datetime="2017-05-03T23:40:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-04</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/04/第二章-在-HTML-中使用-JavaScript/">第二章 在 HTML 中使用 JavaScript</a>
+    <h1 class="article-title" itemprop="name">
+      第二章 在 HTML 中使用 JavaScript
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/05/04/第二章-在-HTML-中使用-JavaScript/" class="archive-article-date">
+  	<time datetime="2017-05-03T23:40:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+      
+
+        <h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>\<script>：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：</p>
+<ul>
+<li><p>async：可选。表示应该立即下载脚本，但不应妨碍页面中的其它内容加载。只对<strong>外部脚本</strong>文件有效。标记为 async 的脚本并不能保证按照指定的的先后顺序执行，一定会在页面的 load 事件前执行，但是对于 DOMContentLoaded 事件就不一定了。建议异步脚本不要在加载期间修改 DOM。</p>
+</li>
+<li><p>charset：可选。表示通过 src 属性指定的代码的字符集。</p>
+</li>
+<li><p>defer：可选。表示所要加载的脚本可以延迟到文档完全被解析和显示之后再执行，即遇到 \</html> 标签之后才执行；只对<strong>外部脚本</strong>文件有效。HTML 5 规范要求延迟脚本是按照出现的顺序执行的，并且先于 DOMContentLoaded 事件，但是现实是不一定的，因此最好只包含一个延迟脚本。</p>
+</li>
+<li><p>language：已经废弃。</p>
+</li>
+<li><p>src：可选。表示包含要执行代码的外部文件。</p>
+</li>
+<li><p>type：可选。language 的替代属性。表示编写代码使用的脚本语言的内容类型（MIME 类型）。通常的默认值为 <code>text/javascript</code>。</p>
+</li>
+</ul>
+<p>\<noscript>：在不支持 JavaScript 的浏览器中显示替代的内容。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;noscript&gt;</div><div class="line">	&lt;p&gt;本页面需要浏览器支持（启用）JavaScript&lt;/p&gt;</div><div class="line">&lt;<span class="regexp">/noscript&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
+<li><p>解释器对 \<script> 元素内代码的解析是从上往下，在该元素内的代码被解析完之前，页面其它内容是不会被浏览器加载或者显示的。（外部文件也一样）</p>
+</li>
+<li><p>通过 src 属性引入外部文件必须要包含开始的 \<script> 和结束的 \&lt;\script&gt;，只是 HTML 规范。</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script type=<span class="string">"text/javasript"</span> src=<span class="string">"example.js"</span>&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>带有 src 属性的 \<script> 元素不应该在其元素之间包含额外的 JavaScritp 代码，如果包含了嵌入的代码，则只会下载并执行外部脚本文件，嵌入的代码会被忽略。</p>
+</li>
+<li><p>JavaScript 代码建议放在 \<body> 元素中页面内容之后</p>
+</li>
+</ul>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第二章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+</script></p>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -200,7 +245,7 @@ var _hmt = _hmt || [];
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -213,66 +258,120 @@ var _hmt = _hmt || [];
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://panzeyong.github.io/2017/05/04/第二章-在-HTML-中使用-JavaScript/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/05/01/AsnycTask-用法及源码解析/" class="archive-article-date">
-  	<time datetime="2017-05-01T09:49:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/05/01/AsnycTask-用法及源码解析/">AsnycTask 用法及源码解析</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/《Android开发艺术探索》/" class="article-tag-list-link color2">《Android 开发艺术探索》</a>
-        		</li>
-      		
-		</ul>
-	</div>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/05/01/AsnycTask-用法及源码解析/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">AsnycTask 用法及源码解析</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
+
+
+
   
-  
-    </div></section>
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="第二章-在-HTML-中使用-JavaScript" data-title="第二章 在 HTML 中使用 JavaScript" data-url="https://panzeyong.github.io/2017/05/04/第二章-在-HTML-中使用-JavaScript/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"04120513"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
   
 
-    
+
+
+<section id="comments">
+  <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'hexo-generator-feed,hexo-generator-sitemap'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
 
 
           </div>
@@ -297,8 +396,8 @@ var _hmt = _hmt || [];
 		mathjax: false,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
