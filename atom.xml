@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-05-03T23:50:22.000Z</updated>
+  <updated>2017-05-03T23:54:20.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -20,15 +20,15 @@
     <link href="https://panzeyong.github.io/2017/05/04/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%9C%A8-HTML-%E4%B8%AD%E4%BD%BF%E7%94%A8-JavaScript/"/>
     <id>https://panzeyong.github.io/2017/05/04/第二章-在-HTML-中使用-JavaScript/</id>
     <published>2017-05-03T23:40:59.000Z</published>
-    <updated>2017-05-03T23:50:22.000Z</updated>
+    <updated>2017-05-03T23:54:20.000Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>\<script>：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：</p>
+    <content type="html"><![CDATA[<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>script：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：</p>
 <ul>
 <li><p>async：可选。表示应该立即下载脚本，但不应妨碍页面中的其它内容加载。只对<strong>外部脚本</strong>文件有效。标记为 async 的脚本并不能保证按照指定的的先后顺序执行，一定会在页面的 load 事件前执行，但是对于 DOMContentLoaded 事件就不一定了。建议异步脚本不要在加载期间修改 DOM。</p>
 </li>
 <li><p>charset：可选。表示通过 src 属性指定的代码的字符集。</p>
 </li>
-<li><p>defer：可选。表示所要加载的脚本可以延迟到文档完全被解析和显示之后再执行，即遇到 \</html\> 标签之后才执行；只对<strong>外部脚本</strong>文件有效。HTML 5 规范要求延迟脚本是按照出现的顺序执行的，并且先于 DOMContentLoaded 事件，但是现实是不一定的，因此最好只包含一个延迟脚本。</p>
+<li><p>defer：可选。表示所要加载的脚本可以延迟到文档完全被解析和显示之后再执行，即遇到 html 标签之后才执行；只对<strong>外部脚本</strong>文件有效。HTML 5 规范要求延迟脚本是按照出现的顺序执行的，并且先于 DOMContentLoaded 事件，但是现实是不一定的，因此最好只包含一个延迟脚本。</p>
 </li>
 <li><p>language：已经废弃。</p>
 </li>
@@ -37,29 +37,29 @@
 <li><p>type：可选。language 的替代属性。表示编写代码使用的脚本语言的内容类型（MIME 类型）。通常的默认值为 <code>text/javascript</code>。</p>
 </li>
 </ul>
-<p>\<noscript\>：在不支持 JavaScript 的浏览器中显示替代的内容。</p>
+<p>noscript：在不支持 JavaScript 的浏览器中显示替代的内容。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;noscript&gt;</div><div class="line">	&lt;p&gt;本页面需要浏览器支持（启用）JavaScript&lt;/p&gt;</div><div class="line">&lt;<span class="regexp">/noscript&gt;</span></div></pre></td></tr></table></figure>
 <h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
-<li><p>解释器对 \<script\> 元素内代码的解析是从上往下，在该元素内的代码被解析完之前，页面其它内容是不会被浏览器加载或者显示的。（外部文件也一样）</p>
+<li><p>解释器对 script 元素内代码的解析是从上往下，在该元素内的代码被解析完之前，页面其它内容是不会被浏览器加载或者显示的。（外部文件也一样）</p>
 </li>
-<li><p>通过 src 属性引入外部文件必须要包含开始的 \<script\> 和结束的 \&lt;\script>，只是 HTML 规范。</p>
+<li><p>通过 src 属性引入外部文件必须要包含开始的 script 和结束的 script，只是 HTML 规范。</p>
 </li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script type=<span class="string">"text/javasript"</span> src=<span class="string">"example.js"</span>&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
 <ul>
-<li><p>带有 src 属性的 \<script\> 元素不应该在其元素之间包含额外的 JavaScritp 代码，如果包含了嵌入的代码，则只会下载并执行外部脚本文件，嵌入的代码会被忽略。</p>
+<li><p>带有 src 属性的 script 元素不应该在其元素之间包含额外的 JavaScritp 代码，如果包含了嵌入的代码，则只会下载并执行外部脚本文件，嵌入的代码会被忽略。</p>
 </li>
-<li><p>JavaScript 代码建议放在 \<body\> 元素中页面内容之后</p>
+<li><p>JavaScript 代码建议放在 body 元素中页面内容之后</p>
 </li>
 </ul>
 <p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第二章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
-</script></p>]]></content>
+]]></content>
     
     <summary type="html">
     
-      &lt;h3 id=&quot;标签&quot;&gt;&lt;a href=&quot;#标签&quot; class=&quot;headerlink&quot; title=&quot;标签&quot;&gt;&lt;/a&gt;标签&lt;/h3&gt;&lt;p&gt;\&lt;script&gt;：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：&lt;/p&gt;
+      &lt;h3 id=&quot;标签&quot;&gt;&lt;a href=&quot;#标签&quot; class=&quot;headerlink&quot; title=&quot;标签&quot;&gt;&lt;/a&gt;标签&lt;/h3&gt;&lt;p&gt;script：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;async：
+&lt;li&gt;&lt;p&gt;async：可选。
     
     </summary>
     
@@ -75,7 +75,7 @@
     <link href="https://panzeyong.github.io/2017/05/01/AsnycTask-%E7%94%A8%E6%B3%95%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     <id>https://panzeyong.github.io/2017/05/01/AsnycTask-用法及源码解析/</id>
     <published>2017-05-01T09:49:39.000Z</published>
-    <updated>2017-05-01T10:01:02.000Z</updated>
+    <updated>2017-05-03T23:52:53.000Z</updated>
     
     <content type="html"><![CDATA[<p>AsyncTask 是一种轻量级异步任务类，可以在线程池执行后台任务，获取到的结果传递给主线程并且在主线程中更新 UI。AsyncTask 比较适合执行短时间任务，对于长时间任务推荐使用 Executor，ThreadPoolExecutor 和 FutureTask。</p>
 <p>AsyncTask 是一个抽象类，提供三个泛型参数，分别是 Params，Progress 和 Result；以及 4 个步骤：onPreExecute，doInBackground，onProgressUpdate 和 onPostExecute。</p>
@@ -172,7 +172,7 @@
     
     </summary>
     
-      <category term="《Android 开发艺术探索》" scheme="https://panzeyong.github.io/categories/%E3%80%8AAndroid-%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B/"/>
+      <category term="《Android 开发艺术探索》学习笔记" scheme="https://panzeyong.github.io/categories/%E3%80%8AAndroid-%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
     
       <category term="Android" scheme="https://panzeyong.github.io/tags/Android/"/>
