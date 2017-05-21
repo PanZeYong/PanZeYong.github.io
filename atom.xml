@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-05-21T05:33:40.000Z</updated>
+  <updated>2017-05-21T05:37:35.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://panzeyong.github.io/2017/05/21/JobScheduler-%E7%94%A8%E6%B3%95/"/>
     <id>https://panzeyong.github.io/2017/05/21/JobScheduler-用法/</id>
     <published>2017-05-21T04:28:37.000Z</published>
-    <updated>2017-05-21T05:33:40.000Z</updated>
+    <updated>2017-05-21T05:37:35.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>先来聊聊怎么会知道 JobSchduler 这神奇的东西。公司项目有这么一个需求：平板上实时记录小朋友的学习情况，然后生成学习报告上传到服务器，供手机端查看。原先的做法是开启服务，在服务里注册广播接收器，当广播接收器接收到 action，就会将数据上传，在网络正常的情况下，该做法是没有问题的；但是当网络很差的情况下，有可能造成上传失败，数据丢失。后来我采用一种方式：当上传失败时，开启定时器上传，直到成功为止。原本以为这样就解决问题，可是后来做后台的同事说由于设置时间短，访问量多，造成服务器流量过大，希望我能找另外一种解决方法。这时 Leader 跟我说采用 JobScheduler，它完全有系统控制，满足一定的条件时触发任务。于是我马上 Google，看看这玩意到底是啥？经过搜索一番，发现 JobScheduler 功能挺强大的。下面是自己学习 JobSchduler 小结。</p>
 <p>JobScheduler 是在 Android 5.0 Google 推出的一个新组件，它的出现主要是为了解决某些任务需要在满足一个或多个条件的情况下才触发的需求，这些条件比如网络状态、电池充电、数据变化、自己设定的条件等，在满足条件时会触发相应的 JobScheduler 完成相应的任务。这个过程只需我们对要执行的任务设定条件，其它都由系统控制完成的，无需我们去控制任务。在学习 JobScheduler 的用法之前，先来了解相关的 API，这里涉及到 JobScheduler、JobInfo、JobParameters、JobService 这四个类。</p>
