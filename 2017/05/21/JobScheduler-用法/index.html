@@ -15,7 +15,7 @@
 <meta property="og:url" content="https://panzeyong.github.io/2017/05/21/JobScheduler-用法/index.html">
 <meta property="og:site_name" content="PANJU's Note">
 <meta property="og:description" content="背景先来聊聊怎么会知道 JobSchduler 这神奇的东西。公司项目有这么一个需求：平板上实时记录小朋友的学习情况，然后生成学习报告上传到服务器，供手机端查看。原先的做法是开启服务，在服务里注册广播接收器，当广播接收器接收到 action，就会将数据上传，在网络正常的情况下，该做法是没有问题的；但是当网络很差的情况下，有可能造成上传失败，数据丢失。后来我采用一种方式：当上传失败时，开启定时器上传">
-<meta property="og:updated_time" content="2017-05-21T04:30:18.000Z">
+<meta property="og:updated_time" content="2017-05-21T05:30:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JobScheduler 用法">
 <meta name="twitter:description" content="背景先来聊聊怎么会知道 JobSchduler 这神奇的东西。公司项目有这么一个需求：平板上实时记录小朋友的学习情况，然后生成学习报告上传到服务器，供手机端查看。原先的做法是开启服务，在服务里注册广播接收器，当广播接收器接收到 action，就会将数据上传，在网络正常的情况下，该做法是没有问题的；但是当网络很差的情况下，有可能造成上传失败，数据丢失。后来我采用一种方式：当上传失败时，开启定时器上传">
@@ -185,7 +185,7 @@ var _hmt = _hmt || [];
 
         <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>先来聊聊怎么会知道 JobSchduler 这神奇的东西。公司项目有这么一个需求：平板上实时记录小朋友的学习情况，然后生成学习报告上传到服务器，供手机端查看。原先的做法是开启服务，在服务里注册广播接收器，当广播接收器接收到 action，就会将数据上传，在网络正常的情况下，该做法是没有问题的；但是当网络很差的情况下，有可能造成上传失败，数据丢失。后来我采用一种方式：当上传失败时，开启定时器上传，直到成功为止。原本以为这样就解决问题，可是后来做后台的同事说由于设置时间短，访问量多，造成服务器流量过大，希望我能找另外一种解决方法。这时 Leader 跟我说采用 JobScheduler，它完全有系统控制，满足一定的条件时触发任务。于是我马上 Google，看看这玩意到底是啥？经过搜索一番，发现 JobScheduler 功能挺强大的。下面是自己学习 JobSchduler 小结。</p>
 <p>JobScheduler 是在 Android 5.0 Google 推出的一个新组件，它的出现主要是为了解决某些任务需要在满足一个或多个条件的情况下才触发的需求，这些条件比如网络状态、电池充电、数据变化、自己设定的条件等，在满足条件时会触发相应的 JobScheduler 完成相应的任务。这个过程只需我们对要执行的任务设定条件，其它都由系统控制完成的，无需我们去控制任务。在学习 JobScheduler 的用法之前，先来了解相关的 API，这里涉及到 JobScheduler、JobInfo、JobParameters、JobService 这四个类。</p>
-<h2 id="API-讲解"><a href="#API-讲解" class="headerlink" title="API 讲解"></a>API 讲解</h2><h3 id="JobScheduler"><a href="#JobScheduler" class="headerlink" title="JobScheduler"></a>JobScheduler</h3><p>先来看下官方文档对 JobScheduler 的描述：</p>
+<h2 id="API-讲解"><a href="#API-讲解" class="headerlink" title="API 讲解"></a>API 讲解</h2><h4 id="JobScheduler"><a href="#JobScheduler" class="headerlink" title="JobScheduler"></a>JobScheduler</h4><p>先来看下官方文档对 JobScheduler 的描述：</p>
 <blockquote>
 <p>根据应用程序自己的进程中调度各种类型的任务。</p>
 <p>关于可以运行的任务类型以及如何构建它们的更多描述，请参阅 <a href="https://developer.android.com/reference/android/app/job/JobInfo.html" target="_blank" rel="external">JobInfo</a>。你将构建这些 JobInfo 对象,并调用 JobScheduler 方法 <a href="https://developer.android.com/reference/android/app/job/JobScheduler.html#schedule(android.app.job.JobInfo" target="_blank" rel="external">schdule(JonInfo)</a>) 将这些 JobInfo 对象传给它。当设定的条件满足时，系统将会在你应用程序 <a href="https://developer.android.com/reference/android/app/job/JobService.html" target="_blank" rel="external">JobService</a> 上执行相应的任务。当你使用 <a href="https://developer.android.com/reference/android/app/job/JobInfo.Builder.html#JobInfo.Builder(int, android.content.ComponentName" target="_blank" rel="external">JobInfo.Builder(int, android.content.ComponentName)</a>) 创建你的 JobInfo 时，意味着已经确定哪个 JobService 将执行你的任务逻辑。</p>
@@ -214,7 +214,7 @@ var _hmt = _hmt || [];
 <li><p><strong>schedule(JobInfo job)</strong>：调度任务。</p>
 </li>
 </ul>
-<h3 id="JobInfo"><a href="#JobInfo" class="headerlink" title="JobInfo"></a>JobInfo</h3><p>JobInfo 对一个即将被执行的任务的信息进行封装，然后供 JobScheduler 调度。由于 JobInfo 包含的信息比较多，所有采用建造者模式来构建其实例，即 JobInfo.Builder 来创建。</p>
+<h4 id="JobInfo"><a href="#JobInfo" class="headerlink" title="JobInfo"></a>JobInfo</h4><p>JobInfo 对一个即将被执行的任务的信息进行封装，然后供 JobScheduler 调度。由于 JobInfo 包含的信息比较多，所有采用建造者模式来构建其实例，即 JobInfo.Builder 来创建。</p>
 <p>来看下官方文档的描述：</p>
 <blockquote>
 <p>将要调度的任务所需的参数（信息）封装为 JobInfo 对象传递给 <a href="https://developer.android.com/reference/android/app/job/JobScheduler.html#RESULT_FAILURE" target="_blank" rel="external">JobScheduler</a>。使用 <a href="https://developer.android.com/reference/android/app/job/JobInfo.Builder.html#JobInfo.Builder(int, android.content.ComponentName" target="_blank" rel="external">JobInfo.Builder</a>) 创建 JobInfo 实例。当你正在创建 JobInfo 对象时，你必须<strong>至少指定一项约束条件</strong>。这样做的目标是为你想完成的任务提供优先级高调度。<strong>如果你没有指定任何一项约束时，你的 app 会抛出异常。</strong></p>
@@ -265,9 +265,8 @@ var _hmt = _hmt || [];
 </li>
 <li><p><strong>setTriggerContentUpdateDelay (long durationMs)</strong>：设置当监听到 content 变化时到任务执行时可以延迟的时间，如果在这期间监听到更多变化，那么延迟时间的计时将被重置到最近一次更改开始。</p>
 </li>
-<li><p>**setBackoffCriteria (long initialBackoffMillis, </p>
-<pre><code>int backoffPolicy)**：设置 back-off 或者 重试策略。注意尝试调用 **setRequiresDeviceIdle(boolean)** 为任务设置回退策略时，当 **build()** 被调用时会抛出异常。因为 back-off 对这些工作类型没意义。
-</code></pre><p>  第一个参数表示第一次失败时尝试的时间间隔，单位为毫秒，预设的参数有：</p>
+<li><p><strong>setBackoffCriteria (long initialBackoffMillis, int backoffPolicy)</strong>：设置 back-off 或者 重试策略。注意尝试调用 <strong>setRequiresDeviceIdle(boolean)</strong> 为任务设置回退策略时，当 <strong>build()</strong> 被调用时会抛出异常。因为 back-off 对这些工作类型没意义。</p>
+<p>  第一个参数表示第一次失败时尝试的时间间隔，单位为毫秒，预设的参数有：</p>
 <ul>
 <li><p>DEFAULT_INITIAL_BACKOFF_MILLIS：30000</p>
 </li>
@@ -291,7 +290,7 @@ var _hmt = _hmt || [];
 <li><p><strong>setExtras (PersistableBundle extras)</strong>：设置额外参数，值允许原始数据类型。</p>
 </li>
 </ul>
-<h3 id="JobService"><a href="#JobService" class="headerlink" title="JobService"></a>JobService</h3><p>JobScheduler 所要调度的任务是在 JobService 定义的，而 JobService 是继承 Service；也就是说，JobService 也是服务，只是它与四大组件之一 Service 有所区别。JobService 有一大特点是无论你的 app 是否处于活跃状态，当你的任务满足特定的条件时，系统都会执行任务。我们可以编写多个 JobServices，而且每个 JobService 指定不同的任务，每个任务在某个时间点被执行。</p>
+<h4 id="JobService"><a href="#JobService" class="headerlink" title="JobService"></a>JobService</h4><p>JobScheduler 所要调度的任务是在 JobService 定义的，而 JobService 是继承 Service；也就是说，JobService 也是服务，只是它与四大组件之一 Service 有所区别。JobService 有一大特点是无论你的 app 是否处于活跃状态，当你的任务满足特定的条件时，系统都会执行任务。我们可以编写多个 JobServices，而且每个 JobService 指定不同的任务，每个任务在某个时间点被执行。</p>
 <p>来看下官方文档的描述</p>
 <blockquote>
 <p><a href="https://developer.android.com/reference/android/app/job/JobScheduler.html#RESULT_FAILURE" target="_blank" rel="external">JobScheduler</a> 回调的入口点。</p>
@@ -311,7 +310,7 @@ var _hmt = _hmt || [];
 <p><strong>jobFinished(JobParameters, boolean)</strong> 需要传入两个参数：第一个参数 JobParameters 表示当前任务的信息，以至于任务完成时系统知道释放哪个锁；第二个参数是 boolean 值，<strong>true</strong> 表示根据退避策略（back-off criteria）重新调度任务；<strong>false</strong> 则表示不调度任务。</p>
 <p>跟四大组件之一 service 一样，都需要在 AndroidManifest.xml 声明，但是有一点不同的是需要添加权限 <strong>android:permission=”android.permission.BIND_JOB_SERVICE”</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;service </div><div class="line">	android:permission=<span class="string">"android.permission.BIND_JOB_SERVICE"</span></div><div class="line">	android:name=<span class="string">".service.JobSchedulerService"</span> &gt;</div></pre></td></tr></table></figure>
-<h3 id="JobParameters"><a href="#JobParameters" class="headerlink" title="JobParameters"></a>JobParameters</h3><p>来看下官方文档描述</p>
+<h4 id="JobParameters"><a href="#JobParameters" class="headerlink" title="JobParameters"></a>JobParameters</h4><p>来看下官方文档描述</p>
 <blockquote>
 <p>JobParameters 对任务的信息进行封装，当任务被调度时，系统就会创建该对象，包含任务的信息；自己是无法实例化该对象的。</p>
 </blockquote>
