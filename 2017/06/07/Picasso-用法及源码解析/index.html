@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://panzeyong.github.io/images/picasso/cache.png">
 <meta property="og:image" content="https://panzeyong.github.io/images/picasso/into.png">
 <meta property="og:image" content="https://panzeyong.github.io/images/picasso/run.png">
-<meta property="og:updated_time" content="2017-06-06T23:50:03.000Z">
+<meta property="og:updated_time" content="2017-06-08T14:02:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Picasso 用法及源码解析">
 <meta name="twitter:description" content="Picasso 是 Square 公司开源的一个 Android 平台优秀图片加载框架，易用、代码简洁、可读性高。自己接触的第一个开源图片加载框架也是 Picasso，以前只停留在会用阶段，根本不知道是如何实现的，最近花了点时间看了 Picasso 源码，学到的东西还是蛮多；大概理解实现基本流程。
@@ -228,7 +228,7 @@ var _hmt = _hmt || [];
 </li>
 <li><p>LRU 内存缓存大小占整个应用可用 RAM 容量的 15%。</p>
 </li>
-<li><p>磁盘缓存大小占存储空间的 5%，不少于 2 MB，不超过 50 MB。（注：仅适于 API 14+ 或者所使用的第三方库包含 API，比如 OkHttp）。</p>
+<li><p>磁盘缓存大小占存储空间的 2%，不少于 5 MB，不超过 50 MB。（注：仅适于 API 14+ 或者所使用的第三方库包含 API，比如 OkHttp）。</p>
 </li>
 <li><p>为磁盘访问和网络访问提供 <strong>3</strong> 个线程。</p>
 </li>
