@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-06-08T14:02:22.000Z</updated>
+  <updated>2017-06-16T11:37:15.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -14,6 +14,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux 命令</title>
+    <link href="https://panzeyong.github.io/2017/06/16/Linux-%E5%91%BD%E4%BB%A4/"/>
+    <id>https://panzeyong.github.io/2017/06/16/Linux-命令/</id>
+    <published>2017-06-16T11:10:49.000Z</published>
+    <updated>2017-06-16T11:37:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="icps-命令"><a href="#icps-命令" class="headerlink" title="icps 命令"></a>icps 命令</h3><ul>
+<li><p>用途：报告进程间通信工具状态</p>
+</li>
+<li><p>语法</p>
+<p>  <strong>ipcs</strong> [ -m] [ -q] [ -s] [ -S] [ -P] [ -1] [ -a | -b -c -o -p -r -t] [ -T] [ -C CoreFile] [ -N Kernel ] [ -X ] [ -@ [ WparName ] ]</p>
+</li>
+<li><p>命令</p>
+<ul>
+<li><p>查看系统当前共享内存页面</p>
+</li>
+<li><p>查看系统消息队列</p>
+</li>
+<li><p>查看系统信号量</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>注：本篇文章主要记录工作和学习过程中遇到过的 linux 命令，持续更新中 ! ! !</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;icps-命令&quot;&gt;&lt;a href=&quot;#icps-命令&quot; class=&quot;headerlink&quot; title=&quot;icps 命令&quot;&gt;&lt;/a&gt;icps 命令&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;用途：报告进程间通信工具状态&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;语法&lt;/p&gt;
+&lt;p
+    
+    </summary>
+    
+      <category term="linux" scheme="https://panzeyong.github.io/categories/linux/"/>
+    
+    
+      <category term="命令" scheme="https://panzeyong.github.io/tags/%E5%91%BD%E4%BB%A4/"/>
+    
+  </entry>
   
   <entry>
     <title>Picasso 用法及源码解析</title>
