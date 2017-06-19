@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://panzeyong.github.io/2017/06/16/Linux-%E5%91%BD%E4%BB%A4/</loc>
+    <loc>https://panzeyong.github.io/categories/index.html</loc>
     
-    <lastmod>2017-06-16T11:40:19.000Z</lastmod>
+    <lastmod>2017-06-19T04:52:59.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://panzeyong.github.io/tags/index.html</loc>
+    
+    <lastmod>2017-06-19T04:52:00.000Z</lastmod>
     
   </url>
   
@@ -54,20 +61,6 @@
     <loc>https://panzeyong.github.io/about/index.html</loc>
     
     <lastmod>2017-03-11T15:18:09.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://panzeyong.github.io/tags/index.html</loc>
-    
-    <lastmod>2016-08-28T09:22:19.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://panzeyong.github.io/categories/index.html</loc>
-    
-    <lastmod>2016-08-21T08:12:28.000Z</lastmod>
     
   </url>
   
