@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-06-19T15:22:12.000Z</updated>
+  <updated>2017-06-25T23:59:07.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -14,6 +14,109 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>第 6 章 面向对象的程序设计</title>
+    <link href="https://panzeyong.github.io/2017/06/26/%E7%AC%AC-6-%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/"/>
+    <id>https://panzeyong.github.io/2017/06/26/第-6-章-面向对象的程序设计/</id>
+    <published>2017-06-25T23:56:20.000Z</published>
+    <updated>2017-06-25T23:59:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="理解对象"><a href="#理解对象" class="headerlink" title="理解对象"></a>理解对象</h2><h3 id="属性类型"><a href="#属性类型" class="headerlink" title="属性类型"></a>属性类型</h3><ul>
+<li><p>数据属性：数据属性包含一个数据值的位置。在这个位置可以读取和写入值。有以下 4 个描述其行为的特性：</p>
+<ul>
+<li><p>[[Configurable]]：表示是否通过 delete 删除属性从而重新定义属性，能否修改属性的特性，或者能否把属性修改为访问器属性。一旦该属性定义为不可配置，即 false，那么就再也不可能设置为可配置了，即 true。此时，再调用 <strong>Object.defineProperty()</strong> 方法修改除 writable 之外的属性都会导致错。在非严格模式下什么也不会发生，而在严格模式下会导致错误。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Enumerable]]：表示能否通过 for-in 循环返回属性。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Writable]]：表示能否修改属性的值。在非严格模式下，赋值操作将被忽略；在严格模式下，赋值操作将会导致错误。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Value]]：包含这个属性的数据值。读取属性值的时候，从这个位置读；写入属性的时候，把新值保存在这个位置。这个特性的默认值为 undefined。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>要修改属性默认属性，必须调用 ECMAScript5 的 <strong>Object.defineProperty()</strong> 方法。该方法接收三个参数：属性所在的对象、属性的名字、和一个描述符对象。描述符（descriptor）对象的属性必须是：configurable、enumerable、writable 和 value。例子如下：</p>
+<p>// 将属性特性 writable 改为只读</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">person.name = <span class="string">"Julian"</span>;</div><div class="line">person.age = <span class="number">22</span>;</div><div class="line">person.job = <span class="string">"Software Engineer"</span>;</div><div class="line"></div><div class="line">person.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	writable : <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.sayName();        <span class="comment">// 修改之前：Julian</span></div><div class="line">person.name = <span class="string">"Jack"</span>;</div><div class="line">person.sayName();		 <span class="comment">// 修改之后：Julian</span></div></pre></td></tr></table></figure>
+<p>将属性特性 configurable 改为不可配置（对象 person 使用上面代码）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	configurable : <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.sayName();        <span class="comment">// 修改之前：Julian</span></div><div class="line"><span class="keyword">delete</span> persion.name;</div><div class="line">person.sayName();		 <span class="comment">// 修改之后：Julian</span></div></pre></td></tr></table></figure>
+<p>在将属性特性 configurable 改为不可配置时再修改其它属性特性（writable 除外），抛出错误。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	value : <span class="string">"Marry"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 错误提示</span></div><div class="line">Uncaught <span class="built_in">TypeError</span>: Cannot redefine property: name</div><div class="line">    at <span class="built_in">Function</span>.defineProperty (&lt;anonymous&gt;)</div></pre></td></tr></table></figure>
+<ul>
+<li><p>访问器属性</p>
+<ul>
+<li><p>[[Configurable]]：表示能否通过 delete 删除属性从而重新定义属性，能否修改属性的特性，或者能否把属性修改为<strong>数据属性</strong>。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Enumerable]]：表示能否通过 for-in 循环返回属性。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Get]]：在读取属性时调用的函数。默认值为 undefined。只指定该属性时意味着不能写入，在非严格模式下写入属性会被忽略；在严格模式下写入属性会抛出错误。</p>
+</li>
+<li><p>[[Set]]：在写入属性时调用的函数。默认值为 undefined。只指定该属性时意味着不能读取，在非严格模式下读取时返回 undefined；在严格模式下会抛出错误。</p>
+<p><strong>访问器不能直接定义，必须使用 Object.defineProperty() 定义</strong>。</p>
+<p>书中例子，代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> book = &#123;</div><div class="line">	_year: <span class="number">2004</span>,</div><div class="line">	edition: <span class="number">1</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(book, <span class="string">"year"</span>, &#123;</div><div class="line">	get: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"get"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>._year;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	set: <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">		<span class="keyword">if</span> (value &gt; <span class="number">2004</span>) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"set"</span>);</div><div class="line">			<span class="keyword">this</span>._year = value;</div><div class="line">			<span class="keyword">this</span>.edition += value - <span class="number">2004</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 调用访问器 set</span></div><div class="line">book.year = <span class="number">2007</span>;  </div><div class="line">alert(book.edition); </div><div class="line"></div><div class="line"><span class="comment">// 调用访问器 get</span></div><div class="line">alert(book.year);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>如果将属性名 “year” 改为 &quot;_year&quot;，并设置 `book._year = 2007` 则会导致无限递归，最终导致错误。
+
+注：_year 前面的下划线是一种常用的记号，用于表示只能通过对象方法访问属性。
+</code></pre><h3 id="定义多个属性"><a href="#定义多个属性" class="headerlink" title="定义多个属性"></a>定义多个属性</h3><p>调用方法 <strong>Object.defineProperties()</strong> 可以为一个对象定义多个属性，该方法接收两个对象参数：第一个对象参数是<strong>要添加和修改其属性的对象</strong>；第二个对象参数是<strong>第二个对象的属性与第一个对象中要添加或修改的属性一一对应</strong>。</p>
+<p>书中例子，代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> book = &#123;&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperties(book, &#123;</div><div class="line">	<span class="comment">// 数据属性</span></div><div class="line">	_year: &#123;</div><div class="line">		value: <span class="number">2005</span></div><div class="line">	&#125;,</div><div class="line">	</div><div class="line">	<span class="comment">// 数据属性</span></div><div class="line">	edition: &#123;</div><div class="line">		value: <span class="number">1</span></div><div class="line">	&#125;,</div><div class="line">	</div><div class="line">	<span class="comment">// 访问器属性</span></div><div class="line">	year: &#123;</div><div class="line">		get: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">this</span>._year;</div><div class="line">		&#125;,</div><div class="line"></div><div class="line">		set: <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">			<span class="keyword">if</span> (value &gt; <span class="number">2005</span>) &#123;</div><div class="line">				<span class="keyword">this</span>._year = value;</div><div class="line">				<span class="keyword">this</span>.edition += value - <span class="number">2005</span>; </div><div class="line">			&#125;	</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="读取属性的特性"><a href="#读取属性的特性" class="headerlink" title="读取属性的特性"></a>读取属性的特性</h3><p>调用 <strong>Object.getOwnPropertyDescriptor()</strong> 方法可以取得给定属性的描述符。这个方法接收两个参数：属性所在的对象和要读取器描述符的属性名称。返回一个对象。</p>
+<p>书中例子，代码如下：（基于以上代码）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 数据属性</span></div><div class="line"><span class="keyword">var</span> descriptor = <span class="built_in">Object</span>.getOwnPropertyDescriptor(book, <span class="string">"_year"</span>);</div><div class="line">alert(descriptor.value);        <span class="comment">// 2005</span></div><div class="line">alert(descriptor.configurable); <span class="comment">// false</span></div><div class="line">alert(descriptor.writable);     <span class="comment">// false</span></div><div class="line">alert(descriptor.enumerable);   <span class="comment">// false</span></div><div class="line">alert(<span class="keyword">typeof</span> descriptor.get);   <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="comment">// 访问器属性</span></div><div class="line"><span class="keyword">var</span> descriptor = <span class="built_in">Object</span>.getOwnPropertyDescriptor(book, <span class="string">"year"</span>);</div><div class="line">alert(descriptor.value);			 <span class="comment">// undefined  </span></div><div class="line">alert(descriptor.configurable); <span class="comment">// false</span></div><div class="line">alert(descriptor.enumerable);   <span class="comment">// false</span></div><div class="line">alert(<span class="keyword">typeof</span> descriptor.get);   <span class="comment">// function</span></div><div class="line">alert(<span class="keyword">typeof</span> descriptor.set);   <span class="comment">// function</span></div></pre></td></tr></table></figure>
+<h2 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h2><h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><p>用函数来封装以特定接口创建对象的细节，与 Java 中 class 类似，即将对象类型的属性和方法进行封装。</p>
+<h3 id="构造函数模式"><a href="#构造函数模式" class="headerlink" title="构造函数模式"></a>构造函数模式</h3><p>可用来创建特定类型的对象，用 new 操作符来调用，这是与普通函数唯一的区别。</p>
+<h3 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h3><p>在 JavaScript 中，我们创建的每个函数都包含一个（原型）属性：prototype。prototype 属性是一个指针，指向一个对象，即原型对象，该原型对象包含可由特定类型的所有实例共享的属性和方法。换句话说，该原型对象可以说是调用构造函数而创建的对象实例的原型对象。使用原型对象的好处是让所有对象实例共享它包含的属性和方法。</p>
+<p>书中例子，代码如下：（1）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person.prototype.name = <span class="string">"Marry"</span>;</div><div class="line">Person.prototype.age = <span class="number">22</span>;</div><div class="line">Person.prototype.job = <span class="string">"Software Engineer"</span>;</div><div class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person();</div><div class="line">person1.sayName();</div><div class="line"></div><div class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person();</div><div class="line">person2.sayName();</div><div class="line"></div><div class="line">alert(person1.sayName == person2.sayName); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h4 id="理解原型对象"><a href="#理解原型对象" class="headerlink" title="理解原型对象"></a>理解原型对象</h4><ul>
+<li><p>每当我们创建新函数时，就会根据特定规则为该函数创建一个 <strong>prototype</strong> 属性，该属性指向函数的原型对象。在默认情况下，所有原型对象都会自动获取 <strong>constructor</strong> （构造函数）属性，该属性包含一个指向 prototype 属性所在函数的指针。</p>
+</li>
+<li><p>prototype 这个属性连接在于实例与构造函数的原型对象之间，而不是存在于实例与构造函数之间。</p>
+</li>
+<li><p>读取对象属性的原则：先从对象实例进行搜索，搜索不到的话再从原型对象进行搜索。</p>
+</li>
+<li><p>虽然可以通过对象实例访问保存在原型对象中的值，但是却不能通过对象实例修改原型对象中的值。如果我们在对象实例定义与原型对象中同名的属性，则对象实例中的属性会屏蔽原型对象中的对象。</p>
+</li>
+<li><p>使用 delete 操作符可以则可以完全删除实例属性，从而让我们能够重新访问原型中的属性。</p>
+</li>
+</ul>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><ul>
+<li><p><strong>isPrototypeOf()：</strong>确定对象之间是否存在关系，即如果 [[Prototype]] 指向调用 <strong>isPrototypeOf()</strong> 方法的对象，则返回 true。</p>
+<p>  以（1）为例子：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(Person.prototype.isPrototypeOf(person1));    <span class="comment">// true</span></div><div class="line">alert(Person.prototype.isPrototypeOf(person2));    <span class="comment">// true</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>Object.getPrototypeOf()</strong>：返回 [[Prototype]] 的值。</p>
+<p>  以（1）为例子：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1) == Person.prototype);    <span class="comment">// true</span></div><div class="line">	alert(<span class="built_in">Object</span>.getPrototypeOf(person1).name);    <span class="comment">// Marry</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hasOwnProperty()</strong>：可以检测一个属性是存在于实例中，还是存在于原型中。如果给定属性存在于实例对象中，则返回 true；否则返回 false。</p>
+<p>  以（1）为例子：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">alert(person1.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div><div class="line">alert(person2.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div><div class="line"></div><div class="line">person2.name = <span class="string">"John"</span>;</div><div class="line">person1.sayName();    <span class="comment">// Marry</span></div><div class="line">person2.sayName();    <span class="comment">// John</span></div><div class="line"></div><div class="line">alert(person1.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div><div class="line">alert(person2.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// true</span></div><div class="line"></div><div class="line"><span class="keyword">delete</span> person2.name</div><div class="line">alert(person2.name);  <span class="comment">// Mary</span></div><div class="line">alert(person2.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第六章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。（未完待续）</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;理解对象&quot;&gt;&lt;a href=&quot;#理解对象&quot; class=&quot;headerlink&quot; title=&quot;理解对象&quot;&gt;&lt;/a&gt;理解对象&lt;/h2&gt;&lt;h3 id=&quot;属性类型&quot;&gt;&lt;a href=&quot;#属性类型&quot; class=&quot;headerlink&quot; title=&quot;属性类型&quot;&gt;&lt;/a
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="https://panzeyong.github.io/categories/JavaScript/"/>
+    
+    
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>Picasso 用法及源码解析</title>
