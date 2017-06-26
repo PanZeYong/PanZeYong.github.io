@@ -395,7 +395,7 @@
 </li>
 </ul>
 <p>要修改属性默认属性，必须调用 ECMAScript5 的 <strong>Object.defineProperty()</strong> 方法。该方法接收三个参数：属性所在的对象、属性的名字、和一个描述符对象。描述符（descriptor）对象的属性必须是：configurable、enumerable、writable 和 value。例子如下：</p>
-<p>// 将属性特性 writable 改为只读</p>
+<p>将属性特性 writable 改为只读</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">person.name = <span class="string">"Julian"</span>;</div><div class="line">person.age = <span class="number">22</span>;</div><div class="line">person.job = <span class="string">"Software Engineer"</span>;</div><div class="line"></div><div class="line">person.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	writable : <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.sayName();        <span class="comment">// 修改之前：Julian</span></div><div class="line">person.name = <span class="string">"Jack"</span>;</div><div class="line">person.sayName();		 <span class="comment">// 修改之后：Julian</span></div></pre></td></tr></table></figure>
 <p>将属性特性 configurable 改为不可配置（对象 person 使用上面代码）。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	configurable : <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.sayName();        <span class="comment">// 修改之前：Julian</span></div><div class="line"><span class="keyword">delete</span> persion.name;</div><div class="line">person.sayName();		 <span class="comment">// 修改之后：Julian</span></div></pre></td></tr></table></figure>
@@ -418,7 +418,7 @@
 </ul>
 </li>
 </ul>
-<pre><code>如果将属性名 “year” 改为 &quot;_year&quot;，并设置 `book._year = 2007` 则会导致无限递归，最终导致错误。
+<pre><code>如果将属性名 “year” 改为 &quot;_year&quot;，并设置 `book._year =2007` 则会导致无限递归，最终导致错误。
 
 注：_year 前面的下划线是一种常用的记号，用于表示只能通过对象方法访问属性。
 </code></pre><h3 id="定义多个属性"><a href="#定义多个属性" class="headerlink" title="定义多个属性"></a>定义多个属性</h3><p>调用方法 <strong>Object.defineProperties()</strong> 可以为一个对象定义多个属性，该方法接收两个对象参数：第一个对象参数是<strong>要添加和修改其属性的对象</strong>；第二个对象参数是<strong>第二个对象的属性与第一个对象中要添加或修改的属性一一对应</strong>。</p>
