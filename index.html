@@ -471,7 +471,7 @@
 <li><p>实例中的指针仅指向原型，而不指向构造函数。</p>
 </li>
 </ul>
-<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><ul>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
 <li><p><strong>isPrototypeOf()：</strong>确定对象之间是否存在关系，即如果 [[Prototype]] 指向调用 <strong>isPrototypeOf()</strong> 方法的对象，则返回 true。</p>
 <p>  以（1）为例子：</p>
   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(Person.prototype.isPrototypeOf(person1));    <span class="comment">// true</span></div><div class="line">alert(Person.prototype.isPrototypeOf(person2));    <span class="comment">// true</span></div></pre></td></tr></table></figure>

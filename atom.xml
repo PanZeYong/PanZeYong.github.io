@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-06-28T23:22:26.000Z</updated>
+  <updated>2017-06-28T23:24:48.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://panzeyong.github.io/2017/06/26/%E7%AC%AC-6-%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/"/>
     <id>https://panzeyong.github.io/2017/06/26/第-6-章-面向对象的程序设计/</id>
     <published>2017-06-25T23:56:20.000Z</published>
-    <updated>2017-06-28T23:22:26.000Z</updated>
+    <updated>2017-06-28T23:24:48.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="理解对象"><a href="#理解对象" class="headerlink" title="理解对象"></a>理解对象</h2><h3 id="属性类型"><a href="#属性类型" class="headerlink" title="属性类型"></a>属性类型</h3><ul>
 <li><p>数据属性：数据属性包含一个数据值的位置。在这个位置可以读取和写入值。有以下 4 个描述其行为的特性：</p>
@@ -113,7 +113,7 @@
 <li><p>实例中的指针仅指向原型，而不指向构造函数。</p>
 </li>
 </ul>
-<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><ul>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
 <li><p><strong>isPrototypeOf()：</strong>确定对象之间是否存在关系，即如果 [[Prototype]] 指向调用 <strong>isPrototypeOf()</strong> 方法的对象，则返回 true。</p>
 <p>  以（1）为例子：</p>
   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(Person.prototype.isPrototypeOf(person1));    <span class="comment">// true</span></div><div class="line">alert(Person.prototype.isPrototypeOf(person2));    <span class="comment">// true</span></div></pre></td></tr></table></figure>
