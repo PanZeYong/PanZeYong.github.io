@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-06-28T23:18:29.000Z</updated>
+  <updated>2017-06-28T23:22:26.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://panzeyong.github.io/2017/06/26/%E7%AC%AC-6-%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/"/>
     <id>https://panzeyong.github.io/2017/06/26/第-6-章-面向对象的程序设计/</id>
     <published>2017-06-25T23:56:20.000Z</published>
-    <updated>2017-06-28T23:18:29.000Z</updated>
+    <updated>2017-06-28T23:22:26.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="理解对象"><a href="#理解对象" class="headerlink" title="理解对象"></a>理解对象</h2><h3 id="属性类型"><a href="#属性类型" class="headerlink" title="属性类型"></a>属性类型</h3><ul>
 <li><p>数据属性：数据属性包含一个数据值的位置。在这个位置可以读取和写入值。有以下 4 个描述其行为的特性：</p>
@@ -58,7 +58,7 @@
 </ul>
 </li>
 </ul>
-<pre><code>如果将属性名 “year” 改为 &quot;_year&quot;，并设置 `book._year = 2007` 则会导致无限递归，最终导致错误。
+<pre><code>如果将属性名 “year” 改为 &quot;_year&quot;，并设置 book._year = 2007，则会导致无限递归，最终导致错误。
 
 注：_year 前面的下划线是一种常用的记号，用于表示只能通过对象方法访问属性。
 </code></pre><h3 id="定义多个属性"><a href="#定义多个属性" class="headerlink" title="定义多个属性"></a>定义多个属性</h3><p>调用方法 <strong>Object.defineProperties()</strong> 可以为一个对象定义多个属性，该方法接收两个对象参数：第一个对象参数是<strong>要添加和修改其属性的对象</strong>；第二个对象参数是<strong>第二个对象的属性与第一个对象中要添加或修改的属性一一对应</strong>。</p>
@@ -111,7 +111,9 @@
   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> friend = <span class="keyword">new</span> Person();</div><div class="line"></div><div class="line">Person.prototype = &#123;	</div><div class="line">	<span class="keyword">constructor</span> : Person,</div><div class="line">	name : "Jack",</div><div class="line">	age : 22,</div><div class="line">	job : "Software Engineer",</div><div class="line">	sayName : function() &#123;</div><div class="line">		alert(<span class="keyword">this</span>.name);</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">friend.sayName();    <span class="comment">// error</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>实例中的指针仅指向原型，而不指向构造函数。</p>
-<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4></li>
+</li>
+</ul>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><ul>
 <li><p><strong>isPrototypeOf()：</strong>确定对象之间是否存在关系，即如果 [[Prototype]] 指向调用 <strong>isPrototypeOf()</strong> 方法的对象，则返回 true。</p>
 <p>  以（1）为例子：</p>
   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(Person.prototype.isPrototypeOf(person1));    <span class="comment">// true</span></div><div class="line">alert(Person.prototype.isPrototypeOf(person2));    <span class="comment">// true</span></div></pre></td></tr></table></figure>
