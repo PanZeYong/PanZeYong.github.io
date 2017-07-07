@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-07-06T23:59:19.000Z</updated>
+  <updated>2017-07-07T00:01:30.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://panzeyong.github.io/2017/06/26/%E7%AC%AC-6-%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/"/>
     <id>https://panzeyong.github.io/2017/06/26/第-6-章-面向对象的程序设计/</id>
     <published>2017-06-25T23:56:20.000Z</published>
-    <updated>2017-07-06T23:59:19.000Z</updated>
+    <updated>2017-07-07T00:01:30.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一、理解对象"><a href="#一、理解对象" class="headerlink" title="一、理解对象"></a>一、理解对象</h2><h3 id="1、属性类型"><a href="#1、属性类型" class="headerlink" title="1、属性类型"></a>1、属性类型</h3><ul>
 <li><p>数据属性：数据属性包含一个数据值的位置。在这个位置可以读取和写入值。有以下 4 个描述其行为的特性：</p>
@@ -105,8 +105,7 @@
 </ul>
 </li>
 </ul>
-<pre><code>- 如果要重新设置 **constructor** 属性所指向的函数，则可以添加 **constructor : Person**。不过值得注意的是这样设置会导致 **[[Enumerable]]** 特性被设置为 true。默认情况下，原生的 **constructor** 属性是不可枚举的。
-</code></pre><ul>
+<ul>
 <li><p>原型的动态性</p>
 <ul>
 <li><p>对原型对象的任何修改都能够立即从实例上反映出来，原因是<strong>实例与原型之间的松散连接关系</strong>。</p>
