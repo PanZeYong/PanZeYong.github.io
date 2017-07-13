@@ -400,7 +400,7 @@
 <p>  将属性特性 configurable 改为不可配置（对象 person 使用上面代码）。</p>
   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">configurable : <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.sayName();        <span class="comment">// 修改之前：Julian</span></div><div class="line"><span class="keyword">delete</span> persion.name;</div><div class="line">person.sayName();		 <span class="comment">// 修改之后：Julian</span></div></pre></td></tr></table></figure>
 <p>  在将属性特性 configurable 改为不可配置时再修改其它属性特性（writable 除外），抛出错误。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	value : <span class="string">"Marry"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 错误提示</span></div><div class="line">Uncaught <span class="built_in">TypeError</span>: Cannot redefine property: name</div><div class="line">  at <span class="built_in">Function</span>.defineProperty (&lt;anonymous&gt;)</div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	value : <span class="string">"Marry"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 错误提示</span></div><div class="line">Uncaught <span class="built_in">TypeError</span>: Cannot redefine property: name</div><div class="line">  at <span class="built_in">Function</span>.defineProperty (<span class="xml"><span class="tag">&lt;<span class="name">anonymous</span>&gt;</span>)</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -602,6 +602,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/07/09/Canvas-用法一-————-绘制图形/" rel="prev" title="Canvas 用法一 ———— 绘制图形">
+                Canvas 用法一 ———— 绘制图形 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -679,7 +683,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -701,7 +705,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
