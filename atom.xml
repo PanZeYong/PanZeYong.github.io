@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-07-13T23:58:34.000Z</updated>
+  <updated>2017-07-20T23:52:56.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://panzeyong.github.io/2017/07/10/%E7%AC%AC%E4%B8%83%E7%AB%A0-%E5%87%BD%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
     <id>https://panzeyong.github.io/2017/07/10/第七章-函数表达式/</id>
     <published>2017-07-09T23:11:07.000Z</published>
-    <updated>2017-07-13T23:58:34.000Z</updated>
+    <updated>2017-07-20T23:52:56.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一、创建函数方式"><a href="#一、创建函数方式" class="headerlink" title="一、创建函数方式"></a>一、创建函数方式</h2><h3 id="1、函数声明"><a href="#1、函数声明" class="headerlink" title="1、函数声明"></a>1、函数声明</h3><p>声明函数使用的关键字是 function，紧接着是指定函数名及函数体。每个函数都定义一个非标准的 <strong>name</strong> 属性，通过该属性可以访问到给函数指定的名字。对于函数声明来说，有一个重要特征就是<strong>函数提升</strong>，即在执行代码之前会先读取函数声明。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="string">"函数声明"</span>);</div><div class="line">	alert(create.name);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -41,6 +41,9 @@
 <p>那么如何才能做到每个函数的返回值是其索引呢？见以下例子（ps：书中例子）</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"Create Function"</span>);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">		result[i] = <span class="function"><span class="keyword">function</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"i : "</span> + i);</div><div class="line">			<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">				<span class="built_in">console</span>.log(<span class="string">"Number : "</span> + num);</div><div class="line">				<span class="keyword">return</span> num;</div><div class="line">			&#125;</div><div class="line">		&#125;(i);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> result = createFunctions();</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; result.length; i++) &#123;</div><div class="line">	alert(result[i]();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>（ps：由于刚接触闭包这个知识点，对书中的例子还不是很理解，后续补上自己的理解。）</p>
+<h3 id="3、关于-this-对象"><a href="#3、关于-this-对象" class="headerlink" title="3、关于 this 对象"></a>3、关于 this 对象</h3><p>this 对象是在运行时基于函数的执行环境绑定的：在全局函数中，this 等于 window，而当函数被作为某个对象的方法调用时，this 等于那个对象。但是匿名函数的执行环境具有全局性，因此其 this 对象通常指向 window。</p>
+<p>每个函数被调用时自动取得两个特殊变量：this 和 arguments，那么跟 arguments 跟 this 存在同样的问题。如果想访问作用域中的 arguments 或 this 对象时，必须将该对象的引用保存到另一个闭包能够访问的变量中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> object = &#123;</div><div class="line">	name : <span class="string">"My Object"</span>,</div><div class="line"></div><div class="line">	getNameFunc : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> that = <span class="keyword">this</span>;        <span class="comment">// 关键在这行代码</span></div><div class="line">		<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			<span class="keyword">return</span> that.name;</div><div class="line">		&#125;;</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 ]]></content>
     
     <summary type="html">
@@ -821,14 +824,14 @@
 </li>
 </ul>
 <p>noscript：在不支持 JavaScript 的浏览器中显示替代的内容。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;noscript&gt;</div><div class="line">	<span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>本页面需要浏览器支持（启用）JavaScript<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></div><div class="line">&lt;<span class="regexp">/noscript&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;noscript&gt;</div><div class="line">	&lt;p&gt;本页面需要浏览器支持（启用）JavaScript&lt;/p&gt;</div><div class="line">&lt;<span class="regexp">/noscript&gt;</span></div></pre></td></tr></table></figure>
 <h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
 <li><p>解释器对 script 元素内代码的解析是从上往下，在该元素内的代码被解析完之前，页面其它内容是不会被浏览器加载或者显示的。（外部文件也一样）</p>
 </li>
 <li><p>通过 src 属性引入外部文件必须要包含开始的 script 和结束的 script，只是 HTML 规范。</p>
 </li>
 </ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script type=<span class="string">"text/javasript"</span> src=<span class="string">"example.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script type=<span class="string">"text/javasript"</span> src=<span class="string">"example.js"</span>&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
 <ul>
 <li><p>带有 src 属性的 script 元素不应该在其元素之间包含额外的 JavaScritp 代码，如果包含了嵌入的代码，则只会下载并执行外部脚本文件，嵌入的代码会被忽略。</p>
 </li>
