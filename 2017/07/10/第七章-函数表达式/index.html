@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="《JavaScript 高级程序设计》学习笔记," />
 
 
 
@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="PANJU's Note">
 <meta property="og:description" content="一、创建函数方式1、函数声明声明函数使用的关键字是 function，紧接着是指定函数名及函数体。每个函数都定义一个非标准的 name 属性，通过该属性可以访问到给函数指定的名字。对于函数声明来说，有一个重要特征就是函数提升，即在执行代码之前会先读取函数声明。
 1234function create() &amp;#123;	alert(&quot;函数声明&quot;);	alert(create.name);&amp;#125;">
-<meta property="og:updated_time" content="2017-07-23T15:06:16.000Z">
+<meta property="og:updated_time" content="2017-07-23T23:39:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第七章 函数表达式">
 <meta name="twitter:description" content="一、创建函数方式1、函数声明声明函数使用的关键字是 function，紧接着是指定函数名及函数体。每个函数都定义一个非标准的 name 属性，通过该属性可以访问到给函数指定的名字。对于函数声明来说，有一个重要特征就是函数提升，即在执行代码之前会先读取函数声明。
@@ -310,6 +310,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -394,7 +416,15 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	</div><div class="line">	<span class="comment">// 私有变量和私有函数</span></div><div class="line">	<span class="keyword">var</span> privateVaribalbe = <span class="number">10</span>;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 构造函数</span></div><div class="line">	MyObject = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	&#125;;</div><div class="line">	</div><div class="line">	<span class="comment">// 特权方法</span></div><div class="line">	MyObject.prototype.publicMethod = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		privateVariable++;</div><div class="line">		<span class="keyword">return</span> privateFunction();</div><div class="line">	&#125;;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
 <p>通过这种方式创建静态私有变量会因为使用原型而增进代码复用，但每个实例都没有自己的私有变量。</p>
 <p>该方法与第一种方法的区别在于：私有变量和函数是由实例共享的。</p>
-<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第七章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。（未完待续）</p>
+<h3 id="2、模块模式（道格拉斯）"><a href="#2、模块模式（道格拉斯）" class="headerlink" title="2、模块模式（道格拉斯）"></a>2、模块模式（道格拉斯）</h3><p>模块模式：为单例创建私有变量和特权方法。</p>
+<p>模块模式使用场景：如果必须创建一个对象并以某些数据对其进行初始化，同时还要公开一些能够访问这些私有数据的方法。</p>
+<p>JavaScript 是以对象字面量的方式来创建单例对象的。</p>
+<p>模块模式模板：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> singleton = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="comment">// 私有变量和私有函数</span></div><div class="line">	<span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 特权方法</span></div><div class="line">	<span class="keyword">return</span> &#123;</div><div class="line">		publicProperty: <span class="literal">true</span>;</div><div class="line">		</div><div class="line">		publicMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			privateVariable++;</div><div class="line">			<span class="keyword">return</span> privateFunction();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;();</div></pre></td></tr></table></figure>
+<p>创建匿名函数并立即调用匿名函数，将对象字面量作为函数返回值，并将其赋值给变量 singleton；由于对象字面量通过特权方法访问匿名函数中私有变量和私有函数，因此变量 singleton 可以其进行访问。以这种方式创建的每个单例都是 Object 的实例。</p>
+<h3 id="3、增强的模块模式"><a href="#3、增强的模块模式" class="headerlink" title="3、增强的模块模式"></a>3、增强的模块模式</h3><p>在返回对象之前加入对其增强的代码。这种增强的模块模式适合那些单例必须是<strong>某种类型的实例</strong>，同时还必须添加某些属性和（或）方法对其加以增强的情况。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> singleton = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="comment">// 私有变量和私有函数</span></div><div class="line">	<span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 创建自定义类型对象</span></div><div class="line">	<span class="keyword">var</span> object = <span class="keyword">new</span> CustomType();</div><div class="line">	</div><div class="line">	</div><div class="line">	object.publicProperty: <span class="literal">true</span>;</div><div class="line">		</div><div class="line">	object.publicMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		privateVariable++;</div><div class="line">		<span class="keyword">return</span> privateFunction();</div><div class="line">	&#125;;</div><div class="line">	</div><div class="line">	<span class="keyword">return</span> object;</div><div class="line">&#125;();</div></pre></td></tr></table></figure>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第七章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
 
       
     </div>
@@ -421,6 +451,12 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/《JavaScript-高级程序设计》学习笔记/" rel="tag"># 《JavaScript 高级程序设计》学习笔记</a>
+          
+        </div>
       
 
       
@@ -593,7 +629,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、创建函数方式"><span class="nav-number">1.</span> <span class="nav-text">一、创建函数方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、函数声明"><span class="nav-number">1.1.</span> <span class="nav-text">1、函数声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、函数表达式（匿名函数、拉姆达函数）"><span class="nav-number">1.2.</span> <span class="nav-text">2、函数表达式（匿名函数、拉姆达函数）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、闭包"><span class="nav-number">2.</span> <span class="nav-text">二、闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、理解作用域链"><span class="nav-number">2.1.</span> <span class="nav-text">1、理解作用域链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、闭包与变量"><span class="nav-number">2.2.</span> <span class="nav-text">2、闭包与变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、关于-this-对象"><span class="nav-number">2.3.</span> <span class="nav-text">3、关于 this 对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、模仿块级作用域"><span class="nav-number">3.</span> <span class="nav-text">三、模仿块级作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、私有变量"><span class="nav-number">4.</span> <span class="nav-text">四、私有变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、创建特权方法的方式"><span class="nav-number">4.1.</span> <span class="nav-text">1、创建特权方法的方式</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、创建函数方式"><span class="nav-number">1.</span> <span class="nav-text">一、创建函数方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、函数声明"><span class="nav-number">1.1.</span> <span class="nav-text">1、函数声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、函数表达式（匿名函数、拉姆达函数）"><span class="nav-number">1.2.</span> <span class="nav-text">2、函数表达式（匿名函数、拉姆达函数）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、闭包"><span class="nav-number">2.</span> <span class="nav-text">二、闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、理解作用域链"><span class="nav-number">2.1.</span> <span class="nav-text">1、理解作用域链</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、闭包与变量"><span class="nav-number">2.2.</span> <span class="nav-text">2、闭包与变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、关于-this-对象"><span class="nav-number">2.3.</span> <span class="nav-text">3、关于 this 对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、模仿块级作用域"><span class="nav-number">3.</span> <span class="nav-text">三、模仿块级作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、私有变量"><span class="nav-number">4.</span> <span class="nav-text">四、私有变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、创建特权方法的方式"><span class="nav-number">4.1.</span> <span class="nav-text">1、创建特权方法的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、模块模式（道格拉斯）"><span class="nav-number">4.2.</span> <span class="nav-text">2、模块模式（道格拉斯）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、增强的模块模式"><span class="nav-number">4.3.</span> <span class="nav-text">3、增强的模块模式</span></a></li></ol></li></ol></div>
             
 
           </div>
