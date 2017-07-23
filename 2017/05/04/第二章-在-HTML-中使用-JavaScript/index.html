@@ -403,14 +403,14 @@ cha">
 </li>
 </ul>
 <p>noscript：在不支持 JavaScript 的浏览器中显示替代的内容。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;noscript&gt;</div><div class="line">	&lt;p&gt;本页面需要浏览器支持（启用）JavaScript&lt;/p&gt;</div><div class="line">&lt;<span class="regexp">/noscript&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;noscript&gt;</div><div class="line">	<span class="xml"><span class="tag">&lt;<span class="name">p</span>&gt;</span>本页面需要浏览器支持（启用）JavaScript<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></div><div class="line">&lt;<span class="regexp">/noscript&gt;</span></div></pre></td></tr></table></figure>
 <h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
 <li><p>解释器对 script 元素内代码的解析是从上往下，在该元素内的代码被解析完之前，页面其它内容是不会被浏览器加载或者显示的。（外部文件也一样）</p>
 </li>
 <li><p>通过 src 属性引入外部文件必须要包含开始的 script 和结束的 script，只是 HTML 规范。</p>
 </li>
 </ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script type=<span class="string">"text/javasript"</span> src=<span class="string">"example.js"</span>&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script type=<span class="string">"text/javasript"</span> src=<span class="string">"example.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></div></pre></td></tr></table></figure>
 <ul>
 <li><p>带有 src 属性的 script 元素不应该在其元素之间包含额外的 JavaScritp 代码，如果包含了嵌入的代码，则只会下载并执行外部脚本文件，嵌入的代码会被忽略。</p>
 </li>
