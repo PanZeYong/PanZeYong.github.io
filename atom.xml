@@ -90,7 +90,7 @@
     <link href="https://panzeyong.github.io/2017/07/25/%E7%AC%AC%E5%85%AB%E7%AB%A0-BOM/"/>
     <id>https://panzeyong.github.io/2017/07/25/第八章-BOM/</id>
     <published>2017-07-24T23:42:23.000Z</published>
-    <updated>2017-08-13T11:07:08.000Z</updated>
+    <updated>2017-08-13T11:09:18.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一、window-对象"><a href="#一、window-对象" class="headerlink" title="一、window 对象"></a>一、window 对象</h2><h3 id="1、全局作用域"><a href="#1、全局作用域" class="headerlink" title="1、全局作用域"></a>1、全局作用域</h3><p>window 对象具有双重角色</p>
 <ul>
@@ -210,7 +210,7 @@
     
     </summary>
     
-      <category term="JavsScript" scheme="https://panzeyong.github.io/categories/JavsScript/"/>
+      <category term="JavaScript" scheme="https://panzeyong.github.io/categories/JavaScript/"/>
     
     
       <category term="《JavaScript 高级程序设计》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
