@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="https://panzeyong.github.io/"/>
-  <updated>2017-08-13T11:04:38.000Z</updated>
+  <updated>2017-08-19T08:22:48.000Z</updated>
   <id>https://panzeyong.github.io/</id>
   
   <author>
@@ -14,6 +14,86 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kotlin 学习笔记（一）：开发环境搭建</title>
+    <link href="https://panzeyong.github.io/2017/08/19/Kotlin-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    <id>https://panzeyong.github.io/2017/08/19/Kotlin-开发环境搭建/</id>
+    <published>2017-08-19T08:11:20.000Z</published>
+    <updated>2017-08-19T08:22:48.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、Kotlin-语言介绍"><a href="#一、Kotlin-语言介绍" class="headerlink" title="一、Kotlin 语言介绍"></a>一、Kotlin 语言介绍</h1><p>Kotlin 是一种基于 JVM 新编程语言，由 JetBrains 开发。Kotlin 不仅可以编译成 Java 字节码，而且也可以编译成 JavaScript，方便在没有 JVM 的设备上运行。（来源：百度百科）</p>
+<p>在应用上，Kotlin 可以用来开发服务器、Android 以及 JavaScript。</p>
+<p>在 2017 年 Google I/O 大会上，官方宣布 Kotlin 正式成为 Android 开发语言。</p>
+<p>学习一门新语言，首先要做的第一件事就是搭建开发环境。所谓工欲善其事，必先利其器。</p>
+<h2 id="二、用命令行编译器创建-Hello-World-程序（链接）"><a href="#二、用命令行编译器创建-Hello-World-程序（链接）" class="headerlink" title="二、用命令行编译器创建 Hello World 程序（链接）"></a>二、用命令行编译器创建 Hello World 程序（<a href="https://kotlinlang.org/docs/tutorials/command-line.html" target="_blank" rel="external">链接</a>）</h2><h3 id="1、安装方式"><a href="#1、安装方式" class="headerlink" title="1、安装方式"></a>1、安装方式</h3><h4 id="（1）、手动安装"><a href="#（1）、手动安装" class="headerlink" title="（1）、手动安装"></a>（1）、手动安装</h4><ul>
+<li><p>下载编译器：kotlin 编译器最新版本是 1.1.3-2，可以从 <a href="https://github.com/JetBrains/kotlin/releases/tag/v1.1.3-2" target="_blank" rel="external">GitHub Releases</a> 下载。</p>
+</li>
+<li><p>将下载好的 kotlin 编译器解压到指定目录，然后将 <strong>bin</strong> 目录添加到系统环境变量中。不同平台添加系统环境变量有所不同，下面介绍下 Mac、Linux 平台，至于 Windows 平台的设置 google 吧。</p>
+<ul>
+<li><p>Linux：以 Ubuntu 为例，Ubuntu 下有多个文件可以配置环境变量（ps：自己 google），这里我选择文件 <strong>~/.bashrc</strong> 来配置。在终端打开文件 <strong>~/.bashrc</strong>，命令为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vim ~/.bashrc</div></pre></td></tr></table></figure>
+<p>然后添加环境变量，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> KOTLIN_HOME =/home/panju/Install/kotlinc</div><div class="line">PATH=$&#123;PATH&#125;:$&#123;KOTLIN_HOME&#125;/bin</div><div class="line">export KOTLIN_HOME PATH</div></pre></td></tr></table></figure>
+<p>最后保存退出，并执行命令 <strong>source ~/.bashrc</strong> 使其生效。</p>
+<p>如果在终端输入命令 <strong>kotlin -version</strong>，出现以下信息则说明 Kotlin 环境搭建成功。如下图：</p>
+<p>  <img src="/images/kotlin/configuration_environment/kotlin_linux.png" alt=""></p>
+</li>
+<li><p>Mac：在 Mac 中，<strong>/etc/profile</strong>、<strong>/etc/bashrc</strong> 这两个文件是针对系统所有用户的全局变量，需要 root 用户才能操作它们，对于普通用户来说是只读；而 <strong>~/.bash_profile</strong> 文件是针对普通用户，即当前用户下所设置的系统环境变量，一般推荐对该文件进行操作。因此，将在 <strong>~/.bash_profile</strong> 文件下配置 kotlin 环境。</p>
+<p>  在终端使用命令 <strong>vim ~/.bash_profile</strong> 打开该文件，并添加环境变量</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export KOTLIN=/Users/Pan/Library/kotlinc</div><div class="line">   export PATH=$PATH:$KOTLIN/bin</div></pre></td></tr></table></figure>
+<p>最后保存退出，并执行命令 <strong>source /.bash_profile</strong> 使其生效。</p>
+<p>如果在终端输入命令 <strong>kotlin -version</strong>，会出现以下信息<br>  <img src="/images/kotlin/configuration_environment/kotlin_mac.png" alt=""></p>
+<p>网上 google 下说这个问题是 Homebrew 安装版的一个 bug，对 kotlin 环境搭建没影响，其实是安装成功的。（<a href="http://bbs.itxdl.cn/read-htm-tid-232933-page-e.html" target="_blank" rel="external">链接</a>） </p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="（2）、SDKMAN"><a href="#（2）、SDKMAN" class="headerlink" title="（2）、SDKMAN"></a>（2）、SDKMAN</h4><p>对于基于 UNIX 系统比如 OS X、Linux、Cygwin、FreeBSD and Solaris 则可以使用 <a href="http://sdkman.io/" target="_blank" rel="external">SDKMAN</a> 安装，安装命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">curl -s https://get.sdkman.io | bash</div><div class="line"></div><div class="line">sdk install kotlin</div></pre></td></tr></table></figure>
+<h4 id="（3）、Homebrew"><a href="#（3）、Homebrew" class="headerlink" title="（3）、Homebrew"></a>（3）、Homebrew</h4><p>对于使用 OS X 系统则可以通过 <a href="https://brew.sh/" target="_blank" rel="external">Homebrew</a> 安装，安装命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">brew update</div><div class="line"></div><div class="line">brew install kotlin</div></pre></td></tr></table></figure>
+<h4 id="（4）、MacPorts"><a href="#（4）、MacPorts" class="headerlink" title="（4）、MacPorts"></a>（4）、MacPorts</h4><p>如果你是 MacPorts 用户，则可以通过 <a href="https://www.macports.org/" target="_blank" rel="external">MacPorts</a> 安装，安装命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo port install kotlin</div></pre></td></tr></table></figure>
+<h3 id="2、创建和运行第一个-kotlin-程序"><a href="#2、创建和运行第一个-kotlin-程序" class="headerlink" title="2、创建和运行第一个 kotlin 程序"></a>2、创建和运行第一个 kotlin 程序</h3><p>创建文件 hello.kt，敲入以下代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</div><div class="line">    println(<span class="string">"Hello, World"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>保存文件，并使用 kotlin 编译器编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kotlinc hello.kt -include-runtime -d hello.jar</div></pre></td></tr></table></figure>
+<p>kotlinc 表示编译的意思；hello.kt 显然是文件名；-include-runtime 表示运行时需要的 kotlin 库包含进来；-d 则表示打包成 jar 文件。至于要了解命令的详细内容，则可以在终端输入 kotlinc -help 查看。那么，接下来就可以运行程序，输入以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar hello.jar</div></pre></td></tr></table></figure>
+<p>此时会在终端显示 <strong>Hello, World</strong>。到此，第一个 kotlin 程序就完成了。</p>
+<h2 id="三、用-Kotlin-开发-Android-环境搭建（链接）"><a href="#三、用-Kotlin-开发-Android-环境搭建（链接）" class="headerlink" title="三、用 Kotlin 开发 Android 环境搭建（链接）"></a>三、用 Kotlin 开发 Android 环境搭建（<a href="https://kotlinlang.org/docs/tutorials/kotlin-android.html" target="_blank" rel="external">链接</a>）</h2><h3 id="1、安装-Kotlin-插件"><a href="#1、安装-Kotlin-插件" class="headerlink" title="1、安装 Kotlin 插件"></a>1、安装 Kotlin 插件</h3><p>Android Studio 从 3.0 开始集成 Kotlin 插件，无需自己安装。但是如果你使用 3.0 以前版本，则需要手动安装 kotlin 插件，安装流程也挺简单的。<strong>Go to File | Settings | Plugins | Install JetBrains plugin…</strong> 搜索和安装 Kotlin 插件；如果 Android Studio 是处于 “Welcome to Android Studio” <strong>Configure | Plugins | Install JetBrains plugin…</strong>。Kotlin 插件安装完成后，需要重新启动 Android Studio 插件才能生效。</p>
+<h3 id="2、创建项目"><a href="#2、创建项目" class="headerlink" title="2、创建项目"></a>2、创建项目</h3><p>使用 Kotlin 开发 Android 程序时，同样也需要创建 Android 项目，创建项目流程跟之前差不多，稍微有区别的是 Android Studio 版本不同在创建时一些选项有所不同。那么就简单来说下他们的不同之处。</p>
+<ul>
+<li><p>在创建项目第一步，Android Studio 3.0 提供一个选项：是否支持 Kotlin。如果选择这个选项，则可以跳过 <strong>“在项目中配置 Kotlin”</strong> 这一步。</p>
+<p>  <img src="/images/kotlin/configuration_environment/kotlin_create_project.png" alt=""></p>
+</li>
+<li><p>在 Android Studio 3.0 中，你可以选择以 Kotlin 方式创建 Activity，所以可以跳过 <strong>“Java 代码转换为 Kotlin 代码”</strong> 这一步。可是在之前版本，还是用 Java 创建 Activity，然后使用转换工具转换。</p>
+</li>
+</ul>
+<h3 id="3、Java-代码转换为-Kotlin-代码"><a href="#3、Java-代码转换为-Kotlin-代码" class="headerlink" title="3、Java 代码转换为 Kotlin 代码"></a>3、Java 代码转换为 Kotlin 代码</h3><p>打开 MainActivity.java 文件，使用快捷键 <strong>Command Shift A</strong> 调出 <strong>Enter action or option name</strong> 并搜索 <strong>convert Java File to Kotlin File</strong>，如下图</p>
+<p><img src="/images/kotlin/configuration_environment/kotlin_convert.png" alt=""></p>
+<p>然后按下回车，转换的 Kotlin 代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</div><div class="line"></div><div class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</div><div class="line">        setContentView(R.layout.activity_main)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4、在项目中配置-Kotlin"><a href="#4、在项目中配置-Kotlin" class="headerlink" title="4、在项目中配置 Kotlin"></a>4、在项目中配置 Kotlin</h3><p>完成以上步骤，还需要在项目中配置 Kotlin。找到 <strong>Tools | Kotlin | Configure Kotlin in Project</strong>，点击后会弹出对话框，如下图：</p>
+<p><img src="/images/kotlin/configuration_environment/kotlin_configure.png" alt=""></p>
+<p>点击 <strong>OK</strong>，然后 <strong>Sync</strong> build.gradle，Kotlin 就配置完成。</p>
+<h3 id="5、构建和发布-Kotlin-程序"><a href="#5、构建和发布-Kotlin-程序" class="headerlink" title="5、构建和发布 Kotlin 程序"></a>5、构建和发布 Kotlin 程序</h3><p>构建程序和运行在真机或模拟器上，会显示 <strong>Hello World</strong>，那么也就完成了用 Kotlin 开发第一个 Android 程序。</p>
+<p>以上是自己在 <a href="https://kotlinlang.org/" target="_blank" rel="external">Kotlin</a> 官网学习后所做的笔记，记录下来的目的是方便自己查找。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、Kotlin-语言介绍&quot;&gt;&lt;a href=&quot;#一、Kotlin-语言介绍&quot; class=&quot;headerlink&quot; title=&quot;一、Kotlin 语言介绍&quot;&gt;&lt;/a&gt;一、Kotlin 语言介绍&lt;/h1&gt;&lt;p&gt;Kotlin 是一种基于 JVM 新编程语言，由 J
+    
+    </summary>
+    
+      <category term="Kotlin" scheme="https://panzeyong.github.io/categories/Kotlin/"/>
+    
+    
+      <category term="Kotlin 学习笔记" scheme="https://panzeyong.github.io/tags/Kotlin-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
   
   <entry>
     <title>第九章 客户端检测</title>
