@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/08/19/Kotlin-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
+    <lastmod>2017-08-19T08:22:48.000Z</lastmod>
+    <data>
+        <display>
+        <title>Kotlin 学习笔记（一）：开发环境搭建</title>
+        <pubTime>2017-08-19T08:11:20.000Z</pubTime>
+        
+        <tag>Kotlin 学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="Kotlin" url="https://panzeyong.github.io/categories/Kotlin/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/07/25/%E7%AC%AC%E5%85%AB%E7%AB%A0-BOM/</loc>
+    <lastmod>2017-08-13T11:09:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>第八章 BOM</title>
+        <pubTime>2017-07-24T23:42:23.000Z</pubTime>
+        
+        <tag>《JavaScript 高级程序设计》学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="https://panzeyong.github.io/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/08/13/%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2017-08-13T11:04:38.000Z</lastmod>
+    <data>
+        <display>
+        <title>第九章 客户端检测</title>
+        <pubTime>2017-08-13T09:23:34.000Z</pubTime>
+        
+        <tag>《JavaScript 高级程序设计》学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="https://panzeyong.github.io/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/07/10/%E7%AC%AC%E4%B8%83%E7%AB%A0-%E5%87%BD%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F/</loc>
+    <lastmod>2017-07-23T23:39:20.000Z</lastmod>
+    <data>
+        <display>
+        <title>第七章 函数表达式</title>
+        <pubTime>2017-07-09T23:11:07.000Z</pubTime>
+        
+        <tag>《JavaScript 高级程序设计》学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="https://panzeyong.github.io/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/06/26/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/</loc>
+    <lastmod>2017-07-23T15:07:21.000Z</lastmod>
+    <data>
+        <display>
+        <title>第 六 章 面向对象的程序设计</title>
+        <pubTime>2017-06-25T23:56:20.000Z</pubTime>
+        
+        <tag>《JavaScript 高级程序设计》学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="https://panzeyong.github.io/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/07/09/Canvas-%E7%94%A8%E6%B3%95%E4%B8%80-%E2%80%94%E2%80%94%E2%80%94%E2%80%94-%E7%BB%98%E5%88%B6%E5%9B%BE%E5%BD%A2/</loc>
+    <lastmod>2017-07-13T09:47:09.000Z</lastmod>
+    <data>
+        <display>
+        <title>Canvas 用法一：绘制图形</title>
+        <pubTime>2017-07-09T04:19:11.000Z</pubTime>
+        
+        <tag>自定义 View</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="https://panzeyong.github.io/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/05/04/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%9C%A8-HTML-%E4%B8%AD%E4%BD%BF%E7%94%A8-JavaScript/</loc>
+    <lastmod>2017-06-19T15:25:28.000Z</lastmod>
+    <data>
+        <display>
+        <title>第二章 在 HTML 中使用 JavaScript</title>
+        <pubTime>2017-05-03T23:40:59.000Z</pubTime>
+        
+        <tag>JavaScript 高级程序设计》学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="https://panzeyong.github.io/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/04/17/Python-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2/</loc>
+    <lastmod>2017-06-19T15:22:47.000Z</lastmod>
+    <data>
+        <display>
+        <title>Python 学习笔记：字符串</title>
+        <pubTime>2017-04-17T14:27:28.000Z</pubTime>
+        
+        <tag>学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="Python" url="https://panzeyong.github.io/categories/Python/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/06/07/Picasso-%E7%94%A8%E6%B3%95%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2017-06-19T15:22:12.000Z</lastmod>
+    <data>
+        <display>
+        <title>Picasso 用法及源码解析</title>
+        <pubTime>2017-06-06T23:47:21.000Z</pubTime>
+        
+        <tag>优秀开源框架</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="https://panzeyong.github.io/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/05/21/JobScheduler-%E7%94%A8%E6%B3%95/</loc>
+    <lastmod>2017-06-19T14:49:53.000Z</lastmod>
+    <data>
+        <display>
+        <title>JobScheduler 用法</title>
+        <pubTime>2017-05-21T04:28:37.000Z</pubTime>
+        
+        <tag>性能优化</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="https://panzeyong.github.io/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/05/01/AsnycTask-%E7%94%A8%E6%B3%95%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2017-06-19T14:44:13.000Z</lastmod>
+    <data>
+        <display>
+        <title>AsnycTask 用法及源码解析</title>
+        <pubTime>2017-05-01T09:49:39.000Z</pubTime>
+        
+        <tag>《Android 开发艺术探索》学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="https://panzeyong.github.io/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://panzeyong.github.io/2017/03/26/%E7%AC%AC%E4%B8%80%E7%AB%A0-Activity-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2017-06-19T14:43:39.000Z</lastmod>
+    <data>
+        <display>
+        <title>第一章 Activity 的生命周期和启动模式</title>
+        <pubTime>2017-03-26T08:41:15.000Z</pubTime>
+        
+        <tag>《Android 开发艺术探索》学习笔记</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="https://panzeyong.github.io/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+    
+</urlset>
