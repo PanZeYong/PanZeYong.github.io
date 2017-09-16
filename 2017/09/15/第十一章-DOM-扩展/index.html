@@ -1,0 +1,1083 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="《JavaScript 高级程序设计》学习笔记," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="PANJU's Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一、选择符 API（Selectors API）选择符 API，简单地来说，就是根据 CSS 选择符选择与某个模式匹配的 DOM 元素。
+1、Selectors API 1 核心方法
+querySelector()：接收一个参数：CSS 选择符。返回与该模式匹配的第一元素，如果没有找到匹配的元素，返回 null。通过类型 Document 调用 querySelector() 方法时，会在文档元素">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十一章 DOM 扩展">
+<meta property="og:url" content="http://panzeyong.com/2017/09/15/第十一章-DOM-扩展/index.html">
+<meta property="og:site_name" content="PANJU's Note">
+<meta property="og:description" content="一、选择符 API（Selectors API）选择符 API，简单地来说，就是根据 CSS 选择符选择与某个模式匹配的 DOM 元素。
+1、Selectors API 1 核心方法
+querySelector()：接收一个参数：CSS 选择符。返回与该模式匹配的第一元素，如果没有找到匹配的元素，返回 null。通过类型 Document 调用 querySelector() 方法时，会在文档元素">
+<meta property="og:updated_time" content="2017-09-16T00:01:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十一章 DOM 扩展">
+<meta name="twitter:description" content="一、选择符 API（Selectors API）选择符 API，简单地来说，就是根据 CSS 选择符选择与某个模式匹配的 DOM 元素。
+1、Selectors API 1 核心方法
+querySelector()：接收一个参数：CSS 选择符。返回与该模式匹配的第一元素，如果没有找到匹配的元素，返回 null。通过类型 Document 调用 querySelector() 方法时，会在文档元素">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://panzeyong.com/2017/09/15/第十一章-DOM-扩展/"/>
+
+
+
+
+
+  <title>第十一章 DOM 扩展 | PANJU's Note</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PANJU's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">故不积跬步，无以至千里；不积小流，无以成江海。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/09/15/第十一章-DOM-扩展/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第十一章 DOM 扩展</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-15T07:50:33+08:00">
+                2017-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/15/第十一章-DOM-扩展/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/09/15/第十一章-DOM-扩展/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/09/15/第十一章-DOM-扩展/" class="leancloud_visitors" data-flag-title="第十一章 DOM 扩展">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、选择符-API（Selectors-API）"><a href="#一、选择符-API（Selectors-API）" class="headerlink" title="一、选择符 API（Selectors API）"></a>一、选择符 API（Selectors API）</h2><p>选择符 API，简单地来说，就是根据 CSS 选择符选择与某个模式匹配的 DOM 元素。</p>
+<h3 id="1、Selectors-API-1-核心方法"><a href="#1、Selectors-API-1-核心方法" class="headerlink" title="1、Selectors API 1 核心方法"></a>1、Selectors API 1 核心方法</h3><ul>
+<li><p><strong>querySelector()</strong>：接收一个参数：CSS 选择符。返回与该模式匹配的第一元素，如果没有找到匹配的元素，返回 null。通过类型 Document 调用 <strong>querySelector()</strong> 方法时，会在文档元素的范围内查找匹配的元素；而通过 Element 类型调用 <strong>querySelector()</strong> 方法时，只会在该元素后代元素的范围内查找匹配的元素。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> body = <span class="built_in">document</span>.querySelector(<span class="string">"body"</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>querySelectorAll()</strong>：接收一个参数：CSS 选择符。返回的是所有匹配的元素，是一个 NodeList 实例。返回的值实际上是带有所有属性和方法的 NodeList，而其底层实现则类似于一组元素的快照，而非不断对文档进行搜索的动态查询。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> lis = <span class="built_in">document</span>.querySelectorAll(<span class="string">"li"</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2、Selector-API-2-方法"><a href="#2、Selector-API-2-方法" class="headerlink" title="2、Selector API 2 方法"></a>2、Selector API 2 方法</h3><p><strong>matchesSelector()</strong>：接收一个参数：CSS 选择符。如果调用元素与该选择符匹配，返回 true；否则返回 false。Selector API 2 w为 Element 类型新增的方法。</p>
+<p>在使用该方法的同时要做到兼容不同浏览器，需要对该方法做处理，示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">matchesSelector</span>(<span class="params">element, selector</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (element.matchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.matchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.msMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.msMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.mozMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.mozMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.webkitMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.webkitMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Not Supported."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="二、元素遍历"><a href="#二、元素遍历" class="headerlink" title="二、元素遍历"></a>二、元素遍历</h2><p>对于元素间的空格，不同浏览器对空格的处理是不一样的。有的浏览器在对空格处理时则会返回文本节点，而有的不会。为了解决此现象，Element Traversal 为 DOM 元素新定义一组元素。</p>
+<p>Element Traversal API 为 DOM 元素添加新属性：</p>
+<ul>
+<li><p><strong>childElementCount</strong>：返回子元素（不包括文本节点和注释）的个数。</p>
+</li>
+<li><p><strong>firstElementChild</strong>：指向第一个子元素；firstChild 的元素版。</p>
+</li>
+<li><p><strong>lastElementChild</strong>：指向最后一个子元素；lastChild 的元素版。</p>
+</li>
+<li><p><strong>previousElementSibling</strong>：指向前一个同辈元素；previousSibling 的元素版。</p>
+</li>
+<li><p><strong>nextElementSibling</strong>：指向后一个同辈元素；nextSibling 的元素版。</p>
+</li>
+</ul>
+<h2 id="三、HTML5"><a href="#三、HTML5" class="headerlink" title="三、HTML5"></a>三、HTML5</h2><h3 id="1、方法"><a href="#1、方法" class="headerlink" title="1、方法"></a>1、方法</h3><ul>
+<li><p><strong>getElementsByClassName()</strong>：接收一个参数：一个包含一或多个类名的字符串，返回带有指定类的所有元素的 NodeList。通过 document 对象及所有 HTML 元素调用该方法。在 document 对象上调用  <strong>getElementsByClassName()</strong> 始终会返回与类名匹配的所有元素，在元素上调用该方法就会返回后代元素中匹配的元素。(一个元素指定多个类名)</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> elements = <span class="built_in">document</span>.getElementsByClassName(<span class="string">"title content"</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>hasFocus()</strong>：确定文档是否获得了焦点了。</p>
+</li>
+<li><p><strong>window.toStaticHTML()</strong>：接收一个参数，即一个 HTML 字符串；返回一个经过无害处理后的版本，即从源 HTML 中删除所有脚本节点和事件处理程序属性。</p>
+</li>
+<li><p><strong>insertAdjacentHTML()</strong>：接收两个参数：插入位置和要插入的文本。第一个参数必须是下列值之一：</p>
+<ul>
+<li><p><strong>“beforebegin”</strong>：在当前元素之前插入一个紧邻的同辈元素；</p>
+</li>
+<li><p><strong>“afterbegin”</strong>：在当前元素之下插入一个新的子元素或在第一个子元素之前再插入新的子元素。</p>
+</li>
+<li><p><strong>“beforeend”</strong>：在当前元素之下插入一个新的子元素或在最后一个子元素之后再插入新的子元素；</p>
+</li>
+<li><p><strong>“afterend”</strong>：在当前元素之后插入一个紧邻的同辈元素。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>scrollIntoView()</strong>：传入参数 <strong>true</strong> 或者不传入任何参数表示窗口滚动之后会让调用元素的顶部与视口顶部尽可能平齐；传入 <strong>false</strong> 则表示调用元素会尽可能全部出现在视口中。</li>
+</ul>
+<h3 id="2、属性"><a href="#2、属性" class="headerlink" title="2、属性"></a>2、属性</h3><ul>
+<li><p><strong>classList</strong>：所有 DOM 元素所具有的属性，而且该属性是新集合类型 DOMTokenList 实例，包含 length 属性，并具有以下方法：</p>
+<ul>
+<li><p><strong>item()</strong>：获取每个元素。</p>
+</li>
+<li><p><strong>add(value)</strong>：将给定的字符串值添加到列表中。如果值已经存在，就不添加了。</p>
+</li>
+<li><p><strong>contains(value)</strong>：表示列表中是否存在给定的值，如果存在则返回 true，否则返回 false。</p>
+</li>
+<li><p><strong>remove(value)</strong>：从列表中删除给定的字符串。</p>
+</li>
+<li><p><strong>toggle(value)</strong>：如果列表中已经存在给定的值，删除它；如果列表中没有给定的值，添加它。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"title"</span> <span class="attr">class</span>=<span class="string">"title content user"</span>&gt;</span>JavaScript Practice<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> classList = p.classList;</div><div class="line">classList.remove(<span class="string">"title"</span>);    <span class="comment">// length：2</span></div><div class="line">classList.add(<span class="string">"content"</span>);     <span class="comment">// length：2</span></div><div class="line">classList.toggle(<span class="string">"toggle"</span>);   <span class="comment">// length：3</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.activeElement</strong>：始终引用 DOM 中当前获取焦点的元素。文档刚刚加载完成时，<strong>document.activeElement</strong> 中保存的是 document.body 元素的引用。文档加载期间，<strong>document.activeElement </strong>的值为 null。（焦点管理）</p>
+</li>
+<li><p><strong>document.readyState</strong>：表示文档是否已经加载完成。有两个值：loading（正在加载文档）和 complete（已经加载完文档）</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.readyState == <span class="string">"complete"</span>) &#123;</div><div class="line">    alert(<span class="string">"Complete"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    alert(<span class="string">"Loading"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.compatMode</strong>：检测浏览器采用的模式（标准还是混杂）。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.compatMode == <span class="string">"CSS1Compat"</span>) &#123;</div><div class="line">    alert(<span class="string">"Standards mode"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    alert(<span class="string">"Quirks mode"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.head</strong>：引用文档的 \<head> 元素。</head></p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> head = <span class="built_in">document</span>.head ||<span class="built_in">document</span>.getElementsByTagName(<span class="string">"head"</span>)[<span class="number">0</span>];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.charset</strong>：表示文档中实际使用的字符集，也可以用来指定新字符集。</p>
+</li>
+<li><p><strong>document.defaultCharset</strong>：表示根据默认浏览器及操作系统的设置。</p>
+</li>
+<li><p><strong>dataset</strong>：访问自定义属性（用 data- 作为前缀），是 DOMStringMap 的一个实例，也是一个名值而的映射。</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span> <span class="attr">class</span>=<span class="string">"content"</span> <span class="attr">data-appId</span>=<span class="string">"12345"</span> <span class="attr">data-username</span>=<span class="string">"panju"</span>&gt;</span>Content<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> div = <span class="built_in">document</span>.getElementById(<span class="string">"content"</span>);</div><div class="line">alert(<span class="string">"AppId : "</span> + div.dataset.appId);</div><div class="line">alert(<span class="string">"User Name : "</span> + div.dataset.username);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>innerHTML</strong>：在读模式下，innerHTML 属性返回与调用元素的所有子节点（包括元素、注释和文本节点）对应的 HTML 标记。在写模式下，innerHTML 会根据指定的值创建新的 DOM 树，然后用这个 DMO 树完全替换调用元素原先的所有子节点。</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// index.html</div><div class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">"bodys"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"title"</span> <span class="attr">class</span>=<span class="string">"title content user"</span>&gt;</span>JavaScript Practice<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"></div><div class="line">     <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span> <span class="attr">class</span>=<span class="string">"content"</span> <span class="attr">data-appId</span>=<span class="string">"12345"</span> <span class="attr">data-username</span>=<span class="string">"panju"</span>&gt;</span>Content<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"ui"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"content"</span>&gt;</span>Python<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>JavaScript<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>Java<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div></pre></td></tr></table></figure>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读模式</span></div><div class="line">alert(<span class="built_in">document</span>.body.innerText);</div><div class="line"></div><div class="line"><span class="comment">// 写模式</span></div><div class="line"><span class="built_in">document</span>.body.innerText = <span class="string">"Hello DOM"</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  注：并不是所有元素都支持 <strong>innerHTML</strong> 属性。不支持 <strong>innerHTML</strong> 的元素有：&lt;col&gt;、&lt;colgroup&gt;、&lt;frameset&gt;、&lt;head&gt;、&lt;html&gt;、&lt;style&gt;、&lt;table&gt;、&lt;tbody&gt;、&lt;thead&gt;、&lt;tfoot&gt;、&lt;tr&gt;。</p>
+<ul>
+<li><strong>outerHTML</strong>：与 <strong>innerHTML</strong> 属性类似。区别在于读模式下，<strong>outerHTML</strong> 返回结果包括调用该属性的元素本身。</li>
+</ul>
+<h2 id="四、专有扩展"><a href="#四、专有扩展" class="headerlink" title="四、专有扩展"></a>四、专有扩展</h2><h3 id="1、4-种文档模式"><a href="#1、4-种文档模式" class="headerlink" title="1、4 种文档模式"></a>1、4 种文档模式</h3><ul>
+<li><p><strong>IE5</strong>：以<strong>混杂模式</strong>渲染页面（IE5 的默认模式就是混杂模式）。IE8 及更高版本中的功能都无法使用。</p>
+</li>
+<li><p><strong>IE7</strong>：以 <em>*IE7 标准模式</em>渲染页面。IE8 及更高版本中的功能都无法使用。</p>
+</li>
+<li><p><strong>IE8</strong>：以 <strong>IE8 标准模式</strong>渲染页面。IE9 中的新功能无法使用。</p>
+</li>
+<li><p><strong>IE9</strong>：以 <strong>IE9 标准模式</strong>渲染页面。</p>
+</li>
+</ul>
+<p>要设置浏览器文档类型，可以通过 HTTP 头部信息 <strong>X-UA-Compatible</strong> 或者通过标签 <strong>\<meta></strong> 来设置，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=<span class="string">"X-UA-Compatible"</span> content=<span class="string">"IE=IEVersion"</span> &gt;</div></pre></td></tr></table></figure>
+<p>对于 IE 版本（IEVersion）的取值如下：</p>
+<ul>
+<li><p><strong>Edge</strong>：始终以最新的文档模式来渲染页面。忽略文档类型声明。对于 IE8，始终保持以 IE8 标准模式渲染页面。对于 IE9，则以 IE9 标准模式渲染页面。</p>
+</li>
+<li><p><strong>EmulateIE9</strong>：如果有文档类型声明，则以 IE9 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>EmulateIE8</strong>：如果有文档类型声明，则以 IE8 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>EmulateIE7</strong>：如果有文档类型声明，则以 IE7 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>9</strong>：强制以 IE9 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>8</strong>：强制以 IE8 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>7</strong>：强制以 IE7 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>5</strong>：强制以 IE5 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+</ul>
+<h3 id="2、方法"><a href="#2、方法" class="headerlink" title="2、方法"></a>2、方法</h3><ul>
+<li><p><strong>contains()</strong>：检测被测节点是不是参考节点的后代。接收一个参数：即要检测的后代节点。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> contains = <span class="built_in">document</span>.documentElement.contains(<span class="built_in">document</span>.body);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>compareDocumentPosition()</strong>：确定节点之间的关系，返回一个表示该关系的位掩码。（DOM Level 3）</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">// 模仿 contains() 方法</span></div><div class="line"><span class="keyword">var</span> position = <span class="built_in">document</span>.documentElement.compareDocumentPosition(<span class="built_in">document</span>.body) &amp; <span class="number">16</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>scrollIntoViewIfNeeded(alignCenter)</strong>：只有当前元素在视口中不可见的情况下，才滚动浏览器窗口或容器元素，最终让它可见。参数 alignCenter 设置为 true 表示尽量将元素显示在视口中部（垂直方向）。（Safari 和 Chrome）</p>
+</li>
+<li><p><strong>scrollByLines(lineCount)</strong>：将元素的内容滚动指定的行高，参数 lineCount 可以为正值或者负值。（Safari 和 Chrome）</p>
+</li>
+<li><p><strong>scrollByPages()</strong>：将元素的内容滚动指定的页面高度，具体高度由元素的高度决定。（Safari 和 Chrome）</p>
+</li>
+</ul>
+<h3 id="3、属性"><a href="#3、属性" class="headerlink" title="3、属性"></a>3、属性</h3><ul>
+<li><p><strong>document.documentMode</strong>：检测文档模式</p>
+</li>
+<li><p><strong>children</strong>：只包含元素中同样还是元素的子节点，忽略空格。该属性是 HTMLCollection 的实例。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> length = ui.children.length;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>innerText</strong>：操作元素中包含的所有文本内容，包括子文档树中的文本。在读模式时，它会将子文档树中所有文本拼接起来；在写模式时，会将元素所有子节点删除，并插入包含文本值的文本子节点。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读模式</span></div><div class="line"><span class="keyword">var</span> innerText = <span class="built_in">document</span>.body.innerText;</div><div class="line"></div><div class="line"><span class="comment">// 写模式</span></div><div class="line"><span class="built_in">document</span>.body.innerText = <span class="string">"Hello JavaScript"</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>textContent</strong>：作用与 <strong>innerText</strong> 类似，DOMLevel 3 规定的一个属性。</p>
+</li>
+<li><p><strong>outerText</strong>：作用与 <strong>innerText</strong> 基本类似。区别在于作用范围扩大到调用它的节点。</p>
+</li>
+</ul>
+<h3 id="4、通用函数"><a href="#4、通用函数" class="headerlink" title="4、通用函数"></a>4、通用函数</h3><p>通用 contains() 函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">contains</span>(<span class="params">refNode, otherNode</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> refNode.contains == <span class="string">"function"</span> &amp;&amp; (!client.engine.webkit || client.engine.webkit &gt;= <span class="number">522</span>)) &#123;</div><div class="line">        <span class="keyword">return</span> refNode.contains(otherNode);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> refNode.compareDocumentPosition == <span class="string">"function"</span>) &#123;</div><div class="line">        retrun !!(refNode.compareDocumentPosition(otherNode) &amp; <span class="number">16</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">var</span> node = otherNode.parentNode;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            <span class="keyword">if</span> (node === refNode) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                node = node.parentNode;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">while</span> (node !== <span class="literal">null</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跨浏览器使用属性 <strong>innerText</strong> 还是 <strong>textContent</strong> 兼容函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getInnerText</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> (<span class="keyword">typeof</span> element.textContent == <span class="string">"string"</span> ? element.textContent : element.innerText);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setInnerText</span>(<span class="params">element, text</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> element.textContent == <span class="string">"string"</span>) &#123;</div><div class="line">		element.textContent = text;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		element.innerText = text;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第十一章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/《JavaScript-高级程序设计》学习笔记/" rel="tag"># 《JavaScript 高级程序设计》学习笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/29/第十章-DOM/" rel="next" title="第十章 DOM">
+                <i class="fa fa-chevron-left"></i> 第十章 DOM
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="PANJU" />
+          <p class="site-author-name" itemprop="name">PANJU</p>
+           
+              <p class="site-description motion-element" itemprop="description">笔记——记录工作和学习中的点点滴滴</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/PanZeYong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、选择符-API（Selectors-API）"><span class="nav-number">1.</span> <span class="nav-text">一、选择符 API（Selectors API）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、Selectors-API-1-核心方法"><span class="nav-number">1.1.</span> <span class="nav-text">1、Selectors API 1 核心方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、Selector-API-2-方法"><span class="nav-number">1.2.</span> <span class="nav-text">2、Selector API 2 方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、元素遍历"><span class="nav-number">2.</span> <span class="nav-text">二、元素遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、HTML5"><span class="nav-number">3.</span> <span class="nav-text">三、HTML5</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、方法"><span class="nav-number">3.1.</span> <span class="nav-text">1、方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、属性"><span class="nav-number">3.2.</span> <span class="nav-text">2、属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、专有扩展"><span class="nav-number">4.</span> <span class="nav-text">四、专有扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、4-种文档模式"><span class="nav-number">4.1.</span> <span class="nav-text">1、4 种文档模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、方法"><span class="nav-number">4.2.</span> <span class="nav-text">2、方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、属性"><span class="nav-number">4.3.</span> <span class="nav-text">3、属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、通用函数"><span class="nav-number">4.4.</span> <span class="nav-text">4、通用函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PANJU</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://panzeyong.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://panzeyong.com/2017/09/15/第十一章-DOM-扩展/';
+          this.page.identifier = '2017/09/15/第十一章-DOM-扩展/';
+          this.page.title = '第十一章 DOM 扩展';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://panzeyong.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("b3EUStGjBwcKOJcOMeQXheDT-gzGzoHsz", "xvVsWacpT435FHV1QCcUpx9I");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

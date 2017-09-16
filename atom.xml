@@ -4,9 +4,9 @@
   <subtitle>故不积跬步，无以至千里；不积小流，无以成江海。</subtitle>
   <link href="//atom.xml" rel="self"/>
   
-  <link href="https://panzeyong.github.io/"/>
-  <updated>2017-08-19T08:22:48.000Z</updated>
-  <id>https://panzeyong.github.io/</id>
+  <link href="http://panzeyong.com/"/>
+  <updated>2017-09-16T00:01:40.000Z</updated>
+  <id>http://panzeyong.com/</id>
   
   <author>
     <name>PANJU</name>
@@ -16,9 +16,624 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>第十一章 DOM 扩展</title>
+    <link href="http://panzeyong.com/2017/09/15/%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-DOM-%E6%89%A9%E5%B1%95/"/>
+    <id>http://panzeyong.com/2017/09/15/第十一章-DOM-扩展/</id>
+    <published>2017-09-14T23:50:33.000Z</published>
+    <updated>2017-09-16T00:01:40.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一、选择符-API（Selectors-API）"><a href="#一、选择符-API（Selectors-API）" class="headerlink" title="一、选择符 API（Selectors API）"></a>一、选择符 API（Selectors API）</h2><p>选择符 API，简单地来说，就是根据 CSS 选择符选择与某个模式匹配的 DOM 元素。</p>
+<h3 id="1、Selectors-API-1-核心方法"><a href="#1、Selectors-API-1-核心方法" class="headerlink" title="1、Selectors API 1 核心方法"></a>1、Selectors API 1 核心方法</h3><ul>
+<li><p><strong>querySelector()</strong>：接收一个参数：CSS 选择符。返回与该模式匹配的第一元素，如果没有找到匹配的元素，返回 null。通过类型 Document 调用 <strong>querySelector()</strong> 方法时，会在文档元素的范围内查找匹配的元素；而通过 Element 类型调用 <strong>querySelector()</strong> 方法时，只会在该元素后代元素的范围内查找匹配的元素。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> body = <span class="built_in">document</span>.querySelector(<span class="string">"body"</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>querySelectorAll()</strong>：接收一个参数：CSS 选择符。返回的是所有匹配的元素，是一个 NodeList 实例。返回的值实际上是带有所有属性和方法的 NodeList，而其底层实现则类似于一组元素的快照，而非不断对文档进行搜索的动态查询。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> lis = <span class="built_in">document</span>.querySelectorAll(<span class="string">"li"</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2、Selector-API-2-方法"><a href="#2、Selector-API-2-方法" class="headerlink" title="2、Selector API 2 方法"></a>2、Selector API 2 方法</h3><p><strong>matchesSelector()</strong>：接收一个参数：CSS 选择符。如果调用元素与该选择符匹配，返回 true；否则返回 false。Selector API 2 w为 Element 类型新增的方法。</p>
+<p>在使用该方法的同时要做到兼容不同浏览器，需要对该方法做处理，示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">matchesSelector</span>(<span class="params">element, selector</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (element.matchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.matchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.msMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.msMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.mozMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.mozMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.webkitMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.webkitMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Not Supported."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="二、元素遍历"><a href="#二、元素遍历" class="headerlink" title="二、元素遍历"></a>二、元素遍历</h2><p>对于元素间的空格，不同浏览器对空格的处理是不一样的。有的浏览器在对空格处理时则会返回文本节点，而有的不会。为了解决此现象，Element Traversal 为 DOM 元素新定义一组元素。</p>
+<p>Element Traversal API 为 DOM 元素添加新属性：</p>
+<ul>
+<li><p><strong>childElementCount</strong>：返回子元素（不包括文本节点和注释）的个数。</p>
+</li>
+<li><p><strong>firstElementChild</strong>：指向第一个子元素；firstChild 的元素版。</p>
+</li>
+<li><p><strong>lastElementChild</strong>：指向最后一个子元素；lastChild 的元素版。</p>
+</li>
+<li><p><strong>previousElementSibling</strong>：指向前一个同辈元素；previousSibling 的元素版。</p>
+</li>
+<li><p><strong>nextElementSibling</strong>：指向后一个同辈元素；nextSibling 的元素版。</p>
+</li>
+</ul>
+<h2 id="三、HTML5"><a href="#三、HTML5" class="headerlink" title="三、HTML5"></a>三、HTML5</h2><h3 id="1、方法"><a href="#1、方法" class="headerlink" title="1、方法"></a>1、方法</h3><ul>
+<li><p><strong>getElementsByClassName()</strong>：接收一个参数：一个包含一或多个类名的字符串，返回带有指定类的所有元素的 NodeList。通过 document 对象及所有 HTML 元素调用该方法。在 document 对象上调用  <strong>getElementsByClassName()</strong> 始终会返回与类名匹配的所有元素，在元素上调用该方法就会返回后代元素中匹配的元素。(一个元素指定多个类名)</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> elements = <span class="built_in">document</span>.getElementsByClassName(<span class="string">"title content"</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>hasFocus()</strong>：确定文档是否获得了焦点了。</p>
+</li>
+<li><p><strong>window.toStaticHTML()</strong>：接收一个参数，即一个 HTML 字符串；返回一个经过无害处理后的版本，即从源 HTML 中删除所有脚本节点和事件处理程序属性。</p>
+</li>
+<li><p><strong>insertAdjacentHTML()</strong>：接收两个参数：插入位置和要插入的文本。第一个参数必须是下列值之一：</p>
+<ul>
+<li><p><strong>“beforebegin”</strong>：在当前元素之前插入一个紧邻的同辈元素；</p>
+</li>
+<li><p><strong>“afterbegin”</strong>：在当前元素之下插入一个新的子元素或在第一个子元素之前再插入新的子元素。</p>
+</li>
+<li><p><strong>“beforeend”</strong>：在当前元素之下插入一个新的子元素或在最后一个子元素之后再插入新的子元素；</p>
+</li>
+<li><p><strong>“afterend”</strong>：在当前元素之后插入一个紧邻的同辈元素。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>scrollIntoView()</strong>：传入参数 <strong>true</strong> 或者不传入任何参数表示窗口滚动之后会让调用元素的顶部与视口顶部尽可能平齐；传入 <strong>false</strong> 则表示调用元素会尽可能全部出现在视口中。</li>
+</ul>
+<h3 id="2、属性"><a href="#2、属性" class="headerlink" title="2、属性"></a>2、属性</h3><ul>
+<li><p><strong>classList</strong>：所有 DOM 元素所具有的属性，而且该属性是新集合类型 DOMTokenList 实例，包含 length 属性，并具有以下方法：</p>
+<ul>
+<li><p><strong>item()</strong>：获取每个元素。</p>
+</li>
+<li><p><strong>add(value)</strong>：将给定的字符串值添加到列表中。如果值已经存在，就不添加了。</p>
+</li>
+<li><p><strong>contains(value)</strong>：表示列表中是否存在给定的值，如果存在则返回 true，否则返回 false。</p>
+</li>
+<li><p><strong>remove(value)</strong>：从列表中删除给定的字符串。</p>
+</li>
+<li><p><strong>toggle(value)</strong>：如果列表中已经存在给定的值，删除它；如果列表中没有给定的值，添加它。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"title"</span> <span class="attr">class</span>=<span class="string">"title content user"</span>&gt;</span>JavaScript Practice<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> classList = p.classList;</div><div class="line">classList.remove(<span class="string">"title"</span>);    <span class="comment">// length：2</span></div><div class="line">classList.add(<span class="string">"content"</span>);     <span class="comment">// length：2</span></div><div class="line">classList.toggle(<span class="string">"toggle"</span>);   <span class="comment">// length：3</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.activeElement</strong>：始终引用 DOM 中当前获取焦点的元素。文档刚刚加载完成时，<strong>document.activeElement</strong> 中保存的是 document.body 元素的引用。文档加载期间，<strong>document.activeElement </strong>的值为 null。（焦点管理）</p>
+</li>
+<li><p><strong>document.readyState</strong>：表示文档是否已经加载完成。有两个值：loading（正在加载文档）和 complete（已经加载完文档）</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.readyState == <span class="string">"complete"</span>) &#123;</div><div class="line">    alert(<span class="string">"Complete"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    alert(<span class="string">"Loading"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.compatMode</strong>：检测浏览器采用的模式（标准还是混杂）。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.compatMode == <span class="string">"CSS1Compat"</span>) &#123;</div><div class="line">    alert(<span class="string">"Standards mode"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    alert(<span class="string">"Quirks mode"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.head</strong>：引用文档的 \<head> 元素。</head></p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> head = <span class="built_in">document</span>.head ||<span class="built_in">document</span>.getElementsByTagName(<span class="string">"head"</span>)[<span class="number">0</span>];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.charset</strong>：表示文档中实际使用的字符集，也可以用来指定新字符集。</p>
+</li>
+<li><p><strong>document.defaultCharset</strong>：表示根据默认浏览器及操作系统的设置。</p>
+</li>
+<li><p><strong>dataset</strong>：访问自定义属性（用 data- 作为前缀），是 DOMStringMap 的一个实例，也是一个名值而的映射。</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span> <span class="attr">class</span>=<span class="string">"content"</span> <span class="attr">data-appId</span>=<span class="string">"12345"</span> <span class="attr">data-username</span>=<span class="string">"panju"</span>&gt;</span>Content<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> div = <span class="built_in">document</span>.getElementById(<span class="string">"content"</span>);</div><div class="line">alert(<span class="string">"AppId : "</span> + div.dataset.appId);</div><div class="line">alert(<span class="string">"User Name : "</span> + div.dataset.username);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>innerHTML</strong>：在读模式下，innerHTML 属性返回与调用元素的所有子节点（包括元素、注释和文本节点）对应的 HTML 标记。在写模式下，innerHTML 会根据指定的值创建新的 DOM 树，然后用这个 DMO 树完全替换调用元素原先的所有子节点。</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// index.html</div><div class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">"bodys"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"title"</span> <span class="attr">class</span>=<span class="string">"title content user"</span>&gt;</span>JavaScript Practice<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"></div><div class="line">     <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span> <span class="attr">class</span>=<span class="string">"content"</span> <span class="attr">data-appId</span>=<span class="string">"12345"</span> <span class="attr">data-username</span>=<span class="string">"panju"</span>&gt;</span>Content<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"ui"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"content"</span>&gt;</span>Python<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>JavaScript<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>Java<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div></pre></td></tr></table></figure>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读模式</span></div><div class="line">alert(<span class="built_in">document</span>.body.innerText);</div><div class="line"></div><div class="line"><span class="comment">// 写模式</span></div><div class="line"><span class="built_in">document</span>.body.innerText = <span class="string">"Hello DOM"</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  注：并不是所有元素都支持 <strong>innerHTML</strong> 属性。不支持 <strong>innerHTML</strong> 的元素有：&lt;col&gt;、&lt;colgroup&gt;、&lt;frameset&gt;、&lt;head&gt;、&lt;html&gt;、&lt;style&gt;、&lt;table&gt;、&lt;tbody&gt;、&lt;thead&gt;、&lt;tfoot&gt;、&lt;tr&gt;。</p>
+<ul>
+<li><strong>outerHTML</strong>：与 <strong>innerHTML</strong> 属性类似。区别在于读模式下，<strong>outerHTML</strong> 返回结果包括调用该属性的元素本身。</li>
+</ul>
+<h2 id="四、专有扩展"><a href="#四、专有扩展" class="headerlink" title="四、专有扩展"></a>四、专有扩展</h2><h3 id="1、4-种文档模式"><a href="#1、4-种文档模式" class="headerlink" title="1、4 种文档模式"></a>1、4 种文档模式</h3><ul>
+<li><p><strong>IE5</strong>：以<strong>混杂模式</strong>渲染页面（IE5 的默认模式就是混杂模式）。IE8 及更高版本中的功能都无法使用。</p>
+</li>
+<li><p><strong>IE7</strong>：以 <em>*IE7 标准模式</em>渲染页面。IE8 及更高版本中的功能都无法使用。</p>
+</li>
+<li><p><strong>IE8</strong>：以 <strong>IE8 标准模式</strong>渲染页面。IE9 中的新功能无法使用。</p>
+</li>
+<li><p><strong>IE9</strong>：以 <strong>IE9 标准模式</strong>渲染页面。</p>
+</li>
+</ul>
+<p>要设置浏览器文档类型，可以通过 HTTP 头部信息 <strong>X-UA-Compatible</strong> 或者通过标签 <strong>\<meta></strong> 来设置，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=<span class="string">"X-UA-Compatible"</span> content=<span class="string">"IE=IEVersion"</span> &gt;</div></pre></td></tr></table></figure>
+<p>对于 IE 版本（IEVersion）的取值如下：</p>
+<ul>
+<li><p><strong>Edge</strong>：始终以最新的文档模式来渲染页面。忽略文档类型声明。对于 IE8，始终保持以 IE8 标准模式渲染页面。对于 IE9，则以 IE9 标准模式渲染页面。</p>
+</li>
+<li><p><strong>EmulateIE9</strong>：如果有文档类型声明，则以 IE9 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>EmulateIE8</strong>：如果有文档类型声明，则以 IE8 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>EmulateIE7</strong>：如果有文档类型声明，则以 IE7 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>9</strong>：强制以 IE9 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>8</strong>：强制以 IE8 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>7</strong>：强制以 IE7 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>5</strong>：强制以 IE5 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+</ul>
+<h3 id="2、方法"><a href="#2、方法" class="headerlink" title="2、方法"></a>2、方法</h3><ul>
+<li><p><strong>contains()</strong>：检测被测节点是不是参考节点的后代。接收一个参数：即要检测的后代节点。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> contains = <span class="built_in">document</span>.documentElement.contains(<span class="built_in">document</span>.body);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>compareDocumentPosition()</strong>：确定节点之间的关系，返回一个表示该关系的位掩码。（DOM Level 3）</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">// 模仿 contains() 方法</span></div><div class="line"><span class="keyword">var</span> position = <span class="built_in">document</span>.documentElement.compareDocumentPosition(<span class="built_in">document</span>.body) &amp; <span class="number">16</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>scrollIntoViewIfNeeded(alignCenter)</strong>：只有当前元素在视口中不可见的情况下，才滚动浏览器窗口或容器元素，最终让它可见。参数 alignCenter 设置为 true 表示尽量将元素显示在视口中部（垂直方向）。（Safari 和 Chrome）</p>
+</li>
+<li><p><strong>scrollByLines(lineCount)</strong>：将元素的内容滚动指定的行高，参数 lineCount 可以为正值或者负值。（Safari 和 Chrome）</p>
+</li>
+<li><p><strong>scrollByPages()</strong>：将元素的内容滚动指定的页面高度，具体高度由元素的高度决定。（Safari 和 Chrome）</p>
+</li>
+</ul>
+<h3 id="3、属性"><a href="#3、属性" class="headerlink" title="3、属性"></a>3、属性</h3><ul>
+<li><p><strong>document.documentMode</strong>：检测文档模式</p>
+</li>
+<li><p><strong>children</strong>：只包含元素中同样还是元素的子节点，忽略空格。该属性是 HTMLCollection 的实例。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> length = ui.children.length;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>innerText</strong>：操作元素中包含的所有文本内容，包括子文档树中的文本。在读模式时，它会将子文档树中所有文本拼接起来；在写模式时，会将元素所有子节点删除，并插入包含文本值的文本子节点。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读模式</span></div><div class="line"><span class="keyword">var</span> innerText = <span class="built_in">document</span>.body.innerText;</div><div class="line"></div><div class="line"><span class="comment">// 写模式</span></div><div class="line"><span class="built_in">document</span>.body.innerText = <span class="string">"Hello JavaScript"</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>textContent</strong>：作用与 <strong>innerText</strong> 类似，DOMLevel 3 规定的一个属性。</p>
+</li>
+<li><p><strong>outerText</strong>：作用与 <strong>innerText</strong> 基本类似。区别在于作用范围扩大到调用它的节点。</p>
+</li>
+</ul>
+<h3 id="4、通用函数"><a href="#4、通用函数" class="headerlink" title="4、通用函数"></a>4、通用函数</h3><p>通用 contains() 函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">contains</span>(<span class="params">refNode, otherNode</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> refNode.contains == <span class="string">"function"</span> &amp;&amp; (!client.engine.webkit || client.engine.webkit &gt;= <span class="number">522</span>)) &#123;</div><div class="line">        <span class="keyword">return</span> refNode.contains(otherNode);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> refNode.compareDocumentPosition == <span class="string">"function"</span>) &#123;</div><div class="line">        retrun !!(refNode.compareDocumentPosition(otherNode) &amp; <span class="number">16</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">var</span> node = otherNode.parentNode;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            <span class="keyword">if</span> (node === refNode) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                node = node.parentNode;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">while</span> (node !== <span class="literal">null</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跨浏览器使用属性 <strong>innerText</strong> 还是 <strong>textContent</strong> 兼容函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getInnerText</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> (<span class="keyword">typeof</span> element.textContent == <span class="string">"string"</span> ? element.textContent : element.innerText);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setInnerText</span>(<span class="params">element, text</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> element.textContent == <span class="string">"string"</span>) &#123;</div><div class="line">		element.textContent = text;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		element.innerText = text;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第十一章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;一、选择符-API（Selectors-API）&quot;&gt;&lt;a href=&quot;#一、选择符-API（Selectors-API）&quot; class=&quot;headerlink&quot; title=&quot;一、选择符 API（Selectors API）&quot;&gt;&lt;/a&gt;一、选择符 API（Sele
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
+    
+    
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>第十章 DOM</title>
+    <link href="http://panzeyong.com/2017/08/29/%E7%AC%AC%E5%8D%81%E7%AB%A0-DOM/"/>
+    <id>http://panzeyong.com/2017/08/29/第十章-DOM/</id>
+    <published>2017-08-28T23:26:29.000Z</published>
+    <updated>2017-09-16T00:02:09.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、节点层次"><a href="#一、节点层次" class="headerlink" title="一、节点层次"></a>一、节点层次</h1><p>DOM（文档对象模型）将任何 HTML 或 XML 文档描绘成一个由多层节点构成的结构。节点类型总共有 12 种，每种节点类型分别表示文档中不同的信息及标记。</p>
+<h3 id="1、Node-类型"><a href="#1、Node-类型" class="headerlink" title="1、Node 类型"></a>1、Node 类型</h3><p>在 JavaScript 中，Node 类型实现 Node 接口，并且作为 JavaScript 中所有节点类型的基类，因此所有节点类型都共享着相同的基本属性和方法。除了 IE 之外，在其它所有浏览器中都可以访问到 Node 类型。</p>
+<h4 id="（1）、在-Node-类型中定义-12-个数值常量表示-12-种节点类型，如下："><a href="#（1）、在-Node-类型中定义-12-个数值常量表示-12-种节点类型，如下：" class="headerlink" title="（1）、在 Node 类型中定义 12 个数值常量表示 12 种节点类型，如下："></a>（1）、在 Node 类型中定义 12 个数值常量表示 12 种节点类型，如下：</h4><ul>
+<li><p>Node.ELEMENT_NODE(1)</p>
+</li>
+<li><p>Node.ATTRIBUTE_NODE(2)</p>
+</li>
+<li><p>Node.TEXT_NODE(3)</p>
+</li>
+<li><p>Node.CDATA_SECTION_NODE(4)</p>
+</li>
+<li><p>Node.ENTITY_REFERENCE_NODE(5)</p>
+</li>
+<li><p>Node.ENTITY_NODE(6)</p>
+</li>
+<li><p>Node.PROCESSING_INSTRUCTION_NODE(7)</p>
+</li>
+<li><p>Node.COMMENT_NODE(8)</p>
+</li>
+<li><p>Node.DOCUMENT_NODE(9)</p>
+</li>
+<li><p>Node.DOCUMENT_TYPE_NODE(10)</p>
+</li>
+<li><p>Node.DOCUMENT_FRAGMENT_NODE(11)</p>
+</li>
+<li><p>Node.NOTATION_NODE(12)</p>
+</li>
+</ul>
+<h4 id="（2）、属性"><a href="#（2）、属性" class="headerlink" title="（2）、属性"></a>（2）、属性</h4><ul>
+<li><p><strong>nodeType</strong>：节点类型；</p>
+</li>
+<li><p><strong>nodeName</strong>：节点标签名；</p>
+</li>
+<li><p><strong>nodeValue</strong>：null 值。</p>
+</li>
+<li><p><strong>childNodes</strong>：一个节点可能有 0 个、1 个 或多个 child 节点，包括各种类型节点。保存在 NodeList 对象（NodeList 是一种类数组对象，用于保存一组有序的节点，可以通过位置来访问这些节点。NodeList 对象的独特之处在于，它实际上是基于 DOM 结构动态执行查询的结果，因此 DOM 结构的变化能够自动反映在 NodeList 对象中。）。</p>
+</li>
+<li><p><strong>parentNode</strong>：每个节点的父节点。</p>
+</li>
+<li><p><strong>previousSibling</strong>：childNodes 列表中节点之间的同胞节点。</p>
+</li>
+<li><p><strong>nextSiblign</strong>：childNodes 列表中节点之间的同胞节点。</p>
+</li>
+<li><p><strong>firstChild</strong>：childNodes 列表中第一个节点。</p>
+</li>
+<li><p><strong>lastChild</strong>：childNodes 列表中最后一个节点。</p>
+</li>
+<li><p><strong>ownerDocument</strong>：表示整个文档的文档节点。这种关系表示的是任何节点都属于它所在的文档，任何节点都不能同时存在于两个或更多文档中。</p>
+</li>
+</ul>
+<h4 id="（3）、方法"><a href="#（3）、方法" class="headerlink" title="（3）、方法"></a>（3）、方法</h4><ul>
+<li><p><strong>hasChildNodes()</strong>：当节点包含一或多个子节点时返回 true。</p>
+</li>
+<li><p><strong>appendChild()</strong>：在 childNodes 末尾添加新节点，返回新增的节点。</p>
+</li>
+<li><p><strong>insertBefore()</strong>：在 childNodes 指定位置插入节点，该方法接收两个参数：要插入的节点和作为参照的节点。</p>
+</li>
+<li><p><strong>replaceChild()</strong>：从文档树中移除要替换的节点，并返回该节点，同时要插入的节点占据其位置。该方法接收两个参数：插入的节点和替换的节点。</p>
+</li>
+<li><p><strong>removeChild()</strong>：移除节点。（移除的节点仍然为文档所有，但是在文档中已经没有了自己的位置。）</p>
+</li>
+<li><p><strong>cloneNode()</strong>：创建调用该方法的节点的一个完全相同的副本。接收一个布尔值：true 表示执行深复制，也就是复制整个节点及其整个子节点数；fasle 表示浅复制，即只复制节点本身。所有类型的方法都拥有该方法。（复制后返回的节点副本属于文档所有，但并没有为它指定父节点。）</p>
+</li>
+<li><p><strong>normalize()</strong>：合并相邻文本节点。所有类型的方法都拥有该方法。</p>
+</li>
+</ul>
+<p>注：并不是所有类型的节点都有子节点，如果在不支持子节点调用以上方法，将会导致错误发生，所有在调用方法之前需要进行相应的检测，以免发生错误。</p>
+<h3 id="2、Document-类型"><a href="#2、Document-类型" class="headerlink" title="2、Document 类型"></a>2、Document 类型</h3><p>HTMLDocument 继承 Document，document 对象是 HTMLDocument 的实例，同时也是 window 对象的一个属性。document 对象表示整个 HTML 页面。Document 节点具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>9</strong>；</p>
+</li>
+<li><p>nodeName 的值为 <strong>#document</strong>；</p>
+</li>
+<li><p>nodeValue 的值为 <strong>null</strong>；</p>
+</li>
+<li><p>parentNode 的值为 <strong>null</strong>；</p>
+</li>
+<li><p>ownerDocument 的值为 <strong>null</strong>；</p>
+</li>
+<li><p>其子节点可能是一个 DocumentType（最多一个）、Element（Element）、ProcessingInstrction 或 Comment。</p>
+</li>
+</ul>
+<h4 id="（1）、属性"><a href="#（1）、属性" class="headerlink" title="（1）、属性"></a>（1）、属性</h4><ul>
+<li><p><strong>documentElement</strong>：访问子节点，指向 HTML 页面中 <strong><html></html></strong> 元素。</p>
+</li>
+<li><p><strong>body</strong>：指向 <strong>&lt;body&gt;</strong> 元素。</p>
+</li>
+<li><p><strong>doctype</strong>：访问子节点 <strong>DocumentType</strong> 信息。</p>
+</li>
+<li><p><strong>title</strong>：显示在浏览器窗口的标题栏或者标签页上。</p>
+</li>
+<li><p><strong>URL</strong>：包含页面完整的 URL（即地址栏中显示 URL）。</p>
+</li>
+<li><p><strong>domain</strong>：只包含页面的域名，可设置。</p>
+</li>
+<li><p><strong>referrer</strong>：保存着链接到当前页面的那个页面的 URL。</p>
+</li>
+<li><p><strong>anchors</strong>：包含文档中所有带 <strong>name</strong> 特性的 <strong>&lt;a&gt;</strong> 元素，返回的结果是 HTMLCollection 对象。</p>
+</li>
+<li><p><strong>forms</strong>：包含文档中所有的 <strong>&lt;form&gt;</strong> 元素，返回的结果是 HTMLCollection 对象。</p>
+</li>
+<li><p><strong>images</strong>：包含文档中所有的 <strong>&lt;img&gt;</strong> 元素，返回的结果是 HTMLCollection 对象。</p>
+</li>
+<li><p><strong>links</strong>：包含文档中所有带 <strong>href</strong> 特性的 <strong>&lt;a&gt;</strong> 元素，返回的结果是 HTMLCollection。</p>
+</li>
+<li><p><strong>implementation</strong>：提供检测浏览器相应信息和功能的对象，提供方法 <strong>hasFeature()</strong>。</p>
+</li>
+</ul>
+<h4 id="（2）、方法"><a href="#（2）、方法" class="headerlink" title="（2）、方法"></a>（2）、方法</h4><ul>
+<li><p><strong>getElementById()</strong>：接收一个参数：要取得的元素的 ID。如果找到相应的元素则返回该元素；否则返回 null。</p>
+</li>
+<li><p><strong>getElementsByTagName()</strong>：接收一个参数：元素的标签名。返回零个或多个元素的 NodeList，该方法返回的对象是 <strong>HTMLCollection</strong>，可使用该对象提供的方法 <strong>item(index)</strong> 或 <strong>namedItem(name)</strong> 访问集合中的项。</p>
+</li>
+<li><p><strong>getElementsByName()</strong>：接收一个参数：name 特定。返回带有指定 name 特定的所有元素，即 HTMLCollection 对象。</p>
+</li>
+<li><p><strong>createElement()</strong>：创建新元素，接收一个参数：要创建元素的标签名。</p>
+</li>
+<li><p><strong>createTextNode()</strong>：创建文本节点，接收一个参数：要插入节点中的文本。</p>
+</li>
+<li><p><strong>createDocument()</strong>：创建注释节点。</p>
+</li>
+<li><p><strong>createCDataSection()</strong>：创建 CDATA 区域，只需为其传入节点的内容。</p>
+</li>
+<li><p><strong>createDocumentFragment()</strong>：创建文档片段。</p>
+</li>
+<li><p><strong>createAttribute()</strong>：创建新的特性节点，传入特性的名称。</p>
+</li>
+<li><p><strong>hasFeature</strong>：<strong>implmentation</strong> 对象提供的方法，接收两个参数：要检测的 DOM 功能的名称及版本号。</p>
+</li>
+<li><p><strong>write()</strong>：接收一个参数：写入到输出流的文本，原样写入；可以动态包含外部资源。</p>
+</li>
+<li><p><strong>writeln()</strong>：接收一个参数：写入到输出流的文本，在字符串的末尾添加一个换行符（\n）；可以动态包含外部资源。</p>
+</li>
+<li><p><strong>open()</strong>：打开网页的输出流。</p>
+</li>
+<li><p><strong>close()</strong>：关闭网页的输出流。</p>
+</li>
+</ul>
+<h3 id="3、Element-类型"><a href="#3、Element-类型" class="headerlink" title="3、Element 类型"></a>3、Element 类型</h3><p>Element 类型用于表现 XML 或 HTML 元素，提供了对元素标签名、子节点及特性的访问。Element 节点具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>1</strong>；</p>
+</li>
+<li><p>nodeName 的值为元素的标签名（tagName）；</p>
+</li>
+<li><p>nodeValue 的值为 <strong>null</strong>；</p>
+</li>
+<li><p>parentNode 可能是 <strong>Document</strong> 或 <strong>Element</strong>；</p>
+</li>
+<li><p>其子节点可能是 Element、Text、Comment、ProcessingInstruction、CDATASection 或 EntityReference。</p>
+</li>
+</ul>
+<h4 id="1、元素特性"><a href="#1、元素特性" class="headerlink" title="1、元素特性"></a>1、元素特性</h4><p>HTML 元素由 HTMLElement 类型表示，而 HTMLElement 类型继承 Element 并添加属性，而这些属性成为每个 HTML 元素存在特有标准特性。</p>
+<ul>
+<li><p><strong>id</strong>：元素在文档中的唯一标识符。</p>
+</li>
+<li><p><strong>title</strong>：有关元素的附加说明信息，一般通过工具提示条显示出来。</p>
+</li>
+<li><p><strong>lang</strong>：元素内容的语言代码，很少使用。</p>
+</li>
+<li><p><strong>dir</strong>：语言的方向，值为 “ltr” （左 -&gt; 右）或 “rtr” （右 -&gt; 左）。</p>
+</li>
+<li><p><strong>className</strong>：与元素的 class 特性对应，即为元素指定的 CSS 类。</p>
+</li>
+</ul>
+<h4 id="2、属性"><a href="#2、属性" class="headerlink" title="2、属性"></a>2、属性</h4><ul>
+<li><p><strong>attributes</strong>：Element 类型是使用 <strong>attributes</strong> 属性的唯一一个 DOM 节点类型。<strong>attributes</strong> 属性返回的是 <strong>NamedNodeMap</strong> 集合，因为元素的每一个特性都由一个 <strong>Attr</strong> 节点表示，每个节点都保存在 <strong>NamedNodeMap</strong> 对象中。NamedNodeMap 对象提供以下方法：</p>
+<ul>
+<li><p><strong>getNamedItem(name)</strong>：返回 nodeName 属性等于 name 的节点；</p>
+</li>
+<li><p><strong>removeNamedItem(name)</strong>：从列表中移除 nodeName 属性等于 name 的节点；</p>
+</li>
+<li><p><strong>setNamedItem(node)</strong>：向列表中添加节点，以节点的 nodeName 属性为索引；</p>
+</li>
+<li><p><strong>item(pos)</strong>：返回位于数字 pos 位置处的节点。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>specified</strong>：true 表示设置相应特性；否则相反。</p>
+</li>
+</ul>
+<h4 id="3、元素方法"><a href="#3、元素方法" class="headerlink" title="3、元素方法"></a>3、元素方法</h4><ul>
+<li><p><strong>getAttribute()</strong>：获取元素标准特性，传入参数特性名；也可以获取自定义特性，自定义特性应该加上 <strong>data-</strong> 前缀以便验证。注意特性的名称是不区分大小写的。</p>
+</li>
+<li><p><strong>setAttribute()</strong>：设置特性。接收两个参数：要设置的特性名和值。</p>
+</li>
+<li><p><strong>removeAttribute()</strong>：彻底删除元素的特性。该方法不仅会清除特性的值，而且也会从元素中完全删除特性。</p>
+</li>
+</ul>
+<h4 id="4、要点"><a href="#4、要点" class="headerlink" title="4、要点"></a>4、要点</h4><ul>
+<li><p>任何元素的所有特性，也都可以通过 DOM 元素本身的属性来访问；只有公认的（标准）特性才会以属性的形式添加到 DOM 对象中，而自定义属性则不会，无法通过元素本身的属性来访问（IE 除外）。比如：<strong>div.id</strong> </p>
+</li>
+<li><p>调用元素方法 <strong>getAttribute()</strong> 获取特性的返回值与元素本身的属性访问的返回值不同的两类特殊特性：</p>
+<ul>
+<li><p>第一类特性是 <strong>style</strong>，用于通过 CSS 为元素指定样式。<strong>getAttribute()</strong> 访问的特性的返回值是 CSS 文本；而通过属性访问则返回一个对象。</p>
+</li>
+<li><p>第二类特性是 <strong>onClick</strong>，表示事件处理程序。<strong>getAttribute()</strong> 访问时返回相应代码的字符串；属性访问则返回 JavaScript 函数。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3、Text-类型"><a href="#3、Text-类型" class="headerlink" title="3、Text 类型"></a>3、Text 类型</h3><p>文本节点由 Text 类型表示，包含的是可以照字面解释的纯文本内容。纯文本中可以包含转义后的 HTML 字符，但不能包含 HTML 代码。Text 节点具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>3</strong>；</p>
+</li>
+<li><p>nodeName 的值为 <strong>#text</strong>；</p>
+</li>
+<li><p>nodeValue 的值为节点所包含的文本；（data）</p>
+</li>
+<li><p>parentNode 是一个 Element；</p>
+</li>
+<li><p>不支持子节点。</p>
+</li>
+</ul>
+<h4 id="元素方法"><a href="#元素方法" class="headerlink" title="元素方法"></a>元素方法</h4><ul>
+<li><p><strong>appendData(text)</strong>：将 text 添加到节点的末尾；</p>
+</li>
+<li><p><strong>deleteData(offset, count)</strong>：从 offset 指定的位置开始删除 count 个字符。</p>
+</li>
+<li><p><strong>insertData(offset, text)</strong>：在 offset 指定的位置插入 text。</p>
+</li>
+<li><p><strong>replaceData(offset, count, text)</strong>：用 text 替换从 offset 指定的位置开始到 offset + count 为止处的文本。</p>
+</li>
+<li><p><strong>splitText(offset)</strong>：从 offset 指定的位置将当前文本节点分成两个文本节点。该方法返回新文本节点。</p>
+</li>
+<li><p><strong>substringData(offset, count)</strong>：提取从 offset 指定的位置开始到 offset+count 为止处的字符串。</p>
+</li>
+</ul>
+<h3 id="5、Comment-类型"><a href="#5、Comment-类型" class="headerlink" title="5、Comment 类型"></a>5、Comment 类型</h3><p>在 DOM 中，注释是通过 Comment 类型来表示。Comment 类型 与 Text 类型继承相同的基类，因此 Comment 类型具有 <strong>splitText()</strong> 之外的所有字符串操作方法。Comment 节点具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>8</strong>；</p>
+</li>
+<li><p>nodeName 的值为 <strong>#comment</strong>；</p>
+</li>
+<li><p>nodeValue 的值是注释的内容；</p>
+</li>
+<li><p>parentNode 可能是 Document 或 Element；</p>
+</li>
+<li><p>不支持子节点。</p>
+</li>
+</ul>
+<h3 id="6、CDATASection-类型"><a href="#6、CDATASection-类型" class="headerlink" title="6、CDATASection 类型"></a>6、CDATASection 类型</h3><p>CDATASection 类型只针对基于 XML 的文档，表示的是 CDATA 区域。CDATASection 类型继承自 Text 类型，因此具有 <strong>splitText()</strong> 之外的所有字符串操作方法。CDATASection 节点具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>4</strong>；</p>
+</li>
+<li><p>nodeName 的值为 <strong>“#cdata-section”</strong>；</p>
+</li>
+<li><p>nodeValue 的值是 CDATA 区域中的内容；</p>
+</li>
+<li><p>parentNode 可能是 Document 或 Element；</p>
+</li>
+<li><p>不支持子节点。</p>
+</li>
+</ul>
+<h3 id="7、DocumentType-类型"><a href="#7、DocumentType-类型" class="headerlink" title="7、DocumentType 类型"></a>7、DocumentType 类型</h3><p>DocumentType 包含着与文档的 doctype 有关的所有信息，它具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>10</strong>；</p>
+</li>
+<li><p>nodeName 的值为 <strong>doctype</strong> 名称；</p>
+</li>
+<li><p>nodeValue 的值为 null；</p>
+</li>
+<li><p>parentNode 是 Document；</p>
+</li>
+<li><p>不支持子节点。</p>
+</li>
+</ul>
+<h4 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h4><ul>
+<li><p><strong>name</strong>：表示文档类型的名称；</p>
+</li>
+<li><p><strong>entities</strong>：由文档类型描述的实体的 NamedNodeMap 对象；</p>
+</li>
+<li><p><strong>notations</strong>：由文档类型描述的符号的 NamedNodeMap 对象。</p>
+</li>
+</ul>
+<p>在 DOM 1 级中，DocumentType 对象不支持动态创建，只能通过解析文档代码的方式来创建。</p>
+<h3 id="8、DocumentFragment-类型"><a href="#8、DocumentFragment-类型" class="headerlink" title="8、DocumentFragment 类型"></a>8、DocumentFragment 类型</h3><p>在所有节点类型中，只有 DocumentFragment 类型在文档中没有对应的标记。DocumentFragment 可以比喻为一个 “仓库”，用来保存将来可能会添加到问文档中节点，当其本身是不被添加到文档中去的。DocumentFragment 节点具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>11</strong>；</p>
+</li>
+<li><p>nodeName 的值为 <strong>“#document-fragment”</strong>；</p>
+</li>
+<li><p>nodeValue 的值为 null；</p>
+</li>
+<li><p>parentNode 的值为 null；</p>
+</li>
+<li><p>子节点可以是 Element、ProcessingInstruction、Comment、Text、CDATASection 或 EntityReference。</p>
+</li>
+</ul>
+<h3 id="9、Attr-类型"><a href="#9、Attr-类型" class="headerlink" title="9、Attr 类型"></a>9、Attr 类型</h3><p>在 DOM 中，Attr 类型用于表示元素特性，而特性就存在于元素 <strong>attributes</strong> 属性中的节点。特性节点具有以下特征：</p>
+<ul>
+<li><p>nodeType 的值为 <strong>2</strong>；</p>
+</li>
+<li><p>nodeName 的值是特性的名称；</p>
+</li>
+<li><p>nodeValue 的值是特性的值；</p>
+</li>
+<li><p>parentNode 的值为 null；</p>
+</li>
+<li><p>在 HTML 中不支持子节点；</p>
+</li>
+<li><p>在 XML 中子节点可以是 Text 或 EntityReference。</p>
+</li>
+</ul>
+<h4 id="属性-1"><a href="#属性-1" class="headerlink" title="属性"></a>属性</h4><ul>
+<li><p><strong>name</strong>：特性名称；</p>
+</li>
+<li><p><strong>value</strong>：特性的值；</p>
+</li>
+<li><p><strong>specified</strong>：用来表示特性是否被指定，true 表示指定；反之相反。</p>
+</li>
+</ul>
+<h1 id="二、-DOM-操作技术"><a href="#二、-DOM-操作技术" class="headerlink" title="二、 DOM 操作技术"></a>二、 DOM 操作技术</h1><h3 id="1、动态脚本"><a href="#1、动态脚本" class="headerlink" title="1、动态脚本"></a>1、动态脚本</h3><p>向 HTML 页面插入 JavaScript 脚本的方式有两种：通过 <strong>src</strong> 特性包含外部文件和直接通过 <strong>&lt;script&gt;</strong> 元素包含代码。</p>
+<p>这里所说的动态脚本是指在页面加载时不存在，但是将来某一时刻通过修改 DOM 动态添加脚本。示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadScriptString</span>(<span class="params">code</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">"script"</span>);</div><div class="line">	script.type = <span class="string">"text/javascript"</span>;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		script.appendChild(<span class="built_in">document</span>.createTextNode(code));</div><div class="line">	&#125; <span class="keyword">catch</span>(ex) &#123;</div><div class="line">		script.text = code;        <span class="comment">// 适配 IE 浏览器</span></div><div class="line">	&#125;</div><div class="line">	<span class="built_in">document</span>.body.appendChild(script);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注：IE 会将 <strong>&lt;script&gt;</strong> 元素认为是一个特殊元素，不允许 DOM 访问其子节点。但是可以通过 <strong>&lt;script&gt;</strong> 元素 <strong>text</strong> 指定 JavaScript 代码。</p>
+<h3 id="2、动态样式"><a href="#2、动态样式" class="headerlink" title="2、动态样式"></a>2、动态样式</h3><p>HTML 页面包含 CSS 样式的方式有两种：通过 <strong>&lt;link&gt;</strong> 元素包含外部文件和直接通过 <strong>&lt;style&gt;</strong> 元素指定嵌入的样式，</p>
+<p>这里所说的动态样式是指在页面刚加载时不存在的样式；而是在页面加载完成后动态添加到页面中。示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">loadStyleString</span>(<span class="params">css</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> style = <span class="built_in">document</span>.createElement(<span class="string">"style"</span>);</div><div class="line">    style.type = <span class="string">"text/css"</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        style.appendChild(<span class="built_in">document</span>.createTextNode(css));</div><div class="line">    &#125; <span class="keyword">catch</span> (ex) &#123;</div><div class="line">        style.styleSheet.cssText = css;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> head = <span class="built_in">document</span>.getElementsByTagName(<span class="string">"head"</span>)[<span class="number">0</span>];</div><div class="line">     head.appendChild(style);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注：IE 会将 <strong>&lt;style&gt;</strong> 元素认为是一个特殊元素，不允许 DOM 访问其子节点。但是可以访问元素 <strong>&lt;style&gt;</strong> 的属性 <strong>styleSheet</strong>，同时该属性又有 <strong>cssText</strong> 属性，可以接受 CSS 代码。</p>
+<h3 id="3、操作表格"><a href="#3、操作表格" class="headerlink" title="3、操作表格"></a>3、操作表格</h3><p><strong>&lt;table&gt;</strong> 元素在 HTML 中相对复杂些，要创建一个表格，会涉及到表格头、表格行、单元格等。HTML DOM 除了提供对应标签外，还为相应的标签提供属性和方法。</p>
+<h4 id="（1）-lt-table-gt-元素添加的属性和方法"><a href="#（1）-lt-table-gt-元素添加的属性和方法" class="headerlink" title="（1）&lt;table&gt; 元素添加的属性和方法"></a>（1）<strong>&lt;table&gt;</strong> 元素添加的属性和方法</h4><ul>
+<li><p><strong>caption</strong>：保存着对 <strong>&lt;caption&gt;</strong> 元素（如果有）的指针。</p>
+</li>
+<li><p><strong>tBodies</strong>：是一个 <strong>&lt;tbody&gt;</strong> 元素的 HTMLCollection。</p>
+</li>
+<li><p><strong>tFoot</strong>：保存着对 <strong>&lt;tfoot&gt;</strong> 元素（如果有）的指针。</p>
+</li>
+<li><p><strong>tHead</strong>：保存着对 <strong>&lt;thead&gt;</strong> 元素（如果有）的指针。</p>
+</li>
+<li><p><strong>rows</strong>：是一个表格中所有行的 HTMLCollection。</p>
+</li>
+<li><p><strong>createTHead()</strong>：创建 <strong>&lt;thead&gt;</strong> 元素，将其放到表格中，返回引用。</p>
+</li>
+<li><p><strong>createTFoot()</strong>：创建 <strong>&lt;tfoot&gt;</strong> 元素，将其放到表格中，返回引用。</p>
+</li>
+<li><p><strong>createCaption()</strong>：创建 <strong>&lt;caption&gt;</strong> 元素，将其放到表格中，返回引用。</p>
+</li>
+<li><p><strong>deleteTHead()</strong>：删除 <strong>&lt;thead&gt;</strong> 元素。</p>
+</li>
+<li><p><strong>deleteTFoot()</strong>：删除 <strong>&lt;tfoot&gt;</strong> 元素。</p>
+</li>
+<li><p><strong>deleteCaption()</strong>：删除 <strong>&lt;caption&gt;</strong> 元素。</p>
+</li>
+<li><p><strong>deleteRow(pos)</strong>：删除指定位置的行。</p>
+</li>
+<li><p><strong>insertRow(pos)</strong>：向 rows 集合中的指定位置插入一行。</p>
+</li>
+</ul>
+<h4 id="（2）-lt-tbody-gt-元素添加的属性和方法"><a href="#（2）-lt-tbody-gt-元素添加的属性和方法" class="headerlink" title="（2）&lt;tbody&gt; 元素添加的属性和方法"></a>（2）<strong>&lt;tbody&gt;</strong> 元素添加的属性和方法</h4><ul>
+<li><p><strong>rows</strong>：保存着 <strong>&lt;tbody&gt;</strong> 元素中行的 HTMLCollection。</p>
+</li>
+<li><p><strong>deleteRow(pos)</strong>：删除指定位置。</p>
+</li>
+<li><p><strong>insertRow(pos)</strong>：向 rows 集合中的指定位置插入一行，返回对新插入行的引用。</p>
+</li>
+</ul>
+<h4 id="（3）-lt-tr-gt-元素添加的属性和方法"><a href="#（3）-lt-tr-gt-元素添加的属性和方法" class="headerlink" title="（3）&lt;tr&gt; 元素添加的属性和方法"></a>（3）<strong>&lt;tr&gt;</strong> 元素添加的属性和方法</h4><ul>
+<li><p><strong>cells</strong>：保存着对 <strong>&lt;tr&gt;</strong> 元素中单元格的 HTMLCollection。</p>
+</li>
+<li><p><strong>deleteCell(pos)</strong>：删除指定位置的单元格。</p>
+</li>
+<li><p><strong>insertCell(pos)</strong>：向 cells 集合中的指定位置插入一个单元格，返回对新插入单元格的引用。</p>
+</li>
+</ul>
+<p>示例代码如下：</p>
+<pre><code class="javascript"><span class="comment">// 创建表格 table</span>
+    <span class="keyword">var</span> table = <span class="built_in">document</span>.createElement(<span class="string">"table"</span>);
+    table.border = <span class="number">1</span>;
+    table.width = <span class="string">"100%"</span>;
+
+    <span class="comment">// 创建 tbody</span>
+    <span class="keyword">var</span> tbody = <span class="built_in">document</span>.createElement(<span class="string">"tbody"</span>);
+    table.appendChild(tbody);
+
+    <span class="comment">// 创建第一行</span>
+    tbody.insertRow(<span class="number">0</span>);
+    tbody.rows[<span class="number">0</span>].insertCell(<span class="number">0</span>);
+    tbody.rows[<span class="number">0</span>].cells[<span class="number">0</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">"Cell 1,1"</span>));
+    tbody.rows[<span class="number">0</span>].insertCell(<span class="number">1</span>);
+    tbody.rows[<span class="number">0</span>].cells[<span class="number">1</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">"Cell 2,1"</span>));
+
+    <span class="comment">// 创建第二行</span>
+    tbody.insertRow(<span class="number">1</span>);
+    tbody.rows[<span class="number">1</span>].insertCell(<span class="number">0</span>);
+    tbody.rows[<span class="number">1</span>].cells[<span class="number">0</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">"Cell 1,2"</span>));
+    tbody.rows[<span class="number">1</span>].insertCell(<span class="number">1</span>);
+    tbody.rows[<span class="number">1</span>].cells[<span class="number">1</span>].appendChild(<span class="built_in">document</span>.createTextNode(<span class="string">"Cell 2,2"</span>));
+
+    <span class="built_in">document</span>.body.appendChild(table);
+</code></pre>
+<h4 id="4-NodeList"><a href="#4-NodeList" class="headerlink" title="(4) NodeList"></a>(4) NodeList</h4><p>NodeList、NamedNodeMap 和 HTMLCollection 这三个集合是 “动态的”，即每当文档结构发生变化时（比如添加元素之类），集合都会得到更新。</p>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第十章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、节点层次&quot;&gt;&lt;a href=&quot;#一、节点层次&quot; class=&quot;headerlink&quot; title=&quot;一、节点层次&quot;&gt;&lt;/a&gt;一、节点层次&lt;/h1&gt;&lt;p&gt;DOM（文档对象模型）将任何 HTML 或 XML 文档描绘成一个由多层节点构成的结构。节点类型总共有 12
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
+    
+    
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Kotlin 学习笔记（一）：开发环境搭建</title>
-    <link href="https://panzeyong.github.io/2017/08/19/Kotlin-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
-    <id>https://panzeyong.github.io/2017/08/19/Kotlin-开发环境搭建/</id>
+    <link href="http://panzeyong.com/2017/08/19/Kotlin-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    <id>http://panzeyong.com/2017/08/19/Kotlin-开发环境搭建/</id>
     <published>2017-08-19T08:11:20.000Z</published>
     <updated>2017-08-19T08:22:48.000Z</updated>
     
@@ -88,17 +703,17 @@
     
     </summary>
     
-      <category term="Kotlin" scheme="https://panzeyong.github.io/categories/Kotlin/"/>
+      <category term="Kotlin" scheme="http://panzeyong.com/categories/Kotlin/"/>
     
     
-      <category term="Kotlin 学习笔记" scheme="https://panzeyong.github.io/tags/Kotlin-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="Kotlin 学习笔记" scheme="http://panzeyong.com/tags/Kotlin-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>第九章 客户端检测</title>
-    <link href="https://panzeyong.github.io/2017/08/13/%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%A3%80%E6%B5%8B/"/>
-    <id>https://panzeyong.github.io/2017/08/13/第九章-客户端检测/</id>
+    <link href="http://panzeyong.com/2017/08/13/%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%A3%80%E6%B5%8B/"/>
+    <id>http://panzeyong.com/2017/08/13/第九章-客户端检测/</id>
     <published>2017-08-13T09:23:34.000Z</published>
     <updated>2017-08-13T11:04:38.000Z</updated>
     
@@ -135,17 +750,17 @@
     
     </summary>
     
-      <category term="JavaScript" scheme="https://panzeyong.github.io/categories/JavaScript/"/>
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
     
     
-      <category term="《JavaScript 高级程序设计》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>第八章 BOM</title>
-    <link href="https://panzeyong.github.io/2017/07/25/%E7%AC%AC%E5%85%AB%E7%AB%A0-BOM/"/>
-    <id>https://panzeyong.github.io/2017/07/25/第八章-BOM/</id>
+    <link href="http://panzeyong.com/2017/07/25/%E7%AC%AC%E5%85%AB%E7%AB%A0-BOM/"/>
+    <id>http://panzeyong.com/2017/07/25/第八章-BOM/</id>
     <published>2017-07-24T23:42:23.000Z</published>
     <updated>2017-08-13T11:09:18.000Z</updated>
     
@@ -267,17 +882,17 @@
     
     </summary>
     
-      <category term="JavaScript" scheme="https://panzeyong.github.io/categories/JavaScript/"/>
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
     
     
-      <category term="《JavaScript 高级程序设计》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>第七章 函数表达式</title>
-    <link href="https://panzeyong.github.io/2017/07/10/%E7%AC%AC%E4%B8%83%E7%AB%A0-%E5%87%BD%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
-    <id>https://panzeyong.github.io/2017/07/10/第七章-函数表达式/</id>
+    <link href="http://panzeyong.com/2017/07/10/%E7%AC%AC%E4%B8%83%E7%AB%A0-%E5%87%BD%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    <id>http://panzeyong.com/2017/07/10/第七章-函数表达式/</id>
     <published>2017-07-09T23:11:07.000Z</published>
     <updated>2017-07-23T23:39:20.000Z</updated>
     
@@ -336,17 +951,17 @@
     
     </summary>
     
-      <category term="JavaScript" scheme="https://panzeyong.github.io/categories/JavaScript/"/>
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
     
     
-      <category term="《JavaScript 高级程序设计》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>Canvas 用法一：绘制图形</title>
-    <link href="https://panzeyong.github.io/2017/07/09/Canvas-%E7%94%A8%E6%B3%95%E4%B8%80-%E2%80%94%E2%80%94%E2%80%94%E2%80%94-%E7%BB%98%E5%88%B6%E5%9B%BE%E5%BD%A2/"/>
-    <id>https://panzeyong.github.io/2017/07/09/Canvas-用法一-————-绘制图形/</id>
+    <link href="http://panzeyong.com/2017/07/09/Canvas-%E7%94%A8%E6%B3%95%E4%B8%80-%E2%80%94%E2%80%94%E2%80%94%E2%80%94-%E7%BB%98%E5%88%B6%E5%9B%BE%E5%BD%A2/"/>
+    <id>http://panzeyong.com/2017/07/09/Canvas-用法一-————-绘制图形/</id>
     <published>2017-07-09T04:19:11.000Z</published>
     <updated>2017-07-13T09:47:09.000Z</updated>
     
@@ -445,17 +1060,17 @@
     
     </summary>
     
-      <category term="Android" scheme="https://panzeyong.github.io/categories/Android/"/>
+      <category term="Android" scheme="http://panzeyong.com/categories/Android/"/>
     
     
-      <category term="自定义 View" scheme="https://panzeyong.github.io/tags/%E8%87%AA%E5%AE%9A%E4%B9%89-View/"/>
+      <category term="自定义 View" scheme="http://panzeyong.com/tags/%E8%87%AA%E5%AE%9A%E4%B9%89-View/"/>
     
   </entry>
   
   <entry>
     <title>第 六 章 面向对象的程序设计</title>
-    <link href="https://panzeyong.github.io/2017/06/26/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/"/>
-    <id>https://panzeyong.github.io/2017/06/26/第六章-面向对象的程序设计/</id>
+    <link href="http://panzeyong.com/2017/06/26/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/"/>
+    <id>http://panzeyong.com/2017/06/26/第六章-面向对象的程序设计/</id>
     <published>2017-06-25T23:56:20.000Z</published>
     <updated>2017-07-23T15:07:21.000Z</updated>
     
@@ -633,17 +1248,17 @@
     
     </summary>
     
-      <category term="JavaScript" scheme="https://panzeyong.github.io/categories/JavaScript/"/>
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
     
     
-      <category term="《JavaScript 高级程序设计》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>Picasso 用法及源码解析</title>
-    <link href="https://panzeyong.github.io/2017/06/07/Picasso-%E7%94%A8%E6%B3%95%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>https://panzeyong.github.io/2017/06/07/Picasso-用法及源码解析/</id>
+    <link href="http://panzeyong.com/2017/06/07/Picasso-%E7%94%A8%E6%B3%95%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    <id>http://panzeyong.com/2017/06/07/Picasso-用法及源码解析/</id>
     <published>2017-06-06T23:47:21.000Z</published>
     <updated>2017-06-19T15:22:12.000Z</updated>
     
@@ -891,17 +1506,17 @@
     
     </summary>
     
-      <category term="Android" scheme="https://panzeyong.github.io/categories/Android/"/>
+      <category term="Android" scheme="http://panzeyong.com/categories/Android/"/>
     
     
-      <category term="优秀开源框架" scheme="https://panzeyong.github.io/tags/%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
+      <category term="优秀开源框架" scheme="http://panzeyong.com/tags/%E4%BC%98%E7%A7%80%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/"/>
     
   </entry>
   
   <entry>
     <title>JobScheduler 用法</title>
-    <link href="https://panzeyong.github.io/2017/05/21/JobScheduler-%E7%94%A8%E6%B3%95/"/>
-    <id>https://panzeyong.github.io/2017/05/21/JobScheduler-用法/</id>
+    <link href="http://panzeyong.com/2017/05/21/JobScheduler-%E7%94%A8%E6%B3%95/"/>
+    <id>http://panzeyong.com/2017/05/21/JobScheduler-用法/</id>
     <published>2017-05-21T04:28:37.000Z</published>
     <updated>2017-06-19T14:49:53.000Z</updated>
     
@@ -1082,19 +1697,19 @@
     
     </summary>
     
-      <category term="Android" scheme="https://panzeyong.github.io/categories/Android/"/>
+      <category term="Android" scheme="http://panzeyong.com/categories/Android/"/>
     
     
-      <category term="性能优化" scheme="https://panzeyong.github.io/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+      <category term="性能优化" scheme="http://panzeyong.com/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
     
   </entry>
   
   <entry>
     <title>第二章 在 HTML 中使用 JavaScript</title>
-    <link href="https://panzeyong.github.io/2017/05/04/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%9C%A8-HTML-%E4%B8%AD%E4%BD%BF%E7%94%A8-JavaScript/"/>
-    <id>https://panzeyong.github.io/2017/05/04/第二章-在-HTML-中使用-JavaScript/</id>
+    <link href="http://panzeyong.com/2017/05/04/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%9C%A8-HTML-%E4%B8%AD%E4%BD%BF%E7%94%A8-JavaScript/"/>
+    <id>http://panzeyong.com/2017/05/04/第二章-在-HTML-中使用-JavaScript/</id>
     <published>2017-05-03T23:40:59.000Z</published>
-    <updated>2017-06-19T15:25:28.000Z</updated>
+    <updated>2017-09-15T23:52:31.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>script：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：</p>
 <ul>
@@ -1137,17 +1752,17 @@
     
     </summary>
     
-      <category term="JavaScript" scheme="https://panzeyong.github.io/categories/JavaScript/"/>
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
     
     
-      <category term="JavaScript 高级程序设计》学习笔记" scheme="https://panzeyong.github.io/tags/JavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>AsnycTask 用法及源码解析</title>
-    <link href="https://panzeyong.github.io/2017/05/01/AsnycTask-%E7%94%A8%E6%B3%95%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>https://panzeyong.github.io/2017/05/01/AsnycTask-用法及源码解析/</id>
+    <link href="http://panzeyong.com/2017/05/01/AsnycTask-%E7%94%A8%E6%B3%95%E5%8F%8A%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    <id>http://panzeyong.com/2017/05/01/AsnycTask-用法及源码解析/</id>
     <published>2017-05-01T09:49:39.000Z</published>
     <updated>2017-06-19T14:44:13.000Z</updated>
     
@@ -1246,17 +1861,17 @@
     
     </summary>
     
-      <category term="Android" scheme="https://panzeyong.github.io/categories/Android/"/>
+      <category term="Android" scheme="http://panzeyong.com/categories/Android/"/>
     
     
-      <category term="《Android 开发艺术探索》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AAndroid-%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="《Android 开发艺术探索》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AAndroid-%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>Python 学习笔记：字符串</title>
-    <link href="https://panzeyong.github.io/2017/04/17/Python-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
-    <id>https://panzeyong.github.io/2017/04/17/Python-学习笔记：字符串/</id>
+    <link href="http://panzeyong.com/2017/04/17/Python-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
+    <id>http://panzeyong.com/2017/04/17/Python-学习笔记：字符串/</id>
     <published>2017-04-17T14:27:28.000Z</published>
     <updated>2017-06-19T15:22:47.000Z</updated>
     
@@ -1367,17 +1982,17 @@
     
     </summary>
     
-      <category term="Python" scheme="https://panzeyong.github.io/categories/Python/"/>
+      <category term="Python" scheme="http://panzeyong.com/categories/Python/"/>
     
     
-      <category term="学习笔记" scheme="https://panzeyong.github.io/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="学习笔记" scheme="http://panzeyong.com/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
   <entry>
     <title>第一章 Activity 的生命周期和启动模式</title>
-    <link href="https://panzeyong.github.io/2017/03/26/%E7%AC%AC%E4%B8%80%E7%AB%A0-Activity-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F/"/>
-    <id>https://panzeyong.github.io/2017/03/26/第一章-Activity-的生命周期和启动模式/</id>
+    <link href="http://panzeyong.com/2017/03/26/%E7%AC%AC%E4%B8%80%E7%AB%A0-Activity-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://panzeyong.com/2017/03/26/第一章-Activity-的生命周期和启动模式/</id>
     <published>2017-03-26T08:41:15.000Z</published>
     <updated>2017-06-19T14:43:39.000Z</updated>
     
@@ -1564,10 +2179,10 @@
     
     </summary>
     
-      <category term="Android" scheme="https://panzeyong.github.io/categories/Android/"/>
+      <category term="Android" scheme="http://panzeyong.com/categories/Android/"/>
     
     
-      <category term="《Android 开发艺术探索》学习笔记" scheme="https://panzeyong.github.io/tags/%E3%80%8AAndroid-%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <category term="《Android 开发艺术探索》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AAndroid-%E5%BC%80%E5%8F%91%E8%89%BA%E6%9C%AF%E6%8E%A2%E7%B4%A2%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   
