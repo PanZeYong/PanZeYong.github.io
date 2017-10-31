@@ -1,1 +1,1 @@
-http://panzeyong.com/2017/09/15/第十一章-DOM-扩展/
+http://panzeyong.com/2017/10/17/第十二章DOM2-和-DOM3/
