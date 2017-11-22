@@ -1,1 +1,1 @@
-http://panzeyong.com/2017/10/17/第十二章DOM2-和-DOM3/
+http://panzeyong.com/2017/11/07/Java-集合框架：ArrayList/

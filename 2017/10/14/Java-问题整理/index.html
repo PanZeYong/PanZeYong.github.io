@@ -109,7 +109,7 @@
 十进制 +10，转换成二进制是 00001010；
 如果是 -10，转换成二进制则是 10001010。
 真值：由于符">
-<meta property="og:updated_time" content="2017-10-14T09:25:07.000Z">
+<meta property="og:updated_time" content="2017-11-20T00:02:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 问题整理">
 <meta name="twitter:description" content="一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？要解决这个问题，必须先来弄清楚几个概念：机器数、真值、原码、反码和补码。
@@ -427,6 +427,39 @@
 </li>
 </ul>
 <p>注：本文主要是记录在复习 Java 知识点时所想到或遇到的问题，持续更新中。</p>
+<h1 id="二、Java-中-与-equals-有何区别？"><a href="#二、Java-中-与-equals-有何区别？" class="headerlink" title="二、Java 中 == 与 equals 有何区别？"></a>二、Java 中 == 与 equals 有何区别？</h1><p><strong>==</strong> 是二元操作符，用于比较两个对象的<strong>内存地址</strong>是否相同，如果两个对象的内存地址相同的话，则返回 true；否则返回 false。基本数据类型（int、short、long、char、float、double、boolean、byte）和 复合数据类型。以下通过例子进一步说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EqualsOperator</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</div><div class="line">        String s1 = <span class="string">"Hello World"</span>;</div><div class="line">        String s2 = <span class="string">"Hello World"</span>;        </div><div class="line">        String s3 = <span class="keyword">new</span> String(<span class="string">"Hello World"</span>);</div><div class="line">        </div><div class="line">        System.out.println(s1 == s2);</div><div class="line">        System.out.println(s1 == s3);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span></div><div class="line"><span class="keyword">false</span></div></pre></td></tr></table></figure>
+<p><strong>equals()</strong> 是 Object 类中方法，默认实现是比较两个对象的内存地址，与 <strong>==</strong> 操作符的作用是一样。不管是 Java 提供的类，还是自己自定义的类，默认继承 Object，如果没有对 <strong>equals()</strong> 方法进行重写时，这时 <strong>equals()</strong> 的作用与操作符 <strong>==</strong> 是一样的；但是 Object 的子类大部分都会根据自己的需求对 <strong>equals()</strong> 方法进行重写，既可以比较两个对象的内存地址，也可以比较两个对象所包含的内容，比如 String、Integer 等。</p>
+<p><strong>equals()</strong> 默认实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很明显可以看出，默认实现是比较两个对象的内存地址。官方文档也给出该方法的具体描述：</p>
+<blockquote>
+<p>equals 方法在非 null 对象引用上实现等价关系：</p>
+<ul>
+<li><p>自反性：对于任何非空引用值 x，x.equals(x) 应该返回 true。</p>
+</li>
+<li><p>对称性：对于任何非空引用值 x 和 y，当且仅当 y.equals(x) 返回 true 时，x.equals(y) 才返回 true。</p>
+</li>
+<li><p>传递性：对于任何非空引用值 x、y 和 z，如果 x.equals(y) 返回 true 并且 y.equals(z) 也返回 true 时，那么 x.equals(z) 返回 true。</p>
+</li>
+<li><p>一致性：对于任何非空引用值 x 和 y，如果对象 equals 对象上比较的信息没有被修改，那么多次调用 x.equals(y) 一致返回 true 或者 一致 返回 false。</p>
+</li>
+<li><p>对于任何非空引用值 x，x.equals(null) 应该返回 false。</p>
+</li>
+</ul>
+<p>Object 类的 equals 方法实现对象上最可能的等价关系;也就是说，对于任何非 null 的引用值 x 和 y，当且仅当 x 和 y 引用同一个对象（x == y 的值为 true）时，此方法返回 true。</p>
+<p>注意：无论什么时候重写此方法，都必须重写 hasCode() 方法，以维护 hasCode() 方法一般的约定，该方法声明相等的对象必须具有相同的哈希码。</p>
+</blockquote>
+<p>那么来看下 String 类是如何重写 equals() 方法的，具体源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</div><div class="line">        String anotherString = (String)anObject;</div><div class="line">        <span class="keyword">int</span> n = value.length;</div><div class="line">        <span class="keyword">if</span> (n == anotherString.value.length) &#123;</div><div class="line">            <span class="keyword">char</span> v1[] = value;</div><div class="line">            <span class="keyword">char</span> v2[] = anotherString.value;</div><div class="line">            <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">            <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (v1[i] != v2[i])</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">                i++;</div><div class="line">            &#125;</div><div class="line">                </div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 2 ~ 4 行代码判断两个对象的内存地址是否相同，相同的话返回则返回 true；不同的话执行下面语句。第 5 ~ 20 行代码判断两个对象所包含的内容是否相同，相同的话则返回 true；否则返回 false。当以上两个条件都不满足时，则返回 false。</p>
+<p>下面通过例子加深对该知识点的理解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EqualsMethos</span> </span>&#123;</div><div class="line">    Integer n1 = <span class="keyword">new</span> Integer(<span class="number">47</span>);</div><div class="line">    Integer n2 = <span class="keyword">new</span> Integer(<span class="number">47</span>);</div><div class="line">    System.out.println(n1.equals(n2));</div><div class="line">    </div><div class="line">    Value v1 = <span class="keyword">new</span> Value();</div><div class="line">    Value v2 = <span class="keyword">new</span> Value();</div><div class="line">    v1.i = v2.i = <span class="number">100</span>;</div><div class="line">    System.out.println(v1.equals(v2));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Value</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span>     <span class="comment">// Integer 类重写 equals() 方法，比较的对象所包含的内容 </span></div><div class="line"><span class="keyword">false</span>    <span class="comment">// 由于 Value 类是自己定义的，没有重写 equals() 方法，继承 Object 类 equals() 方法默认实现，比较的是两个对象的内存地址，这时与 **==** 操作符的作用一样。</span></div></pre></td></tr></table></figure>
+<p>对于 <strong>euqals()</strong> 与 <strong>==</strong> 这知识点异同的比较就说到这里，想要继续更深层的了解就 Google 吧。</p>
 
       
     </div>
@@ -560,7 +593,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -635,7 +668,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、为什么-Java-byte-类型取值范围是-128-127-？"><span class="nav-number">1.</span> <span class="nav-text">一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、为什么-Java-byte-类型取值范围是-128-127-？"><span class="nav-number">1.</span> <span class="nav-text">一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Java-中-与-equals-有何区别？"><span class="nav-number">2.</span> <span class="nav-text">二、Java 中 == 与 equals 有何区别？</span></a></li></ol></div>
             
 
           </div>
