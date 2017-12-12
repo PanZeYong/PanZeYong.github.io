@@ -1,1 +1,1 @@
-http://panzeyong.com/2017/11/07/Java-集合框架：ArrayList/
+http://panzeyong.com/2017/12/06/Java-集合框架：LinkedList/
