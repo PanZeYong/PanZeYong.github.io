@@ -206,11 +206,11 @@
   </entry>
   
   <entry>
-    <title>Java 集合框架：ArrayList</title>
+    <title>Java 集合框架：ArrayList（JDK 8）</title>
     <link href="http://panzeyong.com/2017/11/07/Java-%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%EF%BC%9AArrayList/"/>
     <id>http://panzeyong.com/2017/11/07/Java-集合框架：ArrayList/</id>
     <published>2017-11-07T00:43:33.000Z</published>
-    <updated>2017-11-22T01:10:33.000Z</updated>
+    <updated>2017-12-12T01:17:09.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>ArrayList 是<strong>数组队列</strong>，相当于<strong>动态数组</strong>，其底层结构是由<strong>数组</strong>实现。ArrayList 继承 AbstractList 抽象类，实现 List、RandomAccess、Clone、java.io.Serializable 接口。</p>
 <ul>
@@ -293,6 +293,10 @@
     
     </summary>
     
+      <category term="Java" scheme="http://panzeyong.com/categories/Java/"/>
+    
+    
+      <category term="Java 集合框架" scheme="http://panzeyong.com/tags/Java-%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/"/>
     
   </entry>
   
