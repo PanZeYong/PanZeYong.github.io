@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2017-12-12T01:08:09.000Z</updated>
+  <updated>2017-12-12T01:12:52.000Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://panzeyong.com/2017/12/06/Java-%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%EF%BC%9ALinkedList/"/>
     <id>http://panzeyong.com/2017/12/06/Java-集合框架：LinkedList/</id>
     <published>2017-12-06T00:41:35.000Z</published>
-    <updated>2017-12-12T01:08:09.000Z</updated>
+    <updated>2017-12-12T01:12:52.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>LinkedList 底层实现基于<strong>双向链表</strong>，除了可以当作链表使用外，LinkedList 还可以当作栈、队列和双端队列使用，其原因是实现 List 和 Deque 接口。LinkedList 继承于抽象类 AbstractSequentialList，实现 List、Deque、Cloneable、java.io.Serializable 接口。</p>
 <ul>
@@ -189,6 +189,7 @@
 <li><p>存储的元素允许重复。</p>
 </li>
 </ul>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="http://www.jianshu.com/p/d5ec2ff72b33" target="_blank" rel="external">Java集合干货系列-（二）LinkedList源码解析</a>    </p>
 ]]></content>
     
     <summary type="html">
