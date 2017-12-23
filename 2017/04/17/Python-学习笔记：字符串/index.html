@@ -95,25 +95,25 @@
 
 
 
-<meta name="description" content="定义：Python 的字符串是一种对象类型，这种类型用 str 表示，通常用双引号 “” 或者单引号 ‘’ 表示。
+<meta name="description" content="定义：Python 的字符串是一种对象类型，这种类型用 str 表示，通常用双引号 “” 或者单引号 ‘’ 表示。Python 字符串不可以被更改，即它们是不可变的。
 拼接字符串Python 的字符串是可以拼接，用符号 + 表示；但是与 Java 语言有一点不同的是拼接的两个对象必须是同类型，否则会报错。例子如下：
 两个相同类型 str 拼接（正确）
-12&amp;gt;&amp;gt;&amp;gt; &quot;Hello &quot; + &quot;Python&quot;&apos;Hello Python&apos;">
+12&amp;gt;&amp;gt;&amp;gt; &quot;Hello &quot;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python 学习笔记：字符串">
 <meta property="og:url" content="http://panzeyong.com/2017/04/17/Python-学习笔记：字符串/index.html">
 <meta property="og:site_name" content="PANJU's Note">
-<meta property="og:description" content="定义：Python 的字符串是一种对象类型，这种类型用 str 表示，通常用双引号 “” 或者单引号 ‘’ 表示。
+<meta property="og:description" content="定义：Python 的字符串是一种对象类型，这种类型用 str 表示，通常用双引号 “” 或者单引号 ‘’ 表示。Python 字符串不可以被更改，即它们是不可变的。
 拼接字符串Python 的字符串是可以拼接，用符号 + 表示；但是与 Java 语言有一点不同的是拼接的两个对象必须是同类型，否则会报错。例子如下：
 两个相同类型 str 拼接（正确）
-12&amp;gt;&amp;gt;&amp;gt; &quot;Hello &quot; + &quot;Python&quot;&apos;Hello Python&apos;">
-<meta property="og:updated_time" content="2017-06-19T15:22:47.000Z">
+12&amp;gt;&amp;gt;&amp;gt; &quot;Hello &quot;">
+<meta property="og:updated_time" content="2017-12-21T08:13:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python 学习笔记：字符串">
-<meta name="twitter:description" content="定义：Python 的字符串是一种对象类型，这种类型用 str 表示，通常用双引号 “” 或者单引号 ‘’ 表示。
+<meta name="twitter:description" content="定义：Python 的字符串是一种对象类型，这种类型用 str 表示，通常用双引号 “” 或者单引号 ‘’ 表示。Python 字符串不可以被更改，即它们是不可变的。
 拼接字符串Python 的字符串是可以拼接，用符号 + 表示；但是与 Java 语言有一点不同的是拼接的两个对象必须是同类型，否则会报错。例子如下：
 两个相同类型 str 拼接（正确）
-12&amp;gt;&amp;gt;&amp;gt; &quot;Hello &quot; + &quot;Python&quot;&apos;Hello Python&apos;">
+12&amp;gt;&amp;gt;&amp;gt; &quot;Hello &quot;">
 
 
 
@@ -384,7 +384,7 @@
       
 
       
-        <p>定义：Python 的字符串是一种对象类型，这种类型用 <code>str</code> 表示，通常用双引号 <code>“”</code> 或者单引号 <code>‘’</code> 表示。</p>
+        <p>定义：Python 的字符串是一种对象类型，这种类型用 <code>str</code> 表示，通常用双引号 <code>“”</code> 或者单引号 <code>‘’</code> 表示。Python 字符串不可以被更改，即它们是不可变的。</p>
 <h4 id="拼接字符串"><a href="#拼接字符串" class="headerlink" title="拼接字符串"></a>拼接字符串</h4><p>Python 的字符串是可以拼接，用符号 <code>+</code> 表示；但是与 Java 语言有一点不同的是拼接的两个对象必须是同类型，否则会报错。例子如下：</p>
 <p>两个相同类型 str 拼接（正确）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"Hello "</span> + <span class="string">"Python"</span></div><div class="line"><span class="string">'Hello Python'</span></div></pre></td></tr></table></figure>
@@ -471,13 +471,15 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 获取从第一个字符到 9 之前的字符串</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string[:<span class="number">9</span>]</div><div class="line"><span class="string">'I love Py'</span></div></pre></td></tr></table></figure>
 <p>从以上例子可以看出字符串切片的使用用法，以下做下简单的总结：</p>
 <ul>
-<li><p>[a : b]：表示从索引为 a 起到索引 b 之前字符串。</p>
+<li><p>[a : b]：表示从索引为 a 起到索引 b 之前字符串。(包含起始字符，不包含末尾字符)</p>
 </li>
-<li><p>[:a]：从第一个字符到索引 a 之前的所有字符串。</p>
+<li><p>[:a]：从第一个字符到索引 a 之前的所有字符串。（切片的索引有默认值，省略的第一个索引默认为 0）</p>
 </li>
-<li><p>[a : ]：表示从索引为 a 到末尾字符串。</p>
+<li><p>[a : ]：表示从索引为 a 到末尾字符串。（切片的索引有默认值，省略的第二个索引默认为切片的字符串的大小）</p>
 </li>
 <li><p>[:]：表示原始字符串，但不是复制一份，只是两个变量指向同一个对象。</p>
+</li>
+<li><p>一个过大的索引值(即下标值大于字符串实际长度)将被字符串实际长度所代替，当上边界比下边界大时(即切片左值大于右值)就返回空字符串。</p>
 </li>
 </ul>
 <p>以上只是最近在学 Python 中字符串的小结，也可以说是学习笔记，方便以后查找。（基于 Python3）</p>
@@ -615,7 +617,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
