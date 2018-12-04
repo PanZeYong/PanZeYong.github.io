@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2018-12-04T14:54:15.858Z</updated>
+  <updated>2018-12-04T14:57:14.049Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://panzeyong.com/2018/12/04/%E3%80%8APython3-%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98%E3%80%8B%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/"/>
     <id>http://panzeyong.com/2018/12/04/《Python3-网络爬虫开发实战》问题汇总/</id>
     <published>2018-12-04T14:52:32.000Z</published>
-    <updated>2018-12-04T14:54:15.858Z</updated>
+    <updated>2018-12-04T14:57:14.049Z</updated>
     
     <content type="html"><![CDATA[<p>mac 系统版本信息：</p>
 <ul>
@@ -47,7 +47,7 @@
       <category term="Python" scheme="http://panzeyong.com/categories/Python/"/>
     
     
-      <category term="问题" scheme="http://panzeyong.com/tags/%E9%97%AE%E9%A2%98/"/>
+      <category term="question" scheme="http://panzeyong.com/tags/question/"/>
     
   </entry>
   
