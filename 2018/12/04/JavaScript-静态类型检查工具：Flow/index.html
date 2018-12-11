@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="《Java Thinking》学习笔记," />
+  <meta name="keywords" content="plugin," />
 
 
 
@@ -95,31 +95,22 @@
 
 
 
-<meta name="description" content="一、数据存储位置
-寄存器：最快的存储区，位于处理器内部。
-
-堆栈：位于通用 RAM（随机访问存储区）中，存储速度仅次于寄存器，主要用于存储对象引用。堆栈指针若向下移动，则分配新的内存；若向上移动，则释放内存。有一点不足是 Java 系统必须知道存储在堆栈内的所有项的确切生命周期，方便堆栈指针上下移动。这一约束限制程序的灵活性。
-
-堆：一种通用的内存池（也位于 RAM 区），用于存放所有 Java">
+<meta name="description" content="Flow 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。
+在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。
+一、安装1、安装编译器在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第二章 一切都是对象">
-<meta property="og:url" content="http://panzeyong.com/2017/10/11/第二章-一切都是对象/index.html">
+<meta property="og:title" content="JavaScript 静态类型检查工具：Flow">
+<meta property="og:url" content="http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/index.html">
 <meta property="og:site_name" content="PANJU's Note">
-<meta property="og:description" content="一、数据存储位置
-寄存器：最快的存储区，位于处理器内部。
-
-堆栈：位于通用 RAM（随机访问存储区）中，存储速度仅次于寄存器，主要用于存储对象引用。堆栈指针若向下移动，则分配新的内存；若向上移动，则释放内存。有一点不足是 Java 系统必须知道存储在堆栈内的所有项的确切生命周期，方便堆栈指针上下移动。这一约束限制程序的灵活性。
-
-堆：一种通用的内存池（也位于 RAM 区），用于存放所有 Java">
-<meta property="og:updated_time" content="2017-10-31T11:10:37.000Z">
+<meta property="og:description" content="Flow 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。
+在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。
+一、安装1、安装编译器在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，">
+<meta property="og:updated_time" content="2018-12-11T15:01:24.234Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="第二章 一切都是对象">
-<meta name="twitter:description" content="一、数据存储位置
-寄存器：最快的存储区，位于处理器内部。
-
-堆栈：位于通用 RAM（随机访问存储区）中，存储速度仅次于寄存器，主要用于存储对象引用。堆栈指针若向下移动，则分配新的内存；若向上移动，则释放内存。有一点不足是 Java 系统必须知道存储在堆栈内的所有项的确切生命周期，方便堆栈指针上下移动。这一约束限制程序的灵活性。
-
-堆：一种通用的内存池（也位于 RAM 区），用于存放所有 Java">
+<meta name="twitter:title" content="JavaScript 静态类型检查工具：Flow">
+<meta name="twitter:description" content="Flow 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。
+在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。
+一、安装1、安装编译器在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，">
 
 
 
@@ -147,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://panzeyong.com/2017/10/11/第二章-一切都是对象/"/>
+  <link rel="canonical" href="http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/"/>
 
 
 
 
 
-  <title>第二章 一切都是对象 | PANJU's Note</title>
+  <title>JavaScript 静态类型检查工具：Flow | PANJU's Note</title>
   
 
 
@@ -282,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/10/11/第二章-一切都是对象/">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="PANJU">
@@ -299,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">第二章 一切都是对象</h1>
+          <h1 class="post-title" itemprop="name headline">JavaScript 静态类型检查工具：Flow</h1>
         
 
         <div class="post-meta">
@@ -311,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T21:48:07+08:00">
-                2017-10-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-04T23:01:32+08:00">
+                2018-12-04
               </time>
             
 
@@ -334,8 +325,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
                   </a>
                 </span>
 
@@ -352,9 +343,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/10/11/第二章-一切都是对象/#comments" itemprop="discussionUrl">
+                <a href="/2018/12/04/JavaScript-静态类型检查工具：Flow/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/10/11/第二章-一切都是对象/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/12/04/JavaScript-静态类型检查工具：Flow/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -362,7 +353,7 @@
 
           
           
-             <span id="/2017/10/11/第二章-一切都是对象/" class="leancloud_visitors" data-flag-title="第二章 一切都是对象">
+             <span id="/2018/12/04/JavaScript-静态类型检查工具：Flow/" class="leancloud_visitors" data-flag-title="JavaScript 静态类型检查工具：Flow">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -390,36 +381,66 @@
       
 
       
-        <h1 id="一、数据存储位置"><a href="#一、数据存储位置" class="headerlink" title="一、数据存储位置"></a>一、数据存储位置</h1><ol>
-<li><p><strong>寄存器</strong>：最快的存储区，位于处理器内部。</p>
-</li>
-<li><p><strong>堆栈</strong>：位于通用 RAM（随机访问存储区）中，存储速度仅次于寄存器，主要用于存储对象引用。堆栈指针若向下移动，则分配新的内存；若向上移动，则释放内存。有一点不足是 Java 系统必须知道存储在堆栈内的所有项的确切生命周期，方便堆栈指针上下移动。这一约束限制程序的灵活性。</p>
-</li>
-<li><p><strong>堆</strong>：一种通用的内存池（也位于 RAM 区），用于存放所有 Java 对象。不同于堆栈的好处是：编译器不需要知道存储的数据在堆里存活多长时间，显示提高了灵活性。但是也付出了代价，即用堆进行存储分配和清理可能比用堆栈进行存储分配需要更多的时间。 </p>
-</li>
-<li><p><strong>常量存储</strong>：常量值通常直接存储在程序代码内部（静态存储区）。</p>
-</li>
-<li><p><strong>非 RAM 存储</strong>：流对象（对象转化成字节流）和持久化对象（对象存放磁盘）。  </p>
-</li>
-</ol>
-<h1 id="二、基本数据类型"><a href="#二、基本数据类型" class="headerlink" title="二、基本数据类型"></a>二、基本数据类型</h1><p>在 Java 中，每种基本数据类型都占一定的存储空间大小，而且不随平台的改变而改变，即在不同平台上每种数据类型所占的空间是相同。Java 提供 8 中基本数据类型，如下表：</p>
-<table><tr align="center"><th>基本类型</th><th>大小（bits）</th><th>最小值</th><th>最大值</th><th>包装器类型</th></tr><tr align="center"><td>boolean</td><td>—</td><td>—</td><td>—</td><td>Boolean</td></tr><tr align="center"><td>byte</td><td>8</td><td>-128</td><td>+127</td><td>Byte</td></tr><br><tr align="center"><td>char</td><td>16</td><td>Unicode 0</td><td>Unicode 2<sup>16</sup> - 1</td><td>Character</td></tr><tr align="center"><td>short</td><td>16</td><td>-2<sup>15</sup></td><td>+2<sup>15</sup> - 1</td><td>Short</td></tr><tr align="center"><td>int</td><td>32</td><td>-2<sup>31</sup></td><td>+2<sup>31</sup> - 1</td><td>Integer</td></tr><tr align="center"><td>float</td><td>32</td><td>IEEE754</td><td>IEEE754</td><td>Float</td></tr><tr align="center"><td>long</td><td>64</td><td>-2<sup>63</sup></td><td>+2<sup>63</sup> - 1</td><td>Long</td></tr><tr align="center"><td>double</td><td>64</td><td>IEEE754</td><td>IEEE754</td><td>Double</td></tr></table>
-
-<p>注：Javs SE5 的自动包装功能将自动地将基本类型转换为包装器类型。</p>
-<p>字段（数据成员）会获取默认值，可以不初始化；</p>
-<p>局部变量没有默认值，必须初始化，否则会报错。</p>
-<p>方法的基本组成部分：名称、参数、返回值和方法体。</p>
+        <p><a href="https://flow.org/en/" target="_blank" rel="external">Flow</a> 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。</p>
+<p>在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。</p>
+<h1 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h1><h3 id="1、安装编译器"><a href="#1、安装编译器" class="headerlink" title="1、安装编译器"></a>1、安装编译器</h3><p>在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，而在安装 Flow 时，需要设置编译器，有两种编译器：Babel 和 flow-remove-types，所以总共有 4 种安装方式。这里包管理器为 npm 和 编译器为 Babel 为例子来说。</p>
 <ul>
-<li><p>名称：定义方法的名字。</p>
-</li>
-<li><p>参数：传给方法的信息的类型和名称。</p>
-</li>
-<li><p>返回值：在调用方法之后从方法返回的值。</p>
-</li>
-<li><p>方法体：方法所要执行的逻辑。</p>
+<li><p>设置编译器</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --save-dev babel-cli babel-preset-flow</div></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>方法名和参数列表合称为 “方法签名”。</p>
+<ul>
+<li><p>在项目根目录创建 <code>.babelrc</code> 文件，并添加以下代码</p>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"> <span class="attr">"presets"</span>: [<span class="string">"flow"</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>如果所有源文件都存储在 <code>src</code> 目录下，那么可以通过运行以下命令，把它们编译到另外一个目录</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./node_modules/.bin/babel src/ -d lib/</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>在 <code>package.json</code> 文件 <code>script</code> 添加代码</p>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">	&#123;</div><div class="line">	<span class="attr">"name"</span>: <span class="string">"my-project"</span>,</div><div class="line">	<span class="attr">"main"</span>: <span class="string">"lib/index.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">  		<span class="attr">"build"</span>: <span class="string">"babel src/ -d lib/"</span>,</div><div class="line">    	<span class="attr">"prepublish"</span>: <span class="string">"npm run build"</span></div><div class="line">  	 &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2、安装-Flow"><a href="#2、安装-Flow" class="headerlink" title="2、安装 Flow"></a>2、安装 Flow</h3><ul>
+<li><p>安装 flow-bin</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">	npm install --save-dev flow-bin</div><div class="line">	``` </div><div class="line">	</div><div class="line">- 在 `package.json` 文件 `script` 添加 Flow</div><div class="line"></div><div class="line">	```json</div><div class="line">	&#123;</div><div class="line">  &quot;name&quot;: &quot;my-flow-project&quot;,</div><div class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</div><div class="line">  &quot;devDependencies&quot;: &#123;</div><div class="line">    	&quot;flow-bin&quot;: &quot;^0.87.0&quot;</div><div class="line">  	 &#125;,</div><div class="line">  &quot;scripts&quot;: &#123;</div><div class="line">    	&quot;flow&quot;: &quot;flow&quot;</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>初始化 Flow，会生成文件 <code>.flowconfig</code></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm run flow init</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>运行 Flow</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm run flow</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="二、Flow-的工作方式"><a href="#二、Flow-的工作方式" class="headerlink" title="二、Flow 的工作方式"></a>二、Flow 的工作方式</h1><p>Flow 类型检查有两种方式：</p>
+<ul>
+<li><p>类型推断：结合变量的上下文语境推断出变量的数据类型，然后根据推断出的数据类型进行类型检查。</p>
+</li>
+<li><p>类型注释：在定义变量时声明其数据类型，Flow 会基于声明的数据类型作出判断。</p>
+</li>
+</ul>
+<h3 id="1、类型推断"><a href="#1、类型推断" class="headerlink" title="1、类型推断"></a>1、类型推断</h3><p>类型推断这种类型检查方式对于开发者来说工作量几乎为零，基本不需要对代码作任何改造，Flow 会根据变量的上下文推断出类型，进而作出判断。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// @flow</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">square</span>(<span class="params">n</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> n * n; </div><div class="line">&#125;</div><div class="line"></div><div class="line">square(<span class="string">"2"</span>);    <span class="comment">// Error</span></div></pre></td></tr></table></figure>
+<p>Flow 检查上述代码会报错，因为函数 square 期待输入的参数是整型，而我们输入的是字符串。</p>
+<h3 id="2、类型注释"><a href="#2、类型注释" class="headerlink" title="2、类型注释"></a>2、类型注释</h3><p>在某些场景下，通过类型推断是检查不出类型错误的，这时就需要通过其它方式来检查类型，也就是这部分要说的类型注释。类型注释是说在定义变量时声明其数据类型，有点类似静态语言，比如 Java，Flow 会基于此作出判断。</p>
+<p>先来看一个通过类型推断检查不出错误的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*@flow*/</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x, y</span>)</span>&#123;</div><div class="line">  <span class="keyword">return</span> x + y</div><div class="line">&#125;</div><div class="line"></div><div class="line">add(<span class="string">'Hello'</span>, <span class="number">222</span>)</div></pre></td></tr></table></figure>
+<p>以上代码，从语法上看没有错误，<code>+</code> 既可以用在字符串上，也可以用在整型上，而且我们并没有指出函数 <code>add</code> 参数必须为整型，其实我们期望的是两个整型相加，为了达到这目的，我们可以指定变量的类型，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x: number, y: number</span>)</span>&#123;</div><div class="line">  <span class="keyword">return</span> x + y</div><div class="line">&#125;</div><div class="line"></div><div class="line">add(<span class="string">'Hello'</span>, <span class="number">222</span>)    <span class="comment">// Error</span></div></pre></td></tr></table></figure>
+<p>此时，我们指定变量 <code>x</code> 和 <code>y</code> 的数据类型为整型，而我们传递的参数中有一个是字符串，那么 Flow 检查类型就会报错。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><p><a href="https://flow.org/en/docs/getting-started/" target="_blank" rel="external">https://flow.org/en/docs/getting-started/</a></p>
+</li>
+<li><p><a href="https://ustbhuangyi.github.io/vue-analysis/prepare/flow.html#flow-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F" target="_blank" rel="external">https://ustbhuangyi.github.io/vue-analysis/prepare/flow.html#flow-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F</a></p>
+</li>
+</ul>
 
       
     </div>
@@ -449,7 +470,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/《Java-Thinking》学习笔记/" rel="tag"># 《Java Thinking》学习笔记</a>
+            <a href="/tags/plugin/" rel="tag"># plugin</a>
           
         </div>
       
@@ -462,8 +483,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/15/第十一章-DOM-扩展/" rel="next" title="第十一章 DOM 扩展">
-                <i class="fa fa-chevron-left"></i> 第十一章 DOM 扩展
+              <a href="/2018/12/04/《Python3-网络爬虫开发实战》问题汇总/" rel="next" title="《Python3 网络爬虫开发实战》问题汇总（持续更新......）">
+                <i class="fa fa-chevron-left"></i> 《Python3 网络爬虫开发实战》问题汇总（持续更新......）
               </a>
             
           </div>
@@ -471,10 +492,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/10/14/Java-问题整理/" rel="prev" title="Java 问题整理">
-                Java 问题整理 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -628,7 +645,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、数据存储位置"><span class="nav-number">1.</span> <span class="nav-text">一、数据存储位置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、基本数据类型"><span class="nav-number">2.</span> <span class="nav-text">二、基本数据类型</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、安装"><span class="nav-number">1.</span> <span class="nav-text">一、安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、安装编译器"><span class="nav-number">1.0.1.</span> <span class="nav-text">1、安装编译器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、安装-Flow"><span class="nav-number">1.0.2.</span> <span class="nav-text">2、安装 Flow</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Flow-的工作方式"><span class="nav-number">2.</span> <span class="nav-text">二、Flow 的工作方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、类型推断"><span class="nav-number">2.0.1.</span> <span class="nav-text">1、类型推断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、类型注释"><span class="nav-number">2.0.2.</span> <span class="nav-text">2、类型注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">2.0.3.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -778,9 +795,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://panzeyong.com/2017/10/11/第二章-一切都是对象/';
-          this.page.identifier = '2017/10/11/第二章-一切都是对象/';
-          this.page.title = '第二章 一切都是对象';
+          this.page.url = 'http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/';
+          this.page.identifier = '2018/12/04/JavaScript-静态类型检查工具：Flow/';
+          this.page.title = 'JavaScript 静态类型检查工具：Flow';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://panzeyong.disqus.com/embed.js';
