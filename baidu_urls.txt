@@ -1,1 +1,1 @@
-http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/
+http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/

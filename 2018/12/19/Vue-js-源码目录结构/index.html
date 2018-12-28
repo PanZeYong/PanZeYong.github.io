@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="plugin," />
+  <meta name="keywords" content="source code," />
 
 
 
@@ -95,22 +95,22 @@
 
 
 
-<meta name="description" content="Flow 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。
-在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。
-一、安装1、安装编译器在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，">
+<meta name="description" content="今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。
+在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。
+注">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript 静态类型检查工具：Flow">
-<meta property="og:url" content="http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/index.html">
+<meta property="og:title" content="Vue.js 源码目录结构">
+<meta property="og:url" content="http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/index.html">
 <meta property="og:site_name" content="PANJU's Note">
-<meta property="og:description" content="Flow 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。
-在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。
-一、安装1、安装编译器在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，">
-<meta property="og:updated_time" content="2018-12-11T15:01:24.234Z">
+<meta property="og:description" content="今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。
+在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。
+注">
+<meta property="og:updated_time" content="2018-12-28T15:30:46.310Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript 静态类型检查工具：Flow">
-<meta name="twitter:description" content="Flow 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。
-在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。
-一、安装1、安装编译器在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，">
+<meta name="twitter:title" content="Vue.js 源码目录结构">
+<meta name="twitter:description" content="今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。
+在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。
+注">
 
 
 
@@ -138,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/"/>
+  <link rel="canonical" href="http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/"/>
 
 
 
 
 
-  <title>JavaScript 静态类型检查工具：Flow | PANJU's Note</title>
+  <title>Vue.js 源码目录结构 | PANJU's Note</title>
   
 
 
@@ -273,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="PANJU">
@@ -290,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JavaScript 静态类型检查工具：Flow</h1>
+          <h1 class="post-title" itemprop="name headline">Vue.js 源码目录结构</h1>
         
 
         <div class="post-meta">
@@ -302,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-04T23:01:32+08:00">
-                2018-12-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-19T22:33:04+08:00">
+                2018-12-19
               </time>
             
 
@@ -325,8 +325,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
+                  <a href="/categories/vue-js/" itemprop="url" rel="index">
+                    <span itemprop="name">vue.js</span>
                   </a>
                 </span>
 
@@ -343,9 +343,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/12/04/JavaScript-静态类型检查工具：Flow/#comments" itemprop="discussionUrl">
+                <a href="/2018/12/19/Vue-js-源码目录结构/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/12/04/JavaScript-静态类型检查工具：Flow/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/12/19/Vue-js-源码目录结构/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -353,7 +353,7 @@
 
           
           
-             <span id="/2018/12/04/JavaScript-静态类型检查工具：Flow/" class="leancloud_visitors" data-flag-title="JavaScript 静态类型检查工具：Flow">
+             <span id="/2018/12/19/Vue-js-源码目录结构/" class="leancloud_visitors" data-flag-title="Vue.js 源码目录结构">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -381,66 +381,92 @@
       
 
       
-        <p><a href="https://flow.org/en/" target="_blank" rel="external">Flow</a> 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。</p>
-<p>在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。</p>
-<h1 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h1><h3 id="1、安装编译器"><a href="#1、安装编译器" class="headerlink" title="1、安装编译器"></a>1、安装编译器</h3><p>在 Flow 官方文档可以了解到，安装 Flow 的方式多种，主要取决于项目使用什么工具。Flow 可以通过包管理器来安装，即 npm 或 yarn，而在安装 Flow 时，需要设置编译器，有两种编译器：Babel 和 flow-remove-types，所以总共有 4 种安装方式。这里包管理器为 npm 和 编译器为 Babel 为例子来说。</p>
+        <p>今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。</p>
+<p>在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。</p>
+<p>注：Vue.js 的版本为 2.5.21</p>
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><ul>
+<li><p><code>.circleci</code>：Vue.js 使用了持续集成工具 CircleCI，要在项目中使用该工具，需要在项目根目录创建文件夹 <code>.circleci</code>，并在其目录下创建文件 <code>config.yml</code> 编写构建脚本。</p>
 <ul>
-<li><p>设置编译器</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install --save-dev babel-cli babel-preset-flow</div></pre></td></tr></table></figure>
-</li>
+<li><code>config.yml</code>：编写 CircleCI 构建脚本。</li>
 </ul>
+</li>
+<li><p><code>.github</code>：项目相关说明文档，比如开发者参与项目的规则、要求之类的。</p>
+<p>  <code>CODE_OF_CONDUCT.md</code>：贡献代码的行为准则。</p>
+<p>  <code>COMMIT_CONVENTION.md</code>：git 提交代码时添加提交信息的约定。</p>
+<p>  <code>CONTRIBUTING.md</code>：参与项目指南。</p>
+<p>  <code>ISSUE_TEMPLATE.md</code>：提交 issue 的模板。</p>
+<p>  <code>PULL_REQUEST_TEMPLATE.md</code>：拉取代码指南。</p>
+</li>
+<li><p><code>benchmarks</code>：性能测试相关文件。</p>
+</li>
+<li><p><code>dist</code>：包含不同分发版本的构建文件。要注意的是，这个目录只有在发布新版本时才会更新，开发分支更新的新特性不会影响到该目录。</p>
+</li>
+<li><p><code>example</code>：官方提供的示例。</p>
+</li>
+<li><p><code>flow</code>：包含使用Flow（静态类型检查工具）声明的类型，供全局使用。</p>
 <ul>
-<li><p>在项目根目录创建 <code>.babelrc</code> 文件，并添加以下代码</p>
-  <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"> <span class="attr">"presets"</span>: [<span class="string">"flow"</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<li><p><code>compiler.js</code>：编译相关。</p>
+</li>
+<li><p><code>component.js</code>：组件数据结构。</p>
+</li>
+<li><p><code>global-api.js</code>：Global API 结构。</p>
+</li>
+<li><p><code>modules.js</code>：第三方库定义。</p>
+</li>
+<li><p><code>options.js</code>：选项相关。</p>
+</li>
+<li><p><code>ssr.js</code>：服务端渲染相关。</p>
+</li>
+<li><p><code>vnode.js</code>：虚拟 node 相关。</p>
+</li>
+<li><p><code>weex.js</code>：weex 平台相关。</p>
 </li>
 </ul>
+</li>
+<li><p><code>packages</code>：包含服务端渲染和模板编译器两种不同 NPM 包，供不同场景使用。</p>
 <ul>
-<li><p>如果所有源文件都存储在 <code>src</code> 目录下，那么可以通过运行以下命令，把它们编译到另外一个目录</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./node_modules/.bin/babel src/ -d lib/</div></pre></td></tr></table></figure>
+<li><p><code>vue-server-render</code>：服务端渲染。</p>
+</li>
+<li><p><code>vue-template-compiler</code>：vue 模板编译器。</p>
+</li>
+<li><p><code>weex-template-compiler</code>：weex 模板编译器。</p>
+</li>
+<li><p><code>weex-vue-framework</code>：weex vue 框架。</p>
 </li>
 </ul>
+</li>
+<li><p><code>scripts</code>：包含构建相关脚本和配置文件，大多数情况下不需要关注该目录。</p>
 <ul>
-<li><p>在 <code>package.json</code> 文件 <code>script</code> 添加代码</p>
-  <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">	&#123;</div><div class="line">	<span class="attr">"name"</span>: <span class="string">"my-project"</span>,</div><div class="line">	<span class="attr">"main"</span>: <span class="string">"lib/index.js"</span>,</div><div class="line">  <span class="attr">"scripts"</span>: &#123;</div><div class="line">  		<span class="attr">"build"</span>: <span class="string">"babel src/ -d lib/"</span>,</div><div class="line">    	<span class="attr">"prepublish"</span>: <span class="string">"npm run build"</span></div><div class="line">  	 &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<li><p><code>alias.js</code>：所有源代码和测试中使用的模块导入别名。</p>
+</li>
+<li><p><code>config</code>：包含 <code>dist</code> 目录下所有文件的配置信息。</p>
 </li>
 </ul>
-<h3 id="2、安装-Flow"><a href="#2、安装-Flow" class="headerlink" title="2、安装 Flow"></a>2、安装 Flow</h3><ul>
-<li><p>安装 flow-bin</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">	npm install --save-dev flow-bin</div><div class="line">	``` </div><div class="line">	</div><div class="line">- 在 `package.json` 文件 `script` 添加 Flow</div><div class="line"></div><div class="line">	```json</div><div class="line">	&#123;</div><div class="line">  &quot;name&quot;: &quot;my-flow-project&quot;,</div><div class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</div><div class="line">  &quot;devDependencies&quot;: &#123;</div><div class="line">    	&quot;flow-bin&quot;: &quot;^0.87.0&quot;</div><div class="line">  	 &#125;,</div><div class="line">  &quot;scripts&quot;: &#123;</div><div class="line">    	&quot;flow&quot;: &quot;flow&quot;</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
-</ul>
+<li><p><code>src</code>：vue.js 源代码，代码用 ES6 实现的并采用 JavaScript 静态类型检查工具。</p>
 <ul>
-<li><p>初始化 Flow，会生成文件 <code>.flowconfig</code></p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm run flow init</div></pre></td></tr></table></figure>
+<li><p><code>compiler</code>：该目录包含 Vue.js 编译的相关代码，包括将模板字符串解析成 AST 语法树的<strong>解析器</strong>、检测用于 vdom 渲染优化的静态树的<strong>优化器</strong>和将 AST 语法树生成渲染函数的<strong>代码生成器</strong>。</p>
+</li>
+<li><p><code>core</code>：Vue.js 核心代码，包含通用、跨平台的代码。主要有观察者、虚拟 dom、vue 实例化、全局 api 和内置组件。</p>
+</li>
+<li><p><code>server</code>：包含与服务端渲染相关的代码。</p>
+</li>
+<li><p><code>platform</code>：Vue.js 是一个跨平台的 MVVM 框架，可以在 web 上运行，也可以配合 weex 在 native 客户端上运行。每个平台都有一个入口，都位于该目录下。</p>
+</li>
+<li><p><code>sfc</code>：包含将 .vue 单文件解析为 JavaScript 对象的代码，用于 <code>vue-template-compiler</code> 包。</p>
+</li>
+<li><p><code>shared</code>：包含通用的工具方法，用于浏览器端的 vue.js 和服务器端的 vue.js。</p>
 </li>
 </ul>
-<ul>
-<li><p>运行 Flow</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm run flow</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>tests</code>：所有测试代码，单元测试代码是用 <a href="https://jasmine.github.io/2.3/introduction.html" target="_blank" rel="external">Jasmine</a> 实现并与 <a href="http://karma-runner.github.io/0.13/index.html" target="_blank" rel="external">Karma</a> 一起运行。e2e 测试是为 <a href="http://nightwatchjs.org/" target="_blank" rel="external">Nightwatch.js</a> 编写并与之一起运行。</p>
+</li>
+<li><p><code>types</code>：使用 TypeScript 类型注释，并且包含了测试代码。</p>
 </li>
 </ul>
-<h1 id="二、Flow-的工作方式"><a href="#二、Flow-的工作方式" class="headerlink" title="二、Flow 的工作方式"></a>二、Flow 的工作方式</h1><p>Flow 类型检查有两种方式：</p>
-<ul>
-<li><p>类型推断：结合变量的上下文语境推断出变量的数据类型，然后根据推断出的数据类型进行类型检查。</p>
-</li>
-<li><p>类型注释：在定义变量时声明其数据类型，Flow 会基于声明的数据类型作出判断。</p>
-</li>
-</ul>
-<h3 id="1、类型推断"><a href="#1、类型推断" class="headerlink" title="1、类型推断"></a>1、类型推断</h3><p>类型推断这种类型检查方式对于开发者来说工作量几乎为零，基本不需要对代码作任何改造，Flow 会根据变量的上下文推断出类型，进而作出判断。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// @flow</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">square</span>(<span class="params">n</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> n * n; </div><div class="line">&#125;</div><div class="line"></div><div class="line">square(<span class="string">"2"</span>);    <span class="comment">// Error</span></div></pre></td></tr></table></figure>
-<p>Flow 检查上述代码会报错，因为函数 square 期待输入的参数是整型，而我们输入的是字符串。</p>
-<h3 id="2、类型注释"><a href="#2、类型注释" class="headerlink" title="2、类型注释"></a>2、类型注释</h3><p>在某些场景下，通过类型推断是检查不出类型错误的，这时就需要通过其它方式来检查类型，也就是这部分要说的类型注释。类型注释是说在定义变量时声明其数据类型，有点类似静态语言，比如 Java，Flow 会基于此作出判断。</p>
-<p>先来看一个通过类型推断检查不出错误的例子：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*@flow*/</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x, y</span>)</span>&#123;</div><div class="line">  <span class="keyword">return</span> x + y</div><div class="line">&#125;</div><div class="line"></div><div class="line">add(<span class="string">'Hello'</span>, <span class="number">222</span>)</div></pre></td></tr></table></figure>
-<p>以上代码，从语法上看没有错误，<code>+</code> 既可以用在字符串上，也可以用在整型上，而且我们并没有指出函数 <code>add</code> 参数必须为整型，其实我们期望的是两个整型相加，为了达到这目的，我们可以指定变量的类型，如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x: number, y: number</span>)</span>&#123;</div><div class="line">  <span class="keyword">return</span> x + y</div><div class="line">&#125;</div><div class="line"></div><div class="line">add(<span class="string">'Hello'</span>, <span class="number">222</span>)    <span class="comment">// Error</span></div></pre></td></tr></table></figure>
-<p>此时，我们指定变量 <code>x</code> 和 <code>y</code> 的数据类型为整型，而我们传递的参数中有一个是字符串，那么 Flow 检查类型就会报错。</p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
-<li><p><a href="https://flow.org/en/docs/getting-started/" target="_blank" rel="external">https://flow.org/en/docs/getting-started/</a></p>
-</li>
-<li><p><a href="https://ustbhuangyi.github.io/vue-analysis/prepare/flow.html#flow-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F" target="_blank" rel="external">https://ustbhuangyi.github.io/vue-analysis/prepare/flow.html#flow-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F</a></p>
-</li>
-</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure" target="_blank" rel="external">https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure</a></p>
+<p><a href="https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler" target="_blank" rel="external">https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler</a></p>
+<p><a href="https://segmentfault.com/a/1190000016426470" target="_blank" rel="external">https://segmentfault.com/a/1190000016426470</a></p>
 
       
     </div>
@@ -470,7 +496,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/plugin/" rel="tag"># plugin</a>
+            <a href="/tags/source-code/" rel="tag"># source code</a>
           
         </div>
       
@@ -483,8 +509,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/12/04/《Python3-网络爬虫开发实战》问题汇总/" rel="next" title="《Python3 网络爬虫开发实战》问题汇总（持续更新......）">
-                <i class="fa fa-chevron-left"></i> 《Python3 网络爬虫开发实战》问题汇总（持续更新......）
+              <a href="/2018/12/04/JavaScript-静态类型检查工具：Flow/" rel="next" title="JavaScript 静态类型检查工具：Flow">
+                <i class="fa fa-chevron-left"></i> JavaScript 静态类型检查工具：Flow
               </a>
             
           </div>
@@ -492,10 +518,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/12/19/Vue-js-源码目录结构/" rel="prev" title="Vue.js 源码目录结构">
-                Vue.js 源码目录结构 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -649,7 +671,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、安装"><span class="nav-number">1.</span> <span class="nav-text">一、安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、安装编译器"><span class="nav-number">1.0.1.</span> <span class="nav-text">1、安装编译器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、安装-Flow"><span class="nav-number">1.0.2.</span> <span class="nav-text">2、安装 Flow</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Flow-的工作方式"><span class="nav-number">2.</span> <span class="nav-text">二、Flow 的工作方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、类型推断"><span class="nav-number">2.0.1.</span> <span class="nav-text">1、类型推断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、类型注释"><span class="nav-number">2.0.2.</span> <span class="nav-text">2、类型注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">2.0.3.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目录结构"><span class="nav-number">1.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
@@ -799,9 +821,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/';
-          this.page.identifier = '2018/12/04/JavaScript-静态类型检查工具：Flow/';
-          this.page.title = 'JavaScript 静态类型检查工具：Flow';
+          this.page.url = 'http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/';
+          this.page.identifier = '2018/12/19/Vue-js-源码目录结构/';
+          this.page.title = 'Vue.js 源码目录结构';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://panzeyong.disqus.com/embed.js';
