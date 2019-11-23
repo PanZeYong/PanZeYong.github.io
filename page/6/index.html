@@ -268,6 +268,192 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/05/04/第二章-在-HTML-中使用-JavaScript/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/04/第二章-在-HTML-中使用-JavaScript/" itemprop="url">第二章 在 HTML 中使用 JavaScript</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T07:40:59+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/04/第二章-在-HTML-中使用-JavaScript/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/05/04/第二章-在-HTML-中使用-JavaScript/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/05/04/第二章-在-HTML-中使用-JavaScript/" class="leancloud_visitors" data-flag-title="第二章 在 HTML 中使用 JavaScript">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h3><p>script：表示向 HTML 页面插入 JavaScript。该元素定义 6 个属性：</p>
+<ul>
+<li><p>async：可选。表示应该立即下载脚本，但不应妨碍页面中的其它内容加载。只对<strong>外部脚本</strong>文件有效。标记为 async 的脚本并不能保证按照指定的的先后顺序执行，一定会在页面的 load 事件前执行，但是对于 DOMContentLoaded 事件就不一定了。建议异步脚本不要在加载期间修改 DOM。</p>
+</li>
+<li><p>charset：可选。表示通过 src 属性指定的代码的字符集。</p>
+</li>
+<li><p>defer：可选。表示所要加载的脚本可以延迟到文档完全被解析和显示之后再执行，即遇到 html 标签之后才执行；只对<strong>外部脚本</strong>文件有效。HTML 5 规范要求延迟脚本是按照出现的顺序执行的，并且先于 DOMContentLoaded 事件，但是现实是不一定的，因此最好只包含一个延迟脚本。</p>
+</li>
+<li><p>language：已经废弃。</p>
+</li>
+<li><p>src：可选。表示包含要执行代码的外部文件。</p>
+</li>
+<li><p>type：可选。language 的替代属性。表示编写代码使用的脚本语言的内容类型（MIME 类型）。通常的默认值为 <code>text/javascript</code>。</p>
+</li>
+</ul>
+<p>noscript：在不支持 JavaScript 的浏览器中显示替代的内容。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;noscript&gt;</div><div class="line">	&lt;p&gt;本页面需要浏览器支持（启用）JavaScript&lt;/p&gt;</div><div class="line">&lt;<span class="regexp">/noscript&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
+<li><p>解释器对 script 元素内代码的解析是从上往下，在该元素内的代码被解析完之前，页面其它内容是不会被浏览器加载或者显示的。（外部文件也一样）</p>
+</li>
+<li><p>通过 src 属性引入外部文件必须要包含开始的 script 和结束的 script，只是 HTML 规范。</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script type=<span class="string">"text/javasript"</span> src=<span class="string">"example.js"</span>&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>带有 src 属性的 script 元素不应该在其元素之间包含额外的 JavaScritp 代码，如果包含了嵌入的代码，则只会下载并执行外部脚本文件，嵌入的代码会被忽略。</p>
+</li>
+<li><p>JavaScript 代码建议放在 body 元素中页面内容之后</p>
+</li>
+</ul>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第二章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/05/01/AsnycTask-用法及源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1134,7 +1320,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1156,7 +1342,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1216,7 +1402,7 @@
         <div class="copyright" >
   
   &copy;  2017 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

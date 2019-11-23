@@ -1,1 +1,1 @@
-http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/
+http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/

@@ -268,6 +268,192 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/19/Javascript-之原型及原型链/" itemprop="url">Javascript 之原型及原型链</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-19T07:53:16+08:00">
+                2019-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/19/Javascript-之原型及原型链/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/11/19/Javascript-之原型及原型链/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/11/19/Javascript-之原型及原型链/" class="leancloud_visitors" data-flag-title="Javascript 之原型及原型链">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Javascript 函数有一个 <code>prototype</code> 属性，该属性是一个指针，指向一个对象，该对象包含特定类型的所有实例共享的属性和方法，称为实例对象的<strong>原型对象</strong>。</p>
+<p>简单来说，在 JavaScript 中创建一个新函数，就会自动获取 <code>prototype</code> 属性，通过 <code>new</code> 命令创建实例对象，实例对象会获取 <code>prototype</code> 属性所指向的原型对象的属性和方法。打个比方，在 Java 中有类和继承的概念，<code>prototype</code> 所指向的原型对象就好比 Java 中的基类，而新函数好比是 Java 中的新类，继承基类中的属性和方法，那么创建实例后，除了能访问到本身的属性和方法外，还能访问到基类中的属性和方法。</p>
+<h1 id="构造函数与原型对象之间的关系"><a href="#构造函数与原型对象之间的关系" class="headerlink" title="构造函数与原型对象之间的关系"></a>构造函数与原型对象之间的关系</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person();</div><div class="line">person.age = <span class="number">12</span>;</div><div class="line"><span class="built_in">console</span>.log(person.age);    <span class="comment">// 12</span></div></pre></td></tr></table></figure>
+<p>以上例子，Person 是一个构造函数，通过 <code>new</code> 命令实例化对象。通过构造函数实例化对象的方式，如果多个实例对象都拥有属性 <code>age</code> 时，则需要在每个实例对象本身设置该属性，这样的操作显得有点冗余。那么有没有一种方式可以把属性 <code>age</code> 设置为公有，实例化对象时就自动拥有公共的属性呢，而对于实例对象本身只需要添加自己需要的属性即可。答案是有的。</p>
+<p>这里就需要引出 <code>prototype</code> 属性，那么 <code>prototype</code> 属性是什么呢？除了<strong>bind 函数</strong>、<strong>箭头函数</strong>以及 <strong>Function.prototype</strong> 外，每个函数都有一个属性 <strong>prototype</strong>，该属性是一个指针，指向一个对象，该对象是函数的<strong>原型对象</strong>，原型对象包含了公共的属性和方法，实例化的所有对象都共享原型对象的属性和方法。<em>需要注意的是 <em>*<code>prototype</code> 属性是函数才拥有的。</em></em> </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Person.prototype.age = <span class="number">12</span>;</div><div class="line">Person.prototype.name = <span class="string">"Jack"</span>;</div><div class="line"></div><div class="line">Person.prototype.say = () =&gt; &#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"Hello World !"</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person1 = <span class="keyword">new</span> Person();</div><div class="line"><span class="keyword">let</span> person2 = <span class="keyword">new</span> Person();</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(person1.age);    <span class="comment">// 12</span></div><div class="line"><span class="built_in">console</span>.log(person1.name);   <span class="comment">// Jack</span></div><div class="line"><span class="built_in">console</span>.log(person2.age);    <span class="comment">// 12</span></div><div class="line"><span class="built_in">console</span>.log(person2.name);   <span class="comment">// Jack</span></div><div class="line"><span class="built_in">console</span>.log(person1.say());  <span class="comment">// Hello World</span></div><div class="line"><span class="built_in">console</span>.log(person2.say());  <span class="comment">// Hello World</span></div><div class="line"></div><div class="line">person1.job = <span class="string">"test"</span>;</div><div class="line"><span class="built_in">console</span>.log(person1.job);    <span class="comment">// test</span></div><div class="line"><span class="built_in">console</span>.log(person2.job);    <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
+<p>从以上例子可以得知，通过 <code>prototype</code> 属性添加 <code>age</code> 和 <code>name</code> 属性，然后实例化两个对象，分别打印出两个属性是有值的，说明实例对象拥有了原型对象的属性和方法。</p>
+<p>现在我们已经知道构造函数与原型对象的单向关系，即构造函数通过 <code>prototype</code> 属性指向原型对象。那么原型对象能反过来通过某种方式指向原先的构造函数吗？答案是可以的，这时就需要 <code>constructor</code> 派上场了。</p>
+<p>每个原型对象都会有一个 <code>constructor</code> 属性，而 <code>constructor</code> 属性包含一个指向 <code>prototype</code> 属性所在函数的指针。以上面例子为例，即</p>
+<p><code>Person.prototype.constructor === Person</code>（<code>true</code>）。</p>
+<p>至此，我们理清了构造函数与原型对象之间的关系，关系图如下：</p>
+<p><img src="/images/javascript/prototype/constructor_prototype_object_relation.png" alt=""></p>
+<h1 id="实例对象与原型对象之间的关系"><a href="#实例对象与原型对象之间的关系" class="headerlink" title="实例对象与原型对象之间的关系"></a>实例对象与原型对象之间的关系</h1><p>当读取实例对象属性时，首先会在实例对象本身查找该属性是否存在，不存在的话，就会往实例对象与之关联的原型对象查找，再查找不到时，直向原型的原型查找，查找到最上层为止。</p>
+<p>例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span> (<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line">Person.prototype.name = <span class="string">"Jack"</span>;</div><div class="line">Person.prototype.desc = <span class="string">"desc"</span>;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person();</div><div class="line"><span class="built_in">console</span>.log(person.name);    <span class="comment">// Jack</span></div></pre></td></tr></table></figure>
+<p>可见，实例对象 <code>person</code> 本身没有属性 <code>name</code>，但是还能查找到该属性，这是通过原型对象找到的。那么实例对象是通过什么方式与原型对象关联呢？其实实例对象有一个属性 <code>__proto__</code>，指向原型对象，即 </p>
+<p><code>person.__proto__ === Person.prototype</code>（<code>true</code>）。</p>
+<p><img src="/images/javascript/prototype/proto_to_prototype.png" alt=""></p>
+<h1 id="原型对象的原型对象"><a href="#原型对象的原型对象" class="headerlink" title="原型对象的原型对象"></a>原型对象的原型对象</h1><p>从上面我们已经理清了构造函数与原型对象、实例对象与原型对象之间的关系，那么我们会不会产生一个疑惑：原型对象的原型对象是什么，即 <code>Person.prototype</code> 的原型对象是什么？</p>
+<p>JavaScript 中的所有对象都来自 <code>Object</code>，并且所有对象都从 <code>Object.prototype</code> 继承属性和方法，尽管它们可能被覆盖。因此可以推出：</p>
+<p><code>Person.prototype.__proto__ === Object.prototype</code>（<strong>true</strong>）。</p>
+<p><img src="/images/javascript/prototype/object_prototype.png" alt=""></p>
+<p>图中画虚线的表示通过 <code>__prototype__</code> 形成原型链；至此，已经把原型对象及原型链的知识讲完。最后放一张网上对原型的理解画得比较全面的关系图，如下：</p>
+<p><img src="/images/javascript/prototype/prototype_all.png" alt=""></p>
+<p>注：以上只是自己整理的学习笔记，由于水平有限难免有错误，欢迎指出。随着自己对原型的深入理解，笔记也会做相应的修改，最后放上资料参考来源。</p>
+<ul>
+<li><p><a href="https://github.com/mqyqingfeng/Blog/issues/2" target="_blank" rel="external">https://github.com/mqyqingfeng/Blog/issues/2</a></p>
+</li>
+<li><p>《JavaScript 高级程序设计》（第 3 版）</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1032,142 +1218,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/01/22/插入排序：直接插入排序/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/22/插入排序：直接插入排序/" itemprop="url">插入排序：直接插入排序</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-22T22:23:30+08:00">
-                2018-01-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/01/22/插入排序：直接插入排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/01/22/插入排序：直接插入排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2018/01/22/插入排序：直接插入排序/" class="leancloud_visitors" data-flag-title="插入排序：直接插入排序">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在日常开发工作中，不管是前端开发还是后端开发，在处理数据时，有时根据业务需求需要对数据进行排序，这就涉及到排序算法的选择。然而排序算法有很多种，对于算法的选择需要根据业务的需求，除此之外，还需要扎实的基本功。最近刚好在学习排序算法，把它记录下来，当作学习笔记。这篇文章要讲的是插入排序中一种：直接插入排序。</p>
-<h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><p>排序，简单来说就是把一组无序的元素以正序或者逆序的方式排序，那么至于采取什么方式排序，即是接下来要讲的。<strong>插入排序</strong>的主要思想是将一组元素的第一个元素看作是有序序列，从第二个元素起将待排序的元素插入到有序序列中，使有序序列逐渐扩大，直至所有元素都插入到有序序列中。<strong>直接插入排序</strong>是插入排序的一种，也是比较简单的一种排序方法，以下通过类比的例子来说明直接插入排序的思想。</p>
-<p>这里小学上体育课为例子。回想下我们当时上第一节体育课的情景，老师会说：“同学们，先排好队伍，我们再开始上课”。那么此时老师会根据同学们的身高来排队伍，先按身高从低到高排成一排（从左到右站队），再分成 n 行 n 列。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1217,7 +1267,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1239,7 +1289,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1299,7 +1349,7 @@
         <div class="copyright" >
   
   &copy;  2017 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
