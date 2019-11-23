@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2019-11-23T08:52:32.710Z</updated>
+  <updated>2019-11-23T09:29:09.852Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://panzeyong.com/2019/11/19/Javascript-%E4%B9%8B%E5%8E%9F%E5%9E%8B%E5%8F%8A%E5%8E%9F%E5%9E%8B%E9%93%BE/"/>
     <id>http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/</id>
     <published>2019-11-18T23:53:16.000Z</published>
-    <updated>2019-11-23T08:52:32.710Z</updated>
+    <updated>2019-11-23T09:29:09.852Z</updated>
     
     <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Javascript 函数有一个 <code>prototype</code> 属性，该属性是一个指针，指向一个对象，该对象包含特定类型的所有实例共享的属性和方法，称为实例对象的<strong>原型对象</strong>。</p>
 <p>简单来说，在 JavaScript 中创建一个新函数，就会自动获取 <code>prototype</code> 属性，通过 <code>new</code> 命令创建实例对象，实例对象会获取 <code>prototype</code> 属性所指向的原型对象的属性和方法。打个比方，在 Java 中有类和继承的概念，<code>prototype</code> 所指向的原型对象就好比 Java 中的基类，而新函数好比是 Java 中的新类，继承基类中的属性和方法，那么创建实例后，除了能访问到本身的属性和方法外，还能访问到基类中的属性和方法。</p>
