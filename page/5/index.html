@@ -268,6 +268,271 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/07/25/第八章-BOM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/25/第八章-BOM/" itemprop="url">第八章 BOM</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-25T07:42:23+08:00">
+                2017-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/25/第八章-BOM/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/07/25/第八章-BOM/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/07/25/第八章-BOM/" class="leancloud_visitors" data-flag-title="第八章 BOM">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、window-对象"><a href="#一、window-对象" class="headerlink" title="一、window 对象"></a>一、window 对象</h2><h3 id="1、全局作用域"><a href="#1、全局作用域" class="headerlink" title="1、全局作用域"></a>1、全局作用域</h3><p>window 对象具有双重角色</p>
+<ul>
+<li><p>通过 JavaScript 访问浏览器窗口的一个接口；</p>
+</li>
+<li><p>ECMAScript 规定的 Global 对象。</p>
+</li>
+</ul>
+<p>定义全局变量与在 window 对象上直接定义属性区别：全局变量不能通过 delete 操作符删除，而直接在 window 对象上定义的属性可以。</p>
+<p>尝试访问未声明的变量会抛出错误，但是通过查询 window 对象，可以知道某个可能未声明的变量是否存在。</p>
+<p>书中例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 定义全局变量</span></div><div class="line"><span class="keyword">var</span> age = <span class="number">29</span>;</div><div class="line"></div><div class="line"><span class="comment">// 在 window 对象上定义属性</span></div><div class="line"><span class="built_in">window</span>.color = <span class="string">"Green"</span>;</div><div class="line"></div><div class="line"><span class="comment">// 在 IE &lt; 9 时抛出错误，在其他所以浏览器中都返回 false</span></div><div class="line">alert(<span class="keyword">delete</span> <span class="built_in">window</span>.age);</div><div class="line"></div><div class="line"><span class="comment">// 在 IE &lt; 9 时抛出错误，在其他所以浏览器中都返回 true</span></div><div class="line">alert(<span class="keyword">delete</span> <span class="built_in">window</span>.color);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">sayAge</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.age);</div><div class="line">&#125;</div><div class="line"></div><div class="line">alert(age);</div><div class="line">alert(<span class="built_in">window</span>.age);</div><div class="line"></div><div class="line">sayAge();</div><div class="line"><span class="built_in">window</span>.sayAge();</div><div class="line"></div><div class="line">alert(<span class="built_in">window</span>.color);</div></pre></td></tr></table></figure>
+<h3 id="2、窗口关系以及框架"><a href="#2、窗口关系以及框架" class="headerlink" title="2、窗口关系以及框架"></a>2、窗口关系以及框架</h3><p>每个框架（frame）都拥有自己的 window 对象，并且保存在 frames 集合钟；每个 window 对象都有一个 name 属性，包含框架名称。</p>
+<p>top 对象：始终指向最高（最外）层的框架，也就是浏览器窗口；使用它可以确保在一个框架中正确第访问另外一个框架。（当网页有框架的情况下，window 对象指向的是每个框架特定的实例，与 top 对象不相等；反之，则相同。）</p>
+<p>parent 对象：始终指向当前框架的直接上层框架。（当网页有框架的情况下，parent 不一定等于 top；反之，则一定相等。）</p>
+<p>self 对象：始终指向 window，可以与 window 对象互换使用。引入该对象的目的只是为了与 top 和 parent 对象对应起来。</p>
+<p>top、parent、self 等对象其实都是 window 的属性，也就是说，可以通过 window.top、window.parent 等访问。</p>
+<p>访问框架的方式：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 不推荐，因为在有框架的网页中，每个 window 对象都是指向框架的特定实例，而非指向最外层框架。</span></div><div class="line"><span class="built_in">window</span>.frames[index]</div><div class="line"><span class="built_in">window</span>.frames[<span class="string">"框架名称"</span>]</div><div class="line"></div><div class="line"><span class="comment">// 推荐，因为始终指向最高（最外）层的框架，也就是浏览器窗口</span></div><div class="line">top.frames[index]</div><div class="line">top.frames[<span class="string">"框架名称"</span>]</div><div class="line"></div><div class="line"><span class="comment">// 通过集合访问</span></div><div class="line">frames[index]</div><div class="line">frames[<span class="string">"框架名称"</span>]</div></pre></td></tr></table></figure>
+<h3 id="3、窗口位置"><a href="#3、窗口位置" class="headerlink" title="3、窗口位置"></a>3、窗口位置</h3><p>screenLeft、screenTop、screenX、screenY 这四个属性在各个浏览器中使用情况：</p>
+<table><tr align="center"><td width="25%" align="center">浏览器 / 属性</td><td width="15%" align="center">IE</td><td width="15%" align="center">Chrome</td><td width="15%" align="center">Sarari</td><td width="15%" align="center">Opera</td><td width="15%" align="center">Firefox</td></tr><tr align="center"><td>screenLeft</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>不支持</td></tr><tr align="center"><td>screenTop</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>不支持</td></tr><tr align="center"><td>screenX</td><td>不支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>screenY</td><td>不支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr></table>
+
+<p>跨浏览器获取窗口左边和上边的位置的示例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> leftPos = (<span class="keyword">typeof</span> <span class="built_in">window</span>.screenLeft == <span class="string">"number"</span>) ? <span class="built_in">window</span>.screenLeft : <span class="built_in">window</span>.screenX;</div><div class="line"><span class="keyword">var</span> topPos = (<span class="keyword">typeof</span> <span class="built_in">window</span>.screenTop == <span class="string">"number"</span> )? <span class="built_in">window</span>.screenTop : <span class="built_in">window</span>.screenY;</div></pre></td></tr></table></figure>
+<h3 id="4、窗口大小"><a href="#4、窗口大小" class="headerlink" title="4、窗口大小"></a>4、窗口大小</h3><p>innerWidth、innerHeight、outerWidth、outerHegiht 这四个属性在以下浏览器是支持的，不同的是获取的值，具体情况如下：</p>
+<table><tr align="center"><td width="25%">浏览器 / 属性</td><td width="15%">IE9+</td><td width="15%">Chrome</td><td width="15%">Sarari</td><td width="15%">Opera</td><td width="15%">Firefox</td></tr><tr align="center"><td>innerWidth</td><td>页面视图区的大小（减去边框宽度）</td><td>视口（viewport）大小而非浏览器窗口的大小</td><td>页面视图区的大小（减去边框宽度）</td><td>页面视图区的大小（减去边框宽度）</td><td>页面视图区的大小（减去边框宽度）支持</td></tr><tr align="center"><td>innerHeight</td><td>页面视图区的大小（减去边框宽度）</td><td>视口（viewport）大小而非浏览器窗口的大小</td><td>页面视图区的大小（减去边框宽度）</td><td>页面视图区的大小（减去边框宽度）</td><td>不页面视图区的大小（减去边框宽度）</td></tr><tr align="center"><td>outerWidth</td><td>返回浏览器本身窗口的大小</td><td>视口（viewport）大小而非浏览器窗口的大小</td><td>返回浏览器本身窗口的大小</td><td>页面视图容器大小（单个标签页对应的浏览器窗口）</td><td>返回浏览器本身窗口的大小</td></tr><tr align="center"><td>outerHeight</td><td>返回浏览器本身窗口的大小</td><td>视口（viewport）大小而非浏览器窗口的大小</td><td>返回浏览器本身窗口的大小</td><td>页面视图容器大小（单个标签页对应的浏览器窗口）</td><td>返回浏览器本身窗口的大小</td></tr></table>
+
+<p>document.documentElement.clientWidth、document.documentElement.clientHeight、document.body.clientWidth、document.body.clientHeight 这四个属性作用主要是保存页面视口信息，在不同浏览器使用情况如下：</p>
+<table><tr align="center"><td width="50%">浏览器 / 属性</td><td width="10%">IE</td><td width="10%">Chrome</td><td width="10%">Sarari</td><td width="10%">Opera</td><td width="10%">Firefox</td></tr><tr align="center"><td>document.documentElement.clientWidth</td><td>支持（IE6 中标准模式）</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>document.documentElement.clientHeight</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>document.body.clientWidth</td><td>支持（混杂模式）</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>document.body.clientHeight</td><td>支持（混杂模式）</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr></table>
+
+<p>获取页面视口大小示例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> pageWidth = <span class="built_in">window</span>.innerWidth;</div><div class="line"><span class="keyword">var</span> pageHeight = <span class="built_in">window</span>.innerHeight;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> pageWidth != <span class="string">"number"</span>) &#123;</div><div class="line">	<span class="keyword">if</span> (<span class="built_in">document</span>.compatMode == <span class="string">"CSS1Compat"</span>) &#123;</div><div class="line">		pageWidth = <span class="built_in">document</span>.documentElement.clientWidth;</div><div class="line">		pageHeight = <span class="built_in">document</span>.documentElement.clientHeight;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		pageWidth = <span class="built_in">document</span>.body.clientWidth;</div><div class="line">		pageHeight = <span class="built_in">document</span>.body.clientHeight;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5、导航和打开窗口"><a href="#5、导航和打开窗口" class="headerlink" title="5、导航和打开窗口"></a>5、导航和打开窗口</h3><p><strong>window.open()：</strong>既可以导航到特定的 URL，也可以打开一个新的浏览器窗口。接收 4 个参数，具体如下：</p>
+<ul>
+<li><p>加载的 URL；</p>
+</li>
+<li><p>窗口目标：_self、_parent、_top、_blank（指定窗口的话就在该窗口打开 URL；没有的话就根据浏览器设置打开新标签页或者打开新的窗口）；</p>
+</li>
+<li><p>特性字符串：不允许出现空格；</p>
+</li>
+<li><p>布尔值（表示新页面是否取代浏览器历史记录中当前加载页面）</p>
+</li>
+</ul>
+<p>第三个参数设置窗口特性，具体如下：</p>
+<table><tr align="center"><td width="20%">设置</td><td width="20%">值</td><td width="60%">说明</td></tr><tr align="center"><td width="20%">fullscreen</td><td width="20%">yes / no</td><td width="60%">表示浏览器窗口是否最大化。仅限 IE</td></tr><tr align="center"><td width="20%">height</td><td width="20%">数值</td><td width="60%">表示新窗口的高度。不能小于 100</td></tr><tr align="center"><td width="20%">left</td><td width="20%">数值</td><td width="60%">表示新窗口的左坐标。不能是负值</td></tr><tr align="center"><td width="20%">location</td><td width="20%">yes / no</td><td width="60%">表示是否在浏览器窗口中显示地址栏。不同浏览器的默认值不同。如果设置为 no，地址栏可能会隐藏，也可能会被禁止（取决于浏览器）</td></tr><tr align="center"><td width="20%">menubar</td><td width="20%">yes / no</td><td width="60%">表示是否在浏览器窗口中显示菜单栏。默认值为 no</td></tr><tr align="center"><td width="20%">resizeable</td><td width="20%">yes / no</td><td width="60%">表示是否可以通过拖动浏览器窗口的边框改变其大小。默认值为 no</td></tr><tr align="center"><td width="20%">scrollbars</td><td width="20%">yes / no</td><td width="60%">表示如果内容在视口中显示不下，是否允许滚动。默认值为 no</td></tr><tr align="center"><td width="20%">status</td><td width="20%">yes / no</td><td width="60%">表示是否在浏览器窗口中显示状态栏。默认值 no</td></tr><tr align="center"><td width="20%">toolbar</td><td width="20%">yes / no</td><td width="60%">表示是否在浏览器窗口中显示工具栏。默认值为 no</td></tr><tr align="center"><td width="20%">top</td><td width="20%">数值</td><td width="60%">表示新窗口的上坐标。不能是负值</td></tr><tr align="center"><td width="20%">width</td><td width="20%">数值</td><td width="60%">表示新窗口的宽度。不能小于 100</td></tr></table>
+
+<p><strong>opener</strong>：新创建窗口属性，保存着打开它的原始窗口对象。opener 设置为 null，表示在单独的进程中运行新标签页。（Chrome）</p>
+<p><strong>屏蔽弹出窗口方式：</strong></p>
+<ul>
+<li><p>浏览器内置的屏蔽程序阻止的弹出窗口，window.open 很可能返回 null。</p>
+</li>
+<li><p>浏览器扩展或者其它程序阻止的弹出窗口，window.open() 通常会抛出一个错误。</p>
+</li>
+</ul>
+<p>示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> blocked = <span class="literal">false</span>;</div><div class="line"></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">	<span class="keyword">var</span> baiduWin = <span class="built_in">window</span>.open(<span class="string">"http://www.baidu.com"</span>, <span class="string">"topFrame"</span>, <span class="string">"height=400,widht=600,left=25,top=25,location=no,menubar=no,resizable=true,scrollbars=yes,status=no,toolbar=no"</span>);</div><div class="line">	</div><div class="line">	<span class="keyword">if</span> (<span class="literal">null</span> == baiduWin) &#123;</div><div class="line">		blocked = <span class="literal">true</span>;</div><div class="line">	&#125;</div><div class="line">&#125; <span class="keyword">catch</span> (ex) &#123;</div><div class="line">	blocked = <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> (blocked) &#123;</div><div class="line">	alert(<span class="string">"The popup was blocked !"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	alert(<span class="string">"The popup was not blocked !"</span>);</div><div class="line">	alert(baiduWin);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="6、间歇调用和超时调用"><a href="#6、间歇调用和超时调用" class="headerlink" title="6、间歇调用和超时调用"></a>6、间歇调用和超时调用</h3><p>一般认为，使用超时调用来模拟间歇调用的是一种最佳模式。在开发环境下，很少使用真正的间歇调用，原因是后一个间歇调用可能会在前一个间歇调用结束之前启动。</p>
+<p><strong>setTimeout()</strong>：超时调用,返回一个数值 ID，表示唯一标识。接收两个参数：要执行的代码和以毫秒表示的时间（即在执行代码前需要等待多时毫秒）</p>
+<p><strong>setInterval()</strong>：间歇调用。接收两个参数：要执行的代码和每次执行之前需要等待的毫秒数。</p>
+<p><strong>clearTimeout()</strong>：根据相应的 id 取消调用。</p>
+<p>示例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="string">"Hello World !"</span>);</div><div class="line">&#125;, <span class="number">1000</span>);</div><div class="line"></div><div class="line">setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="string">"Hello World"</span>);</div><div class="line">&#125;, <span class="number">1000</span>);</div></pre></td></tr></table></figure>
+<h3 id="7、系统对话框"><a href="#7、系统对话框" class="headerlink" title="7、系统对话框"></a>7、系统对话框</h3><p><strong>alert()：</strong>警告框。</p>
+<p><strong>comfirm()：</strong>确认对话框。</p>
+<p><strong>prompt()：</strong>提示对话框。</p>
+<p><strong>window.print()：</strong>打印。</p>
+<p><strong>window.find()：</strong>查找。</p>
+<p>示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">alert(<span class="string">"Hello World !"</span>);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (confirm(<span class="string">"Are you sure ?"</span>)) &#123;</div><div class="line">	alert(<span class="string">"I'm so glad you're sure !"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	alert(<span class="string">"I'm sorry to hear you're not sure ."</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> result = prompt(<span class="string">"What is your name ? "</span>, <span class="string">""</span>);</div><div class="line"><span class="keyword">if</span> (<span class="literal">null</span> != result) &#123;</div><div class="line">	alert(<span class="string">"Welcome, "</span> + result);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="二、location-对象"><a href="#二、location-对象" class="headerlink" title="二、location 对象"></a>二、location 对象</h2><p>location 对象不仅提供与当前窗口中加载的文档有关的信息，还提供了一些导航功能以及将 URL 解析为独立的片段。window.location 和 document.location 引用的同是一个对象，即 location 对象。</p>
+<p>location 对象所有属性如下表：</p>
+<table><tr align="center"><td width="25%">属性名</td><td width="25%">例子</td><td width="50%">说明</td></tr><tr align="center"><td>hash</td><td>“#contents”</td><td>返回 URL 中的 hash（# 号后跟或多个字符），如果 URL 中不包含散列，则返回空字符串</td></tr><tr align="center"><td>host</td><td>“www.wrox.com:80”</td><td>返回服务器名称和端口号（如果有）</td></tr><tr align="center"><td>hostname</td><td>“www.wrox.com”</td><td>返回不带端口号的服务器名称</td></tr><tr align="center"><td>href</td><td>“<a href="http://www.wrox.com" target="_blank" rel="external">http://www.wrox.com</a>“</td><td>返回当前加载页面的完整 URL。而 location 对象的 toString() 方法也返回这个值</td></tr><tralign="center"><td>pathname</td><td>“/WileyCDA”</td><td>返回 URL 中的目录和（或）文件名</td><tr align="center"><td>port</td><td>“8080”</td><td>返回 URL 中指定的端口号。如果 URL 中不包含端口号，则这个属性返回空字符串</td></tr><tr align="center"><td>protocol</td><td>“http”</td><td>返回页面使用的协议。通常是 http: 或 https:</td></tr><tr align="center"><td>search</td><td>“?q=javascript”</td><td>返回 URL 的查询字符串。这个字符串以问号开头</td></tr></tralign="center"></table>
+
+<p>查询参数示例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getQueryStringArgs</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> qs = (location.search.length &gt; <span class="number">0</span> ? location.search.substring(<span class="number">1</span>) : <span class="string">""</span>);</div><div class="line"></div><div class="line">	args = &#123;&#125;;</div><div class="line"></div><div class="line">	items = qs.length ? qs.split(<span class="string">"&amp;"</span>) : [];</div><div class="line">	item = <span class="literal">null</span>;</div><div class="line">	name = <span class="literal">null</span>;</div><div class="line">	value = <span class="literal">null</span>;</div><div class="line"></div><div class="line">	i = <span class="number">0</span>;</div><div class="line">	len = items.length;</div><div class="line"></div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">		item = items[i].split(<span class="string">"="</span>);</div><div class="line">		name = <span class="built_in">decodeURIComponent</span>(item[<span class="number">0</span>]);</div><div class="line">		value = <span class="built_in">decodeURIComponent</span>(item[<span class="number">1</span>]);</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (name.length) &#123;</div><div class="line">			args[name] = value;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> args;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>位置操作方法：</p>
+<ul>
+<li><p><strong>location.assign(url)</strong>：立即打开新 URL 并在浏览器的历史记录中生成一条记录。<strong>location.href</strong> 与 <strong>window.location</strong> 效果与之一样。</p>
+</li>
+<li><p><strong>location.replace(url)</strong>：打开新 URL，但是不会下历史记录中生成新记录。</p>
+</li>
+<li><p><strong>location.reload()</strong>：重新加载当前显示的页面。可接收参数，比如 true，表示从服务器加载。</p>
+</li>
+</ul>
+<h2 id="三、navigator-对象"><a href="#三、navigator-对象" class="headerlink" title="三、navigator 对象"></a>三、navigator 对象</h2><p>navigator 对象属性如下表：</p>
+<table><tr align="center"><th width="20%">属性或方法</th><th width="34%">说明</th><th width="8%">IE</th><th width="10%">Firefox</th><th width="18%">Safari/Chrome</th><th width="10%">Opera</th></tr><tr align="center"><td>appCodeName</td><td>浏览器的名称。通常都是 Mozilla，即使在非 Mozilla 浏览器也是如此</td><td>3.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>appMinorVersion</td><td>此版本信息</td><td>4.0+</td><td>-</td><td>-</td><td>9.5+</td></tr><tr align="center"><td>appName</td><td>完整的浏览器名称</td><td>3.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>appVersion</td><td>浏览器的版本。一般不与实际的浏览器版本对应</td><td>3.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>buildId</td><td>浏览器编译版本</td><td>-</td><td>2.0+</td><td>-</td><td>-</td></tr><tr align="center"><td>cookieEnabled</td><td>表示 cookie 是否启用</td><td>4.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>cpuClass</td><td>客户端计算机中使用的 CPU 类型（x86、68K、Alpha、PPC 或 Other）</td><td>4.0+</td><td>-</td><td>-</td><td>-</td></tr><tr align="center"><td>javaEnabled()</td><td>表示当前浏览器中是否启用了 Java</td><td>4.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>language</td><td>浏览器的主语言</td><td>4.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>mimeTypes</td><td>在浏览器中注册的 MIME 类型数组</td><td>4.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>onLine</td><td>表示浏览器是否连接到因特网</td><td>4.0+</td><td>1.0+</td><td>-</td><td>9.5+</td></tr><tr align="center"><td>oscpu</td><td>客户端计算机的操作系统或使用的 CPU</td><td>-</td><td>1.0+</td><td>-</td><td>-</td></tr><tr align="center"><td>platform</td><td>浏览器所在的系统平台</td><td>4.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>plugins</td><td>浏览器中安装的插件信息的数组</td><td>4.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>preference()</td><td>设置用户的首选项</td><td>-</td><td>1.5+</td><td>-</td><td>-</td></tr><tr align="center"><td>product</td><td>产品名称（如 Gecko）</td><td>-</td><td>1.0+</td><td>1.0+</td><td>-</td></tr><tr align="center"><td>productSub</td><td>关于产品的次要信息（如 Gecko 版本）</td><td>-</td><td>1.0+</td><td>1.0+</td><td>-</td></tr><br><tr align="center"><td>systemLanguage</td><td>操作系统的语言</td><td>4.0+</td><td>-</td><td>-</td><td>-</td></tr><tr align="center"><td>userAgent</td><td>浏览器的用户代理字符串</td><td>3.0+</td><td>1.0+</td><td>1.0+</td><td>7.0+</td></tr><tr align="center"><td>userLanguage</td><td>操作系统的默认语言</td><td>4.0+</td><td>-</td><td>-</td><td>7.0+</td></tr><tr align="center"><td>userProfile</td><td>借以访问用户个人信息的对象</td><td>4.0+</td><td>-</td><td>-</td><td>-</td></tr><tr align="center"><td>vendor</td><td>浏览器的品牌</td><td>-</td><td>1.0+</td><td>1.0+</td><td>-</td></tr><tr align="center"><td>vendorSub</td><td>有关供应商的次要信息</td><td>-</td><td>1.0+</td><td>1.0+</td><td>-</td></tr></table>
+
+<h3 id="检测插件"><a href="#检测插件" class="headerlink" title="检测插件"></a>检测插件</h3><p>对于非 IE 浏览器，可以使用 navigator 对象提供的 plugins 属性来检测浏览器插件信息，返回的是数组。该数组中的每一项都包含以下属性：</p>
+<ul>
+<li><p>name：插件的名字。</p>
+</li>
+<li><p>description：插件的描述。</p>
+</li>
+<li><p>filename：插件的文件名。</p>
+</li>
+<li><p>length：插件所处理的 MIME 类型数量。</p>
+</li>
+</ul>
+<p>检测插件示例代码（在 IE 中无效）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasPlugin</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">	name = name.toLowerCase();</div><div class="line"></div><div class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; navigator.plugins.length; i++) &#123;</div><div class="line">		<span class="keyword">if</span> (navigator.plugins[i].name.toLowerCase().indexOf(name) &gt; <span class="number">-1</span>) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>检测插件示例代码（只在 IE 中有效）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">hasIEPlugin</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		<span class="keyword">new</span> ActiveXObject(name);</div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">	&#125; <span class="keyword">catch</span> (ex) &#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="四、screen-对象"><a href="#四、screen-对象" class="headerlink" title="四、screen 对象"></a>四、screen 对象</h2><p>用来表明客户端的能力，其中包括浏览器窗口外部的显示器信息，比如像素宽度和高度。</p>
+<p>screen 对象各种属性如下表：</p>
+<table><tr><th width="30%">属性</th><th width="30%">说明</th><th width="10%">IE</th><th width="10%">Firefox</th><th width="10%">Safari / Chrome</th><th width="10%">Opera</th></tr><tr align="center"><td>availHeight</td><td>屏幕的像素高度减系统部件高度之后的值（只读）</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>availLeft</td><td>未被系统部件占用的最左侧的像素值（只读）</td><td>不支持</td><td>支持</td><td>支持</td><td>不支持</td></tr><tr align="center"><td>availTop</td><td>未被系统部件占用的最上方的像素值（只读）</td><td>不支持</td><td>支持</td><td>支持</td><td>不支持</td></tr><tr align="center"><td>availWidth</td><td>屏幕的像素宽度减去系统部件宽度之后的值（只读）</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>bufferDepth</td><td>读、写用于呈现屏外位图的位数</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>colorDepth</td><td>用于表现颜色的位数；多数系统是 32（只读）</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr><td>deviceXDPI</td><td>屏幕实际的水平 DPI（只读）</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>deviceYDPI</td><td>屏幕实际的垂直 DPI（只读）</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>fontSmooth / ingEnabled</td><td>表示是否启用字体平滑（只读）</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>height</td><td>屏幕的像素高度</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>left</td><td>当前屏幕距离左边的像素距离</td><td>不支持</td><td>支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>logicalXDPI</td><td>屏幕逻辑的水平 DPI（只读）</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>logicalYDPI</td><td>屏幕逻辑的垂直 DPI（只读）</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>pixelDepth</td><td>屏幕的位深</td><td>不支持</td><td>支持</td><td>支持</td><td>支持</td></tr><tr align="center"><td>top</td><td>当前屏幕距上边的像素距离</td><td>不支持</td><td>支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>updateInterval</td><td>读、写以毫秒表示的屏幕刷新时间间隔</td><td>支持</td><td>不支持</td><td>不支持</td><td>不支持</td></tr><tr align="center"><td>width</td><td>屏幕的像素宽度</td><td>支持</td><td>支持</td><td>支持</td><td>支持</td></tr></table>
+
+<h2 id="history-对象"><a href="#history-对象" class="headerlink" title="history 对象"></a>history 对象</h2><p>history 对象保存着用户上网的的历史记录。</p>
+<p><strong>go()</strong>：在用户的历史记录中任意跳转，可以向其也可以向后。该方法接收一个参数，正数表示向前，负数表示向后。</p>
+<p><strong>back()</strong>：后退。</p>
+<p><strong>forward()</strong>：前进。</p>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第八章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/07/10/第七章-函数表达式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1415,330 +1680,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/05/21/JobScheduler-用法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/21/JobScheduler-用法/" itemprop="url">JobScheduler 用法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-21T12:28:37+08:00">
-                2017-05-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/05/21/JobScheduler-用法/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/05/21/JobScheduler-用法/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/05/21/JobScheduler-用法/" class="leancloud_visitors" data-flag-title="JobScheduler 用法">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>先来聊聊怎么会知道 JobSchduler 这神奇的东西。公司项目有这么一个需求：平板上实时记录小朋友的学习情况，然后生成学习报告上传到服务器，供手机端查看。原先的做法是开启服务，在服务里注册广播接收器，当广播接收器接收到 action，就会将数据上传，在网络正常的情况下，该做法是没有问题的；但是当网络很差的情况下，有可能造成上传失败，数据丢失。后来我采用一种方式：当上传失败时，开启定时器上传，直到成功为止。原本以为这样就解决问题，可是后来做后台的同事说由于设置时间短，访问量多，造成服务器流量过大，希望我能找另外一种解决方法。这时 Leader 跟我说采用 JobScheduler，它完全有系统控制，满足一定的条件时触发任务。于是我马上 Google，看看这玩意到底是啥？经过搜索一番，发现 JobScheduler 功能挺强大的。下面是自己学习 JobSchduler 小结。</p>
-<p>JobScheduler 是在 Android 5.0 Google 推出的一个新组件，它的出现主要是为了解决某些任务需要在满足一个或多个条件的情况下才触发的需求，这些条件比如网络状态、电池充电、数据变化、自己设定的条件等，在满足条件时会触发相应的 JobScheduler 完成相应的任务。这个过程只需我们对要执行的任务设定条件，其它都由系统控制完成的，无需我们去控制任务。在学习 JobScheduler 的用法之前，先来了解相关的 API，这里涉及到 JobScheduler、JobInfo、JobParameters、JobService 这四个类。</p>
-<h3 id="API-讲解"><a href="#API-讲解" class="headerlink" title="API 讲解"></a>API 讲解</h3><h4 id="JobScheduler"><a href="#JobScheduler" class="headerlink" title="JobScheduler"></a>JobScheduler</h4><p>先来看下官方文档对 JobScheduler 的描述：</p>
-<blockquote>
-<p>根据应用程序自己的进程中调度各种类型的任务。</p>
-<p>关于可以运行的任务类型以及如何构建它们的更多描述，请参阅 <a href="https://developer.android.com/reference/android/app/job/JobInfo.html" target="_blank" rel="external">JobInfo</a>。你将构建这些 JobInfo 对象,并调用 JobScheduler 方法 <a href="https://developer.android.com/reference/android/app/job/JobScheduler.html#schedule(android.app.job.JobInfo" target="_blank" rel="external">schdule(JonInfo)</a>) 将这些 JobInfo 对象传给它。当设定的条件满足时，系统将会在你应用程序 <a href="https://developer.android.com/reference/android/app/job/JobService.html" target="_blank" rel="external">JobService</a> 上执行相应的任务。当你使用 <a href="https://developer.android.com/reference/android/app/job/JobInfo.Builder.html#JobInfo.Builder(int, android.content.ComponentName" target="_blank" rel="external">JobInfo.Builder(int, android.content.ComponentName)</a>) 创建你的 JobInfo 时，意味着已经确定哪个 JobService 将执行你的任务逻辑。</p>
-<p>框架对于你接收回调的时机很智能的，并且尝试尽可能地分批处理和延迟它们。通常来说，如果你没有为你的任务设置最后期限，那么就会根据 JobScheduler 内部队列当前的状态在任何时刻来执行它们；<br>可是只要到下一次设备连接电源，那么任务就有可能被延迟。</p>
-<p>你不能直接实例化 JobScheduler，而是需要通过 <a href="https://developer.android.com/reference/android/content/Context.html#getSystemService(java.lang.Class&lt;T" target="_blank" rel="external">Context.getSystemService(Context.JOB_SCHEDULER_SERVICE)</a>) 获取实例。</p>
-</blockquote>
-<p>从官方文档可以知道，JobScheduler 的职责是调度任务、取消任务。JobScheduler 提供 2 个常量和 5 个方法，在了解它们之前，先来了解如何获取 JobScheduler 实例。正如官方文档所介绍的，通过获取系统服务来获取的，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JobScheduler jobScheduler = (JobScheduler) Context.getSystemService(Context.JOB_SCHEDULER_SERVICE);</div></pre></td></tr></table></figure>
-<p>接下来来了解两个常量的具体含义</p>
-<ul>
-<li><p>RESULT_FAILURE：调度任务失败时返回值。</p>
-</li>
-<li><p>RESULT_SUCCESS：调度任务成功时返回值。</p>
-</li>
-</ul>
-<p>JobScheduler 提供 5 个方法供我们使用，让我们来了解下这 5 个方法的具体用法</p>
-<ul>
-<li><p><strong>cancel(int jobId)</strong>：取消 JobScheduler 内部队列 id 为 jobId 待处理任务。</p>
-</li>
-<li><p><strong>cancelAll()</strong>：取消在这个应用程序上 JobScheduler 已经注册的所有任务。</p>
-</li>
-<li><p><strong>getAllPendingJobs()</strong>：检索 JobScheduler 待处理所有任务。</p>
-</li>
-<li><p><strong>getPendingJob(int jobId)</strong>：检索 JobScheduler 内部队列 id 为 jobId 待处理任务。</p>
-</li>
-<li><p><strong>schedule(JobInfo job)</strong>：调度任务。</p>
-</li>
-</ul>
-<h4 id="JobInfo"><a href="#JobInfo" class="headerlink" title="JobInfo"></a>JobInfo</h4><p>JobInfo 对一个即将被执行的任务的信息进行封装，然后供 JobScheduler 调度。由于 JobInfo 包含的信息比较多，所有采用建造者模式来构建其实例，即 JobInfo.Builder 来创建。</p>
-<p>来看下官方文档的描述：</p>
-<blockquote>
-<p>将要调度的任务所需的参数（信息）封装为 JobInfo 对象传递给 <a href="https://developer.android.com/reference/android/app/job/JobScheduler.html#RESULT_FAILURE" target="_blank" rel="external">JobScheduler</a>。使用 <a href="https://developer.android.com/reference/android/app/job/JobInfo.Builder.html#JobInfo.Builder(int, android.content.ComponentName" target="_blank" rel="external">JobInfo.Builder</a>) 创建 JobInfo 实例。当你正在创建 JobInfo 对象时，你必须<strong>至少指定一项约束条件</strong>。这样做的目标是为你想完成的任务提供优先级高调度。<strong>如果你没有指定任何一项约束时，你的 app 会抛出异常。</strong></p>
-</blockquote>
-<p>那么来看下如何创建 JobInfo 实例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JobInfo.Builder builder = <span class="keyword">new</span> JobInfo.Builder(jobId, componentName);</div><div class="line">builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);</div><div class="line">JobInfo jobInfo = builder.build();</div></pre></td></tr></table></figure>
-<p>由于创建 JobInfo 对象时至少指定一项约束条件，所以以上只是指定请求网络类型，至于其它属性可以根据自己的需求指定。那么 JobInfo 到底有哪些属性呢？下面一一揭晓。</p>
-<p>先来看下 JobInfo 提供常量：</p>
-<ul>
-<li><p><strong>BACKOFF_POLICY_EXPONENTIAL</strong>：退避策略，任务失败时等待间隔呈指数增长。</p>
-</li>
-<li><p><strong>BACKOFF_POLICY_LINEAR</strong>：退避策略，任务失败时等待间隔呈线性增长。</p>
-</li>
-<li><p><strong>DEFAULT_INITIAL_BACKOFF_MILLIS</strong>：默认情况下任务的 backoff，以毫秒为单位。</p>
-</li>
-<li><p><strong>MAX_BACKOFF_DELAY_MILLIS</strong>：允许任务最大 backoff，以毫秒为单位。</p>
-</li>
-<li><p><strong>NETWORK_TYPE_ANY</strong>：连接任何网络。</p>
-</li>
-<li><p><strong>NETWORK_TYPE_NONE</strong>：默认值，没联网。</p>
-</li>
-<li><p><strong>NETWORK_TYPE_NOT_ROAMING</strong>：连接非漫游网络。</p>
-</li>
-<li><p><strong>NETWORK_TYPE_UNMETERED</strong>：连接非计量网络。</p>
-</li>
-</ul>
-<p>JobInfo 设置属性的方法由 JobInfo.Builder，那么来看下提供哪些方法设置属性</p>
-<ul>
-<li><p><strong>setRequiredNetworkType (int networkType)</strong>：设置网络类型。如果任务需要通过网络访问服务器，但是没有调用该方法设置网络类型时，那么任务不会被执行。提供四个参数可以设置：</p>
-<ul>
-<li><p><strong>NETWORK_TYPE_NONE</strong>：默认值，不连接网络。</p>
-</li>
-<li><p><strong>NETWORK_TYPE_ANY</strong>：连接任何网络。</p>
-</li>
-<li><p><strong>NETWORK_TYPE_NOT_ROAMING</strong>：连接非漫游网络。</p>
-</li>
-<li><p><strong>NETWORK_TYPE_UNMETERED</strong>：连接非计量网络。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>setRequiresCharging (boolean requiresCharging)</strong>：设置是否连接电源，默认值为 false。</p>
-</li>
-<li><p><strong>setRequiresDeviceIdle (boolean requiresDeviceIdle)</strong>：设置是否需要设备处于空闲模式，默认值为 false。空闲模式是系统提供的一种松散模式，意味着设备没有在使用或者已经有一段时间没有使用，这正是执行繁重任务的好时机。</p>
-</li>
-<li><p><strong>addTriggerContentUri (JobInfo.TriggerContentUri uri)</strong>：API 24 支持使用 content provider 变化作为触发任务执行的时机。需要指定触发 URL，并通过 ContentObserver 监听 content provider 变化，从而触发任务的执行。注意设置该属性后，不能设置 <strong>setPeriodic(long)</strong> 或者 <strong>setPersisted(boolean)</strong> 属性，也就是说不能与他们任何一个一起使用。因为他们之间是不兼容的，如果一起使用的话，当 <strong>build()</strong> 被调用时，会抛出 <strong>IllegalArgumentException</strong> 异常。为了持续监听 content 变化，需要在 JobService 完成最近变化执行的任务之前，调用新的 JobInfo 观察相同的 URL。</p>
-</li>
-<li><p><strong>setTriggerContentMaxDelay (long durationMs)</strong>：设置当第一次监听到 content 变化到任务执行时可以延迟的最大时间，以毫秒为单位。</p>
-</li>
-<li><p><strong>setTriggerContentUpdateDelay (long durationMs)</strong>：设置当监听到 content 变化时到任务执行时可以延迟的时间，如果在这期间监听到更多变化，那么延迟时间的计时将被重置到最近一次更改开始。</p>
-</li>
-<li><p><strong>setBackoffCriteria (long initialBackoffMillis, int backoffPolicy)</strong>：设置 back-off 或者 重试策略。注意尝试调用 <strong>setRequiresDeviceIdle(boolean)</strong> 为任务设置回退策略时，当 <strong>build()</strong> 被调用时会抛出异常。因为 back-off 对这些工作类型没意义。</p>
-<p>  第一个参数表示第一次失败时尝试的时间间隔，单位为毫秒，预设的参数有：</p>
-<ul>
-<li><p>DEFAULT_INITIAL_BACKOFF_MILLIS：30000</p>
-</li>
-<li><p>MAX_BACKOFF_DELAY_MILLIS：18000000</p>
-<p>第二个参数表示退避策略</p>
-</li>
-<li><p>BACKOFF_POLICY_EXPONENTIAL：任务失败时等待间隔呈指数增长。</p>
-</li>
-<li><p>BACKOFF_POLICY_LINEAR：任务失败时等待间隔呈线性增长。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>setMinimumLatency (long minLatencyMillis)</strong>：指定任务延迟执行时间。</p>
-</li>
-<li><p><strong>setOverrideDeadline (long maxExecutionDelayMillis)</strong>：设置任务执行最大的延迟时间。即使到了时间期限，条件还没满足，任务也会被执行。</p>
-</li>
-<li><p><strong>setPeriodic (long intervalMillis)</strong>：指定任务在一定的周期内执行，并且每一个任务在周期内只执行一次。调用该方法设置后，不能再调用 <strong>setMinimumLatency (long minLatencyMillis)</strong> 或者 <strong>setOverrideDeadline (long maxExecutionDelayMillis)</strong> 方法，否则会抛出异常。</p>
-</li>
-<li><p><strong>setPersisted (boolean isPersisted)</strong>：设置当设备重启，任务是否被重新调度。如果设置 true，必须申请权限 <strong>RECEIVE_BOOT_COMPLETED</strong>，否则运行时会报错。</p>
-</li>
-<li><p><strong>setExtras (PersistableBundle extras)</strong>：设置额外参数，值允许原始数据类型。</p>
-</li>
-</ul>
-<h4 id="JobService"><a href="#JobService" class="headerlink" title="JobService"></a>JobService</h4><p>JobScheduler 所要调度的任务是在 JobService 定义的，而 JobService 是继承 Service；也就是说，JobService 也是服务，只是它与四大组件之一 Service 有所区别。JobService 有一大特点是无论你的 app 是否处于活跃状态，当你的任务满足特定的条件时，系统都会执行任务。我们可以编写多个 JobServices，而且每个 JobService 指定不同的任务，每个任务在某个时间点被执行。</p>
-<p>来看下官方文档的描述</p>
-<blockquote>
-<p><a href="https://developer.android.com/reference/android/app/job/JobScheduler.html#RESULT_FAILURE" target="_blank" rel="external">JobScheduler</a> 回调的入口点。</p>
-<p>JobService 是处理之前调度的异步请求的基类。你应该重写 <a href="https://developer.android.com/reference/android/app/job/JobService.html#onStartJob(android.app.job.JobParameters" target="_blank" rel="external">onStartJob (JobParameters params)</a>) 方法，将在该方法实现你的任务逻辑。</p>
-<p>此服务运行在应用程序主线程处理传入的任务。这意味着你必须将执行逻辑放到子线程、handler、<a href="https://developer.android.com/reference/android/os/AsyncTask.html" target="_blank" rel="external">AsyncTask</a>。如果不这样做的话会阻塞 JobManager 的回调，特别是 <a href="https://developer.android.com/reference/android/app/job/JobService.html#onStopJob(android.app.job.JobParameters" target="_blank" rel="external">onStopJob(android.app.job.JobParameters)</a>)，这意味着将通知你不满足调度要求。</p>
-</blockquote>
-<p>那么该如何实现 JobService 呢？必须创建一个新类，继承 JobService，并重写方法 <strong>onStartJob(JobParameters)</strong> 和 <strong>onStopJob(android.app.job.JobParameters)</strong>。下面给出一个模板：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JobSchedulerService</span> <span class="keyword">extends</span> <span class="title">JobService</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartJob</span><span class="params">(JobParameters params)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStopJob</span><span class="params">(JobParameters params)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从以上可知，两个方法都返回 boolean 值，那么什么时候返回 true，什么时候返回 false 呢，返回值对 JobScheduler 任务调度又有什么影响呢？下面一一来解析：</p>
-<ul>
-<li><p><strong>onStartJob(JobParameters)</strong>：在此方法实现任务的逻辑。由于 JobService 是在主线程运行，因此对于逻辑简单的可以直接写在该方法里，但是对于比较复杂任务，例如网络请求，那么就要开启子线程来操作，以免造成阻塞。当任务完成的时候返回 <strong>false</strong>，作用是通知系统任务已经完成；当有任务要执行的话返回 <strong>true</strong>，作用是让系统知道有任务即将执行或正在执行，并对该任务持有锁。因为任务一旦完成并通知系统，系统就释放持有该任务锁。</p>
-</li>
-<li><p><strong>onStopJob (JobParameters params)</strong>：当任务未完成调用 <a href="https://developer.android.com/reference/android/app/job/JobService.html#jobFinished(android.app.job.JobParameters, boolean" target="_blank" rel="external">jobFinished(JobParameters, boolean)</a>) 取消任务时，此方法就会被调用。发生这种现象的原因大部分是调度的任务不满足所指定的条件，导致系统无法执行任务。当任务停止时，如果还想系统重新调度任务的话，那么返回 <strong>true</strong>；反之返回 <strong>false</strong>，此时系统会移除任务，导致所要调度的任务必须暂停。</p>
-</li>
-</ul>
-<p>除此之外，JobService 还提供了 <a href="https://developer.android.com/reference/android/app/job/JobService.html#jobFinished(android.app.job.JobParameters, boolean" target="_blank" rel="external">jobFinished(JobParameters, boolean)</a>) 这个方法，虽然不用重写该方法，但是该方法却有很大的作用。此回调方法用来通知 JobManager 任务已经完成。由于此方法最终在主线程调用，因此可以在任何线程调用该方法。当系统收到信息时，就会释放持有该任务锁。当 <strong>onStartJob(JobParameters)</strong> 返回 true，即表示任务正在执行或要被执行，在任务执行完成后需要调用 <strong>jobFinished(JobParameters, boolean)</strong> 方法来通知系统任务已经完成，此时系统才可以安全地释放持有该任务锁。如果忘记调用该方法的话，应用中其它任务就不会被执行。</p>
-<p><strong>jobFinished(JobParameters, boolean)</strong> 需要传入两个参数：第一个参数 JobParameters 表示当前任务的信息，以至于任务完成时系统知道释放哪个锁；第二个参数是 boolean 值，<strong>true</strong> 表示根据退避策略（back-off criteria）重新调度任务；<strong>false</strong> 则表示不调度任务。</p>
-<p>跟四大组件之一 service 一样，都需要在 AndroidManifest.xml 声明，但是有一点不同的是需要添加权限 <strong>android:permission=”android.permission.BIND_JOB_SERVICE”</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;service </div><div class="line">	android:permission=<span class="string">"android.permission.BIND_JOB_SERVICE"</span></div><div class="line">	android:name=<span class="string">".service.JobSchedulerService"</span> &gt;</div></pre></td></tr></table></figure>
-<h4 id="JobParameters"><a href="#JobParameters" class="headerlink" title="JobParameters"></a>JobParameters</h4><p>来看下官方文档描述</p>
-<blockquote>
-<p>JobParameters 对任务的信息进行封装，当任务被调度时，系统就会创建该对象，包含任务的信息；自己是无法实例化该对象的。</p>
-</blockquote>
-<p>PS：自己觉得是与 JobInfo 对应的，JobInfo 是设置属性，而 JobParameters 是获取相应属性。</p>
-<p>那么来看下 JobParameters 提供的方法，只列出部分：</p>
-<ul>
-<li><p><strong>getJobId ()</strong>：获取每个任务独一无二的 id。</p>
-</li>
-<li><p><strong>getExtras ()</strong>：获取额外参数。</p>
-</li>
-</ul>
-<p>了解 API 之后，接下来的任务是学习 JobScheduler 用法。</p>
-<h3 id="JobScheduler-用法"><a href="#JobScheduler-用法" class="headerlink" title="JobScheduler 用法"></a>JobScheduler 用法</h3><p>对于 JobScheduler 的用法，我打算用项目中使用到 JobScheduler 作为例子，前提是移除了业务逻辑，代码可能不太完整。换句话说吧，给个模板吧。</p>
-<p>先给出例子，再来分步讲解吧。代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JobSchedulerService</span> <span class="keyword">extends</span> <span class="title">JobService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = JobSchedulerService.class.getCanonicalName();</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> String TASK = <span class="string">"com.demo.panju.task"</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> JOB_ID = <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ComponentName mComponentName;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> JobScheduler mJobScheduler;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Handler mHandler = <span class="keyword">new</span> Handler() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">            </div><div class="line">            <span class="keyword">switch</span>(msg.what) &#123;</div><div class="line">            	<span class="keyword">case</span> <span class="number">1</span>；</div><div class="line">            		task();</div><div class="line">            		<span class="keyword">break</span>;</div><div class="line">            			</div><div class="line">            	<span class="keyword">default</span>:</div><div class="line">            		<span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate();</div><div class="line"></div><div class="line">        mReceiver = <span class="keyword">new</span> Receiver();</div><div class="line">        mFilter = <span class="keyword">new</span> IntentFilter();</div><div class="line">        </div><div class="line">        mComponentName = <span class="keyword">new</span> ComponentName(getPackageName(), JobSchedulerService.class.getName());</div><div class="line">        mJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);</div><div class="line"></div><div class="line">        registerReceiver();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartJob</span><span class="params">(JobParameters params)</span> </span>&#123;</div><div class="line">        sendMessage(params);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStopJob</span><span class="params">(JobParameters params)</span> </span>&#123;</div><div class="line">        mHandler.removeMessages(<span class="number">1</span>));</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLowMemory</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onLowMemory();</div><div class="line">        stopSelf();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onDestroy();</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != mReceiver) &#123;</div><div class="line">            unregisterReceiver(mReceiver);</div><div class="line">            mReceiver = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">scheduleJob</span><span class="params">(<span class="keyword">int</span> jobId)</span> </span>&#123;</div><div class="line">        JobInfo.Builder builder = <span class="keyword">new</span> JobInfo.Builder(jobId, mComponentName);</div><div class="line">        builder.setPersisted(<span class="keyword">true</span>);</div><div class="line">        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);</div><div class="line">        builder.setOverrideDeadline(<span class="number">500</span>);</div><div class="line">        mJobScheduler.schedule(builder.build());</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendMessage</span><span class="params">(JobParameters parameters)</span> </span>&#123;</div><div class="line">        Message message = mHandler.obtainMessage();</div><div class="line">        message.what = <span class="number">1</span>;</div><div class="line">        message.obj = parameters;</div><div class="line">        mHandler.sendMessage(message);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">registerReceiver</span><span class="params">()</span> </span>&#123;</div><div class="line">        mFilter.addAction(TASK);</div><div class="line">        registerReceiver(mReceiver, mFilter);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">task</span><span class="params">()</span> </span>&#123;</div><div class="line">        mApi.task(<span class="keyword">new</span> Callback() &#123;&#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSuccess</span><span class="params">(Object result)</span> </span>&#123;</div><div class="line">                jobFinished(mJobParameters, <span class="keyword">false</span>);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Object e, <span class="keyword">int</span> errno)</span> </span>&#123;</div><div class="line">                jobFinished(mJobParameters, <span class="keyword">true</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Receiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</div><div class="line">            String action = intent.getAction();</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> (TASK.equals(action)) &#123;</div><div class="line">                 scheduleJob(JOB_ID);</div><div class="line">            &#125;</div><div class="line">     	&#125;</div><div class="line">    &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>以上例子应该不难理解，接下来分步讲解：</p>
-<ul>
-<li><p>创建新类 JobSchedulerService 并继承 Service，重写方法 <strong>onStartJob(JobParameters params)</strong> 和 <strong>onStopJob(JobParameters params)</strong>。<strong>onStartJob(JobParameters params)</strong> 返回 <strong>true</strong> 表示任务将被执行；<strong>onStopJob(JobParameters params)</strong> 返回 <strong>false</strong> 表示当任务中途被取消而导致暂停任务，系统将会移除任务。</p>
-</li>
-<li><p>创建 JobScheduler 和 ComponentName 对象</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mComponentName = <span class="keyword">new</span> ComponentName(getPackageName(), JobSchedulerService.class.getName());</div><div class="line">  mJobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>对调度任务所需要的属性进行封装</p>
-  <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">scheduleJob</span><span class="params">(<span class="keyword">int</span> jobId)</span> </span>&#123;</div><div class="line">       JobInfo.Builder builder = <span class="keyword">new</span> JobInfo.Builder(jobId, mComponentName);</div><div class="line">       builder.setPersisted(<span class="keyword">true</span>);</div><div class="line">       builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);</div><div class="line">       builder.setOverrideDeadline(<span class="number">500</span>);</div><div class="line">       mJobScheduler.schedule(builder.build());</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>编写广播接收器、注册接收器、重写 Handler 回调方法 handleMessage(Message msg) 并实现相应逻辑。</p>
-</li>
-<li><p>当注册的广播接收器收到相应 action 时，就会调用方法 scheduleJob(JOB_ID)，即调度任务，那么方法 onStartJob(JobParameters params) 就会被调用，在该方法里通过 Handler 机制发送消息，Handler 的回调方法 handleMessage(Message msg) 就会被调用，实现的逻辑主要是发起网络请求，即 task() 方法。task() 方法逻辑中有两个回调方法：onSuccess(Object result) 和 onError(Object e, int errno)。发起网络请求成功的话就会调用方法 onSuccess(Object result)，在该方法里又调用 jobFinished(mJobParameters, false)，传入的 boolean 值是 false，意味着任务已经成功完成，无需重新调度任务；发起网络请求失败的话就会调用 onError(Object e, int errno)，在该方法里又会调用 jobFinished(mJobParameters, true)，传入的 boolean 值是 true，意味着任务失败，根据重试策略重新调度任务。</p>
-</li>
-</ul>
-<p>由于自己的水平有限，若有些地方描述的不对或者翻译的不恰当（参考官方文档和国外博客），欢迎指出 ！ 大家一起学习，共同进步 ！</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://developer.android.com/reference/android/app/job/JobScheduler.html#RESULT_FAILURE" target="_blank" rel="external">官方文档</a></p>
-<p><a href="https://medium.com/google-developers/scheduling-jobs-like-a-pro-with-jobscheduler-286ef8510129" target="_blank" rel="external">https://medium.com/google-developers/scheduling-jobs-like-a-pro-with-jobscheduler-286ef8510129</a></p>
-<p><a href="http://josiassena.com/the-jobscheduler-on-android/" target="_blank" rel="external">http://josiassena.com/the-jobscheduler-on-android/</a></p>
-<p><a href="http://blog.csdn.net/bboyfeiyu/article/details/44809395" target="_blank" rel="external">http://blog.csdn.net/bboyfeiyu/article/details/44809395</a></p>
-<p><a href="http://zhanghuimin.com/2016/10/27/about-android-job-scheduler/" target="_blank" rel="external">http://zhanghuimin.com/2016/10/27/about-android-job-scheduler/</a></p>
-<p><a href="http://mahong978.top/2016/08/19/android-job-scheduler/" target="_blank" rel="external">http://mahong978.top/2016/08/19/android-job-scheduler/</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1788,7 +1729,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

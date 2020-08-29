@@ -1,1 +1,1 @@
-http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/
+http://panzeyong.com/2020/08/29/Vue-入口初始化/
