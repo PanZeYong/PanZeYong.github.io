@@ -1,1 +1,1 @@
-http://panzeyong.com/2020/08/29/Vue-入口初始化/
+http://panzeyong.com/2020/07/29/Vue-入口初始化/

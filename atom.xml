@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2020-08-29T08:41:30.122Z</updated>
+  <updated>2020-08-29T08:45:00.632Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -17,18 +17,15 @@
   
   <entry>
     <title>Vue 入口初始化</title>
-    <link href="http://panzeyong.com/2020/08/29/Vue-%E5%85%A5%E5%8F%A3%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
-    <id>http://panzeyong.com/2020/08/29/Vue-入口初始化/</id>
-    <published>2020-08-29T08:32:55.000Z</published>
-    <updated>2020-08-29T08:41:30.122Z</updated>
+    <link href="http://panzeyong.com/2020/07/29/Vue-%E5%85%A5%E5%8F%A3%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
+    <id>http://panzeyong.com/2020/07/29/Vue-入口初始化/</id>
+    <published>2020-07-29T08:32:55.000Z</published>
+    <updated>2020-08-29T08:45:00.632Z</updated>
     
     <content type="html"><![CDATA[<p>这节主要介绍 Vue 是如何初始化以及初始化过程中做了哪些事情。通过自己整理出来的流程图来说明其主线：</p>
 <p><img src="/images/vue/vue_init.png" alt=""></p>
-<ul>
-<li><p>参考链接</p>
-</li>
-<li><p><a href="https://ustbhuangyi.github.io/vue-analysis/v2/prepare/entrance.html#vue-%E7%9A%84%E5%85%A5%E5%8F%A3" target="_blank" rel="external">从入口开始</a></p>
-</li>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ul>
+<li><a href="https://ustbhuangyi.github.io/vue-analysis/v2/prepare/entrance.html#vue-%E7%9A%84%E5%85%A5%E5%8F%A3" target="_blank" rel="external">从入口开始</a></li>
 </ul>
 ]]></content>
     
@@ -36,10 +33,7 @@
     
       &lt;p&gt;这节主要介绍 Vue 是如何初始化以及初始化过程中做了哪些事情。通过自己整理出来的流程图来说明其主线：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/images/vue/vue_init.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;参考链接&lt;/p&gt;
-&lt;/li&gt;
-&lt;li
+&lt;h3 id=&quot;参考链接&quot;&gt;&lt;a href=&quot;#参考链接&quot; 
     
     </summary>
     
@@ -216,7 +210,7 @@
     <link href="http://panzeyong.com/2018/12/04/JavaScript-%E9%9D%99%E6%80%81%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5%E5%B7%A5%E5%85%B7%EF%BC%9AFlow/"/>
     <id>http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/</id>
     <published>2018-12-04T15:01:32.000Z</published>
-    <updated>2018-12-11T15:01:24.234Z</updated>
+    <updated>2020-08-29T08:44:40.703Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://flow.org/en/" target="_blank" rel="external">Flow</a> 是 Facebook 开源的 JavaScript 静态类型检查工具，它可以帮助提高我们的工作效率，使我们的代码更快、更智能、更自信和更大规模。</p>
 <p>在学习 Flow 的用法之前，我们先来学习如何在项目中使用 Flow。</p>
@@ -286,10 +280,10 @@
     
     </summary>
     
-      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
+      <category term="Vue.js" scheme="http://panzeyong.com/categories/Vue-js/"/>
     
     
-      <category term="plugin" scheme="http://panzeyong.com/tags/plugin/"/>
+      <category term="Vue.js 源码解析" scheme="http://panzeyong.com/tags/Vue-js-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
   </entry>
   
