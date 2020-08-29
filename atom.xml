@@ -73,11 +73,11 @@
     <link href="http://panzeyong.com/2018/12/19/Vue-js-%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/"/>
     <id>http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/</id>
     <published>2018-12-19T14:33:04.000Z</published>
-    <updated>2018-12-28T15:30:46.310Z</updated>
+    <updated>2020-08-29T08:23:35.144Z</updated>
     
     <content type="html"><![CDATA[<p>今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。</p>
 <p>在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。</p>
-<p>注：Vue.js 的版本为 2.5.21</p>
+<p>注：Vue.js 的版本为 2.6.11</p>
 <h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><ul>
 <li><p><code>.circleci</code>：Vue.js 使用了持续集成工具 CircleCI，要在项目中使用该工具，需要在项目根目录创建文件夹 <code>.circleci</code>，并在其目录下创建文件 <code>config.yml</code> 编写构建脚本。</p>
 <ul>
@@ -169,10 +169,10 @@
     
     </summary>
     
-      <category term="vue.js" scheme="http://panzeyong.com/categories/vue-js/"/>
+      <category term="Vue.js" scheme="http://panzeyong.com/categories/Vue-js/"/>
     
     
-      <category term="source code" scheme="http://panzeyong.com/tags/source-code/"/>
+      <category term="Vue.js 源码解析" scheme="http://panzeyong.com/tags/Vue-js-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
     
   </entry>
   
