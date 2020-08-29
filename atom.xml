@@ -99,8 +99,8 @@
   
   <entry>
     <title>Vue.js 源码目录结构</title>
-    <link href="http://panzeyong.com/2018/12/19/Vue-js-%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/"/>
-    <id>http://panzeyong.com/2018/12/19/Vue-js-源码目录结构/</id>
+    <link href="http://panzeyong.com/2018/12/19/Vue%20%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84/"/>
+    <id>http://panzeyong.com/2018/12/19/Vue 源码目录结构/</id>
     <published>2018-12-19T14:33:04.000Z</published>
     <updated>2020-08-29T08:48:35.557Z</updated>
     
@@ -328,7 +328,7 @@
     <link href="http://panzeyong.com/2018/03/08/JavaScript-%E9%97%AE%E9%A2%98/"/>
     <id>http://panzeyong.com/2018/03/08/JavaScript-问题/</id>
     <published>2018-03-08T09:25:35.000Z</published>
-    <updated>2018-03-09T05:38:51.000Z</updated>
+    <updated>2020-08-29T09:01:56.291Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一、JavaScript-数组（包括元素和对象）去重"><a href="#一、JavaScript-数组（包括元素和对象）去重" class="headerlink" title="一、JavaScript 数组（包括元素和对象）去重"></a>一、JavaScript 数组（包括元素和对象）去重</h1><h3 id="1、for-循环"><a href="#1、for-循环" class="headerlink" title="1、for 循环"></a>1、for 循环</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">array</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> result = [array[<span class="number">0</span>]];</div><div class="line"></div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>, len = array.length; i &lt; len; i++) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>, resultLen = result.length; j &lt; resultLen; j++) &#123;</div><div class="line">			<span class="keyword">if</span> (array[i] === result[j]) &#123;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (j === resultLen) &#123;</div><div class="line">			result.push(array[i]);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h3 id="2、indexOf"><a href="#2、indexOf" class="headerlink" title="2、indexOf"></a>2、indexOf</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">array</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> res = [];</div><div class="line">	</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = array.length; i &lt; len; i++) &#123;</div><div class="line">		<span class="keyword">var</span> current = array[i];</div><div class="line">		<span class="keyword">if</span> (res.indexOf(current) === <span class="number">-1</span>) &#123;</div><div class="line">			res.push(current);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> res;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -358,6 +358,10 @@
     
     </summary>
     
+      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
+    
+    
+      <category term="知识点" scheme="http://panzeyong.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
     
   </entry>
   
@@ -1482,7 +1486,7 @@
     <link href="http://panzeyong.com/2017/10/14/Java-%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/"/>
     <id>http://panzeyong.com/2017/10/14/Java-问题整理/</id>
     <published>2017-10-14T09:20:19.000Z</published>
-    <updated>2017-11-20T00:02:56.000Z</updated>
+    <updated>2020-08-29T09:01:29.957Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一、为什么-Java-byte-类型取值范围是-128-127-？"><a href="#一、为什么-Java-byte-类型取值范围是-128-127-？" class="headerlink" title="一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？"></a>一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？</h1><p>要解决这个问题，必须先来弄清楚几个概念：机器数、真值、原码、反码和补码。</p>
 <p><strong>机器数</strong>：数字在计算机中的二进制表示，带符号的，即有正负数之分。在计算机中用一个数的最高位表示符号位，0 表示正数，1 表示负数。例如：</p>
@@ -1568,7 +1572,7 @@
       <category term="Java" scheme="http://panzeyong.com/categories/Java/"/>
     
     
-      <category term="问题" scheme="http://panzeyong.com/tags/%E9%97%AE%E9%A2%98/"/>
+      <category term="知识点" scheme="http://panzeyong.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
     
   </entry>
   
@@ -1577,7 +1581,7 @@
     <link href="http://panzeyong.com/2017/10/11/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E4%B8%80%E5%88%87%E9%83%BD%E6%98%AF%E5%AF%B9%E8%B1%A1/"/>
     <id>http://panzeyong.com/2017/10/11/第二章-一切都是对象/</id>
     <published>2017-10-11T13:48:07.000Z</published>
-    <updated>2017-10-31T11:10:37.000Z</updated>
+    <updated>2020-08-29T09:04:48.416Z</updated>
     
     <content type="html"><![CDATA[<h1 id="一、数据存储位置"><a href="#一、数据存储位置" class="headerlink" title="一、数据存储位置"></a>一、数据存储位置</h1><ol>
 <li><p><strong>寄存器</strong>：最快的存储区，位于处理器内部。</p>

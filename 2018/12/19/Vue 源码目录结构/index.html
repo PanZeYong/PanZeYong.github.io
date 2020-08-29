@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="知识点整理," />
+  <meta name="keywords" content="Vue.js 源码解析," />
 
 
 
@@ -95,24 +95,22 @@
 
 
 
-<meta name="description" content="概述Javascript 函数有一个 prototype 属性，该属性是一个指针，指向一个对象，该对象包含特定类型的所有实例共享的属性和方法，称为实例对象的原型对象。
-简单来说，在 JavaScript 中创建一个新函数，就会自动获取 prototype 属性，通过 new 命令创建实例对象，实例对象会获取 prototype 属性所指向的原型对象的属性和方法。打个比方，在 Java 中有类和继承">
+<meta name="description" content="今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。
+在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。
+注">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Javascript 之原型及原型链">
-<meta property="og:url" content="http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/index.html">
+<meta property="og:title" content="Vue.js 源码目录结构">
+<meta property="og:url" content="http://panzeyong.com/2018/12/19/Vue 源码目录结构/index.html">
 <meta property="og:site_name" content="PANJU's Note">
-<meta property="og:description" content="概述Javascript 函数有一个 prototype 属性，该属性是一个指针，指向一个对象，该对象包含特定类型的所有实例共享的属性和方法，称为实例对象的原型对象。
-简单来说，在 JavaScript 中创建一个新函数，就会自动获取 prototype 属性，通过 new 命令创建实例对象，实例对象会获取 prototype 属性所指向的原型对象的属性和方法。打个比方，在 Java 中有类和继承">
-<meta property="og:image" content="http://panzeyong.com/images/javascript/prototype/constructor_prototype_object_relation.png">
-<meta property="og:image" content="http://panzeyong.com/images/javascript/prototype/proto_to_prototype.png">
-<meta property="og:image" content="http://panzeyong.com/images/javascript/prototype/object_prototype.png">
-<meta property="og:image" content="http://panzeyong.com/images/javascript/prototype/prototype_all.png">
-<meta property="og:updated_time" content="2019-11-23T09:29:09.852Z">
+<meta property="og:description" content="今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。
+在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。
+注">
+<meta property="og:updated_time" content="2020-08-29T08:48:35.557Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Javascript 之原型及原型链">
-<meta name="twitter:description" content="概述Javascript 函数有一个 prototype 属性，该属性是一个指针，指向一个对象，该对象包含特定类型的所有实例共享的属性和方法，称为实例对象的原型对象。
-简单来说，在 JavaScript 中创建一个新函数，就会自动获取 prototype 属性，通过 new 命令创建实例对象，实例对象会获取 prototype 属性所指向的原型对象的属性和方法。打个比方，在 Java 中有类和继承">
-<meta name="twitter:image" content="http://panzeyong.com/images/javascript/prototype/constructor_prototype_object_relation.png">
+<meta name="twitter:title" content="Vue.js 源码目录结构">
+<meta name="twitter:description" content="今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。
+在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。
+注">
 
 
 
@@ -140,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/"/>
+  <link rel="canonical" href="http://panzeyong.com/2018/12/19/Vue 源码目录结构/"/>
 
 
 
 
 
-  <title>Javascript 之原型及原型链 | PANJU's Note</title>
+  <title>Vue.js 源码目录结构 | PANJU's Note</title>
   
 
 
@@ -275,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/19/Vue 源码目录结构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="PANJU">
@@ -292,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Javascript 之原型及原型链</h1>
+          <h1 class="post-title" itemprop="name headline">Vue.js 源码目录结构</h1>
         
 
         <div class="post-meta">
@@ -304,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-19T07:53:16+08:00">
-                2019-11-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-19T22:33:04+08:00">
+                2018-12-19
               </time>
             
 
@@ -327,8 +325,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
                   </a>
                 </span>
 
@@ -345,9 +343,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/11/19/Javascript-之原型及原型链/#comments" itemprop="discussionUrl">
+                <a href="/2018/12/19/Vue 源码目录结构/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/11/19/Javascript-之原型及原型链/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/12/19/Vue 源码目录结构/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -355,7 +353,7 @@
 
           
           
-             <span id="/2019/11/19/Javascript-之原型及原型链/" class="leancloud_visitors" data-flag-title="Javascript 之原型及原型链">
+             <span id="/2018/12/19/Vue 源码目录结构/" class="leancloud_visitors" data-flag-title="Vue.js 源码目录结构">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -383,37 +381,92 @@
       
 
       
-        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Javascript 函数有一个 <code>prototype</code> 属性，该属性是一个指针，指向一个对象，该对象包含特定类型的所有实例共享的属性和方法，称为实例对象的<strong>原型对象</strong>。</p>
-<p>简单来说，在 JavaScript 中创建一个新函数，就会自动获取 <code>prototype</code> 属性，通过 <code>new</code> 命令创建实例对象，实例对象会获取 <code>prototype</code> 属性所指向的原型对象的属性和方法。打个比方，在 Java 中有类和继承的概念，<code>prototype</code> 所指向的原型对象就好比 Java 中的基类，而新函数好比是 Java 中的新类，继承基类中的属性和方法，那么创建实例后，除了能访问到本身的属性和方法外，还能访问到基类中的属性和方法。</p>
-<h1 id="构造函数与原型对象之间的关系"><a href="#构造函数与原型对象之间的关系" class="headerlink" title="构造函数与原型对象之间的关系"></a>构造函数与原型对象之间的关系</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person();</div><div class="line">person.age = <span class="number">12</span>;</div><div class="line"><span class="built_in">console</span>.log(person.age);    <span class="comment">// 12</span></div></pre></td></tr></table></figure>
-<p>以上例子，Person 是一个构造函数，通过 <code>new</code> 命令实例化对象。通过构造函数实例化对象的方式，如果多个实例对象都拥有属性 <code>age</code> 时，则需要在每个实例对象本身设置该属性，这样的操作显得有点冗余。那么有没有一种方式可以把属性 <code>age</code> 设置为公有，实例化对象时就自动拥有公共的属性呢，而对于实例对象本身只需要添加自己需要的属性即可。答案是有的。</p>
-<p>这里就需要引出 <code>prototype</code> 属性，那么 <code>prototype</code> 属性是什么呢？除了<strong>bind 函数</strong>、<strong>箭头函数</strong>以及 <strong>Function.prototype</strong> 外，每个函数都有一个属性 <strong>prototype</strong>，该属性是一个指针，指向一个对象，该对象是函数的<strong>原型对象</strong>，原型对象包含了公共的属性和方法，实例化的所有对象都共享原型对象的属性和方法。<em>需要注意的是 <em>*<code>prototype</code> 属性是函数才拥有的。</em></em> </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Person.prototype.age = <span class="number">12</span>;</div><div class="line">Person.prototype.name = <span class="string">"Jack"</span>;</div><div class="line"></div><div class="line">Person.prototype.say = () =&gt; &#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"Hello World !"</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person1 = <span class="keyword">new</span> Person();</div><div class="line"><span class="keyword">let</span> person2 = <span class="keyword">new</span> Person();</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(person1.age);    <span class="comment">// 12</span></div><div class="line"><span class="built_in">console</span>.log(person1.name);   <span class="comment">// Jack</span></div><div class="line"><span class="built_in">console</span>.log(person2.age);    <span class="comment">// 12</span></div><div class="line"><span class="built_in">console</span>.log(person2.name);   <span class="comment">// Jack</span></div><div class="line"><span class="built_in">console</span>.log(person1.say());  <span class="comment">// Hello World</span></div><div class="line"><span class="built_in">console</span>.log(person2.say());  <span class="comment">// Hello World</span></div><div class="line"></div><div class="line">person1.job = <span class="string">"test"</span>;</div><div class="line"><span class="built_in">console</span>.log(person1.job);    <span class="comment">// test</span></div><div class="line"><span class="built_in">console</span>.log(person2.job);    <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-<p>从以上例子可以得知，通过 <code>prototype</code> 属性添加 <code>age</code> 和 <code>name</code> 属性，然后实例化两个对象，分别打印出两个属性是有值的，说明实例对象拥有了原型对象的属性和方法。</p>
-<p>现在我们已经知道构造函数与原型对象的单向关系，即构造函数通过 <code>prototype</code> 属性指向原型对象。那么原型对象能反过来通过某种方式指向原先的构造函数吗？答案是可以的，这时就需要 <code>constructor</code> 派上场了。</p>
-<p>每个原型对象都会有一个 <code>constructor</code> 属性，而 <code>constructor</code> 属性包含一个指向 <code>prototype</code> 属性所在函数的指针。以上面例子为例，即</p>
-<p><code>Person.prototype.constructor === Person</code>（<code>true</code>）。</p>
-<p>至此，我们理清了构造函数与原型对象之间的关系，关系图如下：</p>
-<p><img src="/images/javascript/prototype/constructor_prototype_object_relation.png" alt=""></p>
-<h1 id="实例对象与原型对象之间的关系"><a href="#实例对象与原型对象之间的关系" class="headerlink" title="实例对象与原型对象之间的关系"></a>实例对象与原型对象之间的关系</h1><p>当读取实例对象属性时，首先会在实例对象本身查找该属性是否存在，不存在的话，就会往实例对象与之关联的原型对象查找，再查找不到时，直向原型的原型查找，查找到最上层为止。</p>
-<p>例子如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span> (<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line">Person.prototype.name = <span class="string">"Jack"</span>;</div><div class="line">Person.prototype.desc = <span class="string">"desc"</span>;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person();</div><div class="line"><span class="built_in">console</span>.log(person.name);    <span class="comment">// Jack</span></div></pre></td></tr></table></figure>
-<p>可见，实例对象 <code>person</code> 本身没有属性 <code>name</code>，但是还能查找到该属性，这是通过原型对象找到的。那么实例对象是通过什么方式与原型对象关联呢？其实实例对象有一个属性 <code>__proto__</code>，指向原型对象，即 </p>
-<p><code>person.__proto__ === Person.prototype</code>（<code>true</code>）。</p>
-<p><img src="/images/javascript/prototype/proto_to_prototype.png" alt=""></p>
-<h1 id="原型对象的原型对象"><a href="#原型对象的原型对象" class="headerlink" title="原型对象的原型对象"></a>原型对象的原型对象</h1><p>从上面我们已经理清了构造函数与原型对象、实例对象与原型对象之间的关系，那么我们会不会产生一个疑惑：原型对象的原型对象是什么，即 <code>Person.prototype</code> 的原型对象是什么？</p>
-<p>JavaScript 中的所有对象都来自 <code>Object</code>，并且所有对象都从 <code>Object.prototype</code> 继承属性和方法，尽管它们可能被覆盖。因此可以推出：</p>
-<p><code>Person.prototype.__proto__ === Object.prototype</code>（<strong>true</strong>）。</p>
-<p><img src="/images/javascript/prototype/object_prototype.png" alt=""></p>
-<p>图中画虚线的表示通过 <code>__prototype__</code> 形成原型链；至此，已经把原型对象及原型链的知识讲完。最后放一张网上对原型的理解画得比较全面的关系图，如下：</p>
-<p><img src="/images/javascript/prototype/prototype_all.png" alt=""></p>
-<p>注：以上只是自己整理的学习笔记，由于水平有限难免有错误，欢迎指出。随着自己对原型的深入理解，笔记也会做相应的修改，最后放上资料参考来源。</p>
+        <p>今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。</p>
+<p>在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。</p>
+<p>注：Vue.js 的版本为 2.6.11</p>
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><ul>
+<li><p><code>.circleci</code>：Vue.js 使用了持续集成工具 CircleCI，要在项目中使用该工具，需要在项目根目录创建文件夹 <code>.circleci</code>，并在其目录下创建文件 <code>config.yml</code> 编写构建脚本。</p>
 <ul>
-<li><p><a href="https://github.com/mqyqingfeng/Blog/issues/2" target="_blank" rel="external">https://github.com/mqyqingfeng/Blog/issues/2</a></p>
+<li><code>config.yml</code>：编写 CircleCI 构建脚本。</li>
+</ul>
 </li>
-<li><p>《JavaScript 高级程序设计》（第 3 版）</p>
+<li><p><code>.github</code>：项目相关说明文档，比如开发者参与项目的规则、要求之类的。</p>
+<p>  <code>CODE_OF_CONDUCT.md</code>：贡献代码的行为准则。</p>
+<p>  <code>COMMIT_CONVENTION.md</code>：git 提交代码时添加提交信息的约定。</p>
+<p>  <code>CONTRIBUTING.md</code>：参与项目指南。</p>
+<p>  <code>ISSUE_TEMPLATE.md</code>：提交 issue 的模板。</p>
+<p>  <code>PULL_REQUEST_TEMPLATE.md</code>：拉取代码指南。</p>
+</li>
+<li><p><code>benchmarks</code>：性能测试相关文件。</p>
+</li>
+<li><p><code>dist</code>：包含不同分发版本的构建文件。要注意的是，这个目录只有在发布新版本时才会更新，开发分支更新的新特性不会影响到该目录。</p>
+</li>
+<li><p><code>example</code>：官方提供的示例。</p>
+</li>
+<li><p><code>flow</code>：包含使用Flow（静态类型检查工具）声明的类型，供全局使用。</p>
+<ul>
+<li><p><code>compiler.js</code>：编译相关。</p>
+</li>
+<li><p><code>component.js</code>：组件数据结构。</p>
+</li>
+<li><p><code>global-api.js</code>：Global API 结构。</p>
+</li>
+<li><p><code>modules.js</code>：第三方库定义。</p>
+</li>
+<li><p><code>options.js</code>：选项相关。</p>
+</li>
+<li><p><code>ssr.js</code>：服务端渲染相关。</p>
+</li>
+<li><p><code>vnode.js</code>：虚拟 node 相关。</p>
+</li>
+<li><p><code>weex.js</code>：weex 平台相关。</p>
 </li>
 </ul>
+</li>
+<li><p><code>packages</code>：包含服务端渲染和模板编译器两种不同 NPM 包，供不同场景使用。</p>
+<ul>
+<li><p><code>vue-server-render</code>：服务端渲染。</p>
+</li>
+<li><p><code>vue-template-compiler</code>：vue 模板编译器。</p>
+</li>
+<li><p><code>weex-template-compiler</code>：weex 模板编译器。</p>
+</li>
+<li><p><code>weex-vue-framework</code>：weex vue 框架。</p>
+</li>
+</ul>
+</li>
+<li><p><code>scripts</code>：包含构建相关脚本和配置文件，大多数情况下不需要关注该目录。</p>
+<ul>
+<li><p><code>alias.js</code>：所有源代码和测试中使用的模块导入别名。</p>
+</li>
+<li><p><code>config</code>：包含 <code>dist</code> 目录下所有文件的配置信息。</p>
+</li>
+</ul>
+</li>
+<li><p><code>src</code>：vue.js 源代码，代码用 ES6 实现的并采用 JavaScript 静态类型检查工具。</p>
+<ul>
+<li><p><code>compiler</code>：该目录包含 Vue.js 编译的相关代码，包括将模板字符串解析成 AST 语法树的<strong>解析器</strong>、检测用于 vdom 渲染优化的静态树的<strong>优化器</strong>和将 AST 语法树生成渲染函数的<strong>代码生成器</strong>。</p>
+</li>
+<li><p><code>core</code>：Vue.js 核心代码，包含通用、跨平台的代码。主要有观察者、虚拟 dom、vue 实例化、全局 api 和内置组件。</p>
+</li>
+<li><p><code>server</code>：包含与服务端渲染相关的代码。</p>
+</li>
+<li><p><code>platform</code>：Vue.js 是一个跨平台的 MVVM 框架，可以在 web 上运行，也可以配合 weex 在 native 客户端上运行。每个平台都有一个入口，都位于该目录下。</p>
+</li>
+<li><p><code>sfc</code>：包含将 .vue 单文件解析为 JavaScript 对象的代码，用于 <code>vue-template-compiler</code> 包。</p>
+</li>
+<li><p><code>shared</code>：包含通用的工具方法，用于浏览器端的 vue.js 和服务器端的 vue.js。</p>
+</li>
+</ul>
+</li>
+<li><p><code>tests</code>：所有测试代码，单元测试代码是用 <a href="https://jasmine.github.io/2.3/introduction.html" target="_blank" rel="external">Jasmine</a> 实现并与 <a href="http://karma-runner.github.io/0.13/index.html" target="_blank" rel="external">Karma</a> 一起运行。e2e 测试是为 <a href="http://nightwatchjs.org/" target="_blank" rel="external">Nightwatch.js</a> 编写并与之一起运行。</p>
+</li>
+<li><p><code>types</code>：使用 TypeScript 类型注释，并且包含了测试代码。</p>
+</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure" target="_blank" rel="external">https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure</a></p>
+<p><a href="https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler" target="_blank" rel="external">https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler</a></p>
+<p><a href="https://segmentfault.com/a/1190000016426470" target="_blank" rel="external">https://segmentfault.com/a/1190000016426470</a></p>
 
       
     </div>
@@ -443,7 +496,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/知识点整理/" rel="tag"># 知识点整理</a>
+            <a href="/tags/Vue-js-源码解析/" rel="tag"># Vue.js 源码解析</a>
           
         </div>
       
@@ -456,8 +509,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/12/19/Vue 源码目录结构/" rel="next" title="Vue.js 源码目录结构">
-                <i class="fa fa-chevron-left"></i> Vue.js 源码目录结构
+              <a href="/2018/12/04/JavaScript-静态类型检查工具：Flow/" rel="next" title="JavaScript 静态类型检查工具：Flow">
+                <i class="fa fa-chevron-left"></i> JavaScript 静态类型检查工具：Flow
               </a>
             
           </div>
@@ -466,8 +519,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/03/29/Vue-入口初始化/" rel="prev" title="Vue 入口初始化">
-                Vue 入口初始化 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/11/19/Javascript-之原型及原型链/" rel="prev" title="Javascript 之原型及原型链">
+                Javascript 之原型及原型链 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -622,7 +675,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造函数与原型对象之间的关系"><span class="nav-number">2.</span> <span class="nav-text">构造函数与原型对象之间的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例对象与原型对象之间的关系"><span class="nav-number">3.</span> <span class="nav-text">实例对象与原型对象之间的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型对象的原型对象"><span class="nav-number">4.</span> <span class="nav-text">原型对象的原型对象</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目录结构"><span class="nav-number">1.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
@@ -772,9 +825,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/';
-          this.page.identifier = '2019/11/19/Javascript-之原型及原型链/';
-          this.page.title = 'Javascript 之原型及原型链';
+          this.page.url = 'http://panzeyong.com/2018/12/19/Vue 源码目录结构/';
+          this.page.identifier = '2018/12/19/Vue 源码目录结构/';
+          this.page.title = 'Vue.js 源码目录结构';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://panzeyong.disqus.com/embed.js';
