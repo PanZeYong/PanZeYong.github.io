@@ -4,6 +4,106 @@
 
     
   <url>
+    <loc>http://panzeyong.com/2019/03/12/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/</loc>
+    <lastmod>2020-08-29T09:46:53.051Z</lastmod>
+    <data>
+        <display>
+        <title>函数的扩展</title>
+        <pubTime>2019-03-12T12:04:48.000Z</pubTime>
+        
+        <tag>ES6</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="http://panzeyong.com/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://panzeyong.com/2019/03/03/%E6%95%B0%E5%80%BC%E7%9A%84%E6%89%A9%E5%B1%95/</loc>
+    <lastmod>2020-08-29T09:44:40.149Z</lastmod>
+    <data>
+        <display>
+        <title>数值的扩展</title>
+        <pubTime>2019-03-03T09:37:39.000Z</pubTime>
+        
+        <tag>ES6</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="http://panzeyong.com/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://panzeyong.com/2019/02/20/%E5%8F%98%E9%87%8F%E7%9A%84%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/</loc>
+    <lastmod>2020-08-29T09:40:58.217Z</lastmod>
+    <data>
+        <display>
+        <title>变量的解构赋值</title>
+        <pubTime>2019-02-20T14:41:08.000Z</pubTime>
+        
+        <tag>ES6</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="http://panzeyong.com/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://panzeyong.com/2019/03/03/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/</loc>
+    <lastmod>2020-08-29T09:40:38.629Z</lastmod>
+    <data>
+        <display>
+        <title>字符串的扩展</title>
+        <pubTime>2019-03-03T07:14:34.000Z</pubTime>
+        
+        <tag>ES6</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="http://panzeyong.com/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://panzeyong.com/2019/02/12/let-%E5%92%8C-const-%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2020-08-29T09:34:50.561Z</lastmod>
+    <data>
+        <display>
+        <title>let 和 const 命令</title>
+        <pubTime>2019-02-12T04:34:36.000Z</pubTime>
+        
+        <tag>ES6</tag>
+         
+         
+           
+             
+              <breadCrumb title="JavaScript" url="http://panzeyong.com/categories/JavaScript/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://panzeyong.com/2017/05/21/JobScheduler-%E7%94%A8%E6%B3%95/</loc>
     <lastmod>2020-08-29T09:31:11.756Z</lastmod>
     <data>
@@ -57,26 +157,6 @@
            
              
               <breadCrumb title="Python" url="http://panzeyong.com/categories/Python/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://panzeyong.com/2019/02/24/let-%E5%92%8C-const-%E5%91%BD%E4%BB%A4/</loc>
-    <lastmod>2020-08-29T09:28:38.661Z</lastmod>
-    <data>
-        <display>
-        <title>let 和 const 命令</title>
-        <pubTime>2019-02-24T04:34:36.000Z</pubTime>
-        
-        <tag>ES6</tag>
-         
-         
-           
-             
-              <breadCrumb title="JavaScript" url="http://panzeyong.com/categories/JavaScript/"/>
           
         </display>
     </data>
