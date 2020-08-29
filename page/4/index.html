@@ -268,6 +268,234 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/10/14/Java-问题整理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/14/Java-问题整理/" itemprop="url">Java 问题整理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-14T17:20:19+08:00">
+                2017-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/10/14/Java-问题整理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/10/14/Java-问题整理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/10/14/Java-问题整理/" class="leancloud_visitors" data-flag-title="Java 问题整理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一、为什么-Java-byte-类型取值范围是-128-127-？"><a href="#一、为什么-Java-byte-类型取值范围是-128-127-？" class="headerlink" title="一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？"></a>一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？</h1><p>要解决这个问题，必须先来弄清楚几个概念：机器数、真值、原码、反码和补码。</p>
+<p><strong>机器数</strong>：数字在计算机中的二进制表示，带符号的，即有正负数之分。在计算机中用一个数的最高位表示符号位，0 表示正数，1 表示负数。例如：</p>
+<p>十进制 +10，转换成二进制是 00001010；</p>
+<p>如果是 -10，转换成二进制则是 10001010。</p>
+<p><strong>真值</strong>：由于符号位的存在，机器数并不能表示真正的数值。比如上面带符号数 10001010，最高位 1 表示负数，其真值是 -10；而其形式值是 138（二进制 10001010 转化为十进制），明显两个值是不相等的。因此，将带符号位的机器数真正的数值称为机器数的真值。例如：</p>
+<p>00001010 真值：10；</p>
+<p>10001010 真值：-10。</p>
+<p><strong>原码</strong>：机器数中最简单的一种表示形式，符号位为 0 表示正数；符号位为 1 表示负数；数值位即真值的绝对值。故原码表示又称为带符号位的绝对值表示。以 8 位二进制为例子：</p>
+<p>10 的原码： 00001010</p>
+<p>-10 的原码：10001010</p>
+<p><strong>反码</strong>：反码通常来作为原码求补码或者补码求原码中间过渡。可以归纳为：</p>
+<ul>
+<li><p>正数的反码是其本身；</p>
+</li>
+<li><p>负数的反码是在原码基础上，符号位不变，各位取反。</p>
+</li>
+</ul>
+<p>10 反码： 00001010</p>
+<p>-10 反码：11110101</p>
+<p><strong>补码</strong>：补码也是一种用二进制表示有符号数的方法。可归纳为下：</p>
+<ul>
+<li><p>正数的补码是其本身；</p>
+</li>
+<li><p>负数的补码是在原码基础上，符号位不变，各位取反，末位加 1（即在反码基础上加 1），也可以理解为负数的补码是其绝对值取反末位加 1。</p>
+</li>
+</ul>
+<p>10 补码：00001010；</p>
+<p>-10 补码：11110110。</p>
+<p>理解了机器数、真值、原码、反码、补码这 5 个概念后，我们就可以来解答这个问题了。</p>
+<p>二进制有原码、反码、补码这三种表示方法，但是在计算机内部二进制的表示方法最终是采用补码。（至于为何采用补码，自己 Google 。）</p>
+<p>在 Java 中，数据类型 byte 占用的空间是 8 位，最高位是符号位。</p>
+<ul>
+<li><p>那么最大整数是 0111111，由于正数的补码是其本身，因此二进制 01111111 转换为十进制为 127；</p>
+</li>
+<li><p>由于有符号之分，其最小负数是 10000000（最大负整数 11111111，即 -1），负数的补码是在原码基础上，符号位不变，各位取反，末位加 1，而且我们又知道二进制是用补码表示，因此我们把计算补码的步骤反过来即可。即 10000000，减 1 得 011111111，各位取反 10000000。由于负数的补码是其绝对值取反加 1，那么 10000000 是最小负数的绝对值，转换成十进制为 128，最小负数是 -128。</p>
+</li>
+<li><p>因此，byte 的取值范围是 -128 ~ 127。</p>
+</li>
+</ul>
+<p>注：本文主要是记录在复习 Java 知识点时所想到或遇到的问题，持续更新中。</p>
+<h1 id="二、Java-中-与-equals-有何区别？"><a href="#二、Java-中-与-equals-有何区别？" class="headerlink" title="二、Java 中 == 与 equals 有何区别？"></a>二、Java 中 == 与 equals 有何区别？</h1><p><strong>==</strong> 是二元操作符，用于比较两个对象的<strong>内存地址</strong>是否相同，如果两个对象的内存地址相同的话，则返回 true；否则返回 false。基本数据类型（int、short、long、char、float、double、boolean、byte）和 复合数据类型。以下通过例子进一步说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EqualsOperator</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</div><div class="line">        String s1 = <span class="string">"Hello World"</span>;</div><div class="line">        String s2 = <span class="string">"Hello World"</span>;        </div><div class="line">        String s3 = <span class="keyword">new</span> String(<span class="string">"Hello World"</span>);</div><div class="line">        </div><div class="line">        System.out.println(s1 == s2);</div><div class="line">        System.out.println(s1 == s3);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span></div><div class="line"><span class="keyword">false</span></div></pre></td></tr></table></figure>
+<p><strong>equals()</strong> 是 Object 类中方法，默认实现是比较两个对象的内存地址，与 <strong>==</strong> 操作符的作用是一样。不管是 Java 提供的类，还是自己自定义的类，默认继承 Object，如果没有对 <strong>equals()</strong> 方法进行重写时，这时 <strong>equals()</strong> 的作用与操作符 <strong>==</strong> 是一样的；但是 Object 的子类大部分都会根据自己的需求对 <strong>equals()</strong> 方法进行重写，既可以比较两个对象的内存地址，也可以比较两个对象所包含的内容，比如 String、Integer 等。</p>
+<p><strong>equals()</strong> 默认实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很明显可以看出，默认实现是比较两个对象的内存地址。官方文档也给出该方法的具体描述：</p>
+<blockquote>
+<p>equals 方法在非 null 对象引用上实现等价关系：</p>
+<ul>
+<li><p>自反性：对于任何非空引用值 x，x.equals(x) 应该返回 true。</p>
+</li>
+<li><p>对称性：对于任何非空引用值 x 和 y，当且仅当 y.equals(x) 返回 true 时，x.equals(y) 才返回 true。</p>
+</li>
+<li><p>传递性：对于任何非空引用值 x、y 和 z，如果 x.equals(y) 返回 true 并且 y.equals(z) 也返回 true 时，那么 x.equals(z) 返回 true。</p>
+</li>
+<li><p>一致性：对于任何非空引用值 x 和 y，如果对象 equals 对象上比较的信息没有被修改，那么多次调用 x.equals(y) 一致返回 true 或者 一致 返回 false。</p>
+</li>
+<li><p>对于任何非空引用值 x，x.equals(null) 应该返回 false。</p>
+</li>
+</ul>
+<p>Object 类的 equals 方法实现对象上最可能的等价关系;也就是说，对于任何非 null 的引用值 x 和 y，当且仅当 x 和 y 引用同一个对象（x == y 的值为 true）时，此方法返回 true。</p>
+<p>注意：无论什么时候重写此方法，都必须重写 hasCode() 方法，以维护 hasCode() 方法一般的约定，该方法声明相等的对象必须具有相同的哈希码。</p>
+</blockquote>
+<p>那么来看下 String 类是如何重写 equals() 方法的，具体源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</div><div class="line">        String anotherString = (String)anObject;</div><div class="line">        <span class="keyword">int</span> n = value.length;</div><div class="line">        <span class="keyword">if</span> (n == anotherString.value.length) &#123;</div><div class="line">            <span class="keyword">char</span> v1[] = value;</div><div class="line">            <span class="keyword">char</span> v2[] = anotherString.value;</div><div class="line">            <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">            <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (v1[i] != v2[i])</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">                i++;</div><div class="line">            &#125;</div><div class="line">                </div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 2 ~ 4 行代码判断两个对象的内存地址是否相同，相同的话返回则返回 true；不同的话执行下面语句。第 5 ~ 20 行代码判断两个对象所包含的内容是否相同，相同的话则返回 true；否则返回 false。当以上两个条件都不满足时，则返回 false。</p>
+<p>下面通过例子加深对该知识点的理解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EqualsMethos</span> </span>&#123;</div><div class="line">    Integer n1 = <span class="keyword">new</span> Integer(<span class="number">47</span>);</div><div class="line">    Integer n2 = <span class="keyword">new</span> Integer(<span class="number">47</span>);</div><div class="line">    System.out.println(n1.equals(n2));</div><div class="line">    </div><div class="line">    Value v1 = <span class="keyword">new</span> Value();</div><div class="line">    Value v2 = <span class="keyword">new</span> Value();</div><div class="line">    v1.i = v2.i = <span class="number">100</span>;</div><div class="line">    System.out.println(v1.equals(v2));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Value</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span>     <span class="comment">// Integer 类重写 equals() 方法，比较的对象所包含的内容 </span></div><div class="line"><span class="keyword">false</span>    <span class="comment">// 由于 Value 类是自己定义的，没有重写 equals() 方法，继承 Object 类 equals() 方法默认实现，比较的是两个对象的内存地址，这时与 **==** 操作符的作用一样。</span></div></pre></td></tr></table></figure>
+<p>对于 <strong>euqals()</strong> 与 <strong>==</strong> 这知识点异同的比较就说到这里，想要继续更深层的了解就 Google 吧。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/10/11/第二章-一切都是对象/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1538,191 +1766,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/08/13/第九章-客户端检测/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/13/第九章-客户端检测/" itemprop="url">第九章 客户端检测</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-13T17:23:34+08:00">
-                2017-08-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/08/13/第九章-客户端检测/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/08/13/第九章-客户端检测/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/08/13/第九章-客户端检测/" class="leancloud_visitors" data-flag-title="第九章 客户端检测">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、能力检测"><a href="#一、能力检测" class="headerlink" title="一、能力检测"></a>一、能力检测</h1><p>能力检测的目标不是识别特定的浏览器，而是识别浏览器的能力。比如说，函数 <strong>document.getElementById</strong> 在不同浏览器是否被支持。</p>
-<p>能力检测有两个重要概念：一是先检测达成目的的最常用的特性；二是必须测试实际要用到的特性。</p>
-<p>示例如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getElement</span>(<span class="params">id</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">document</span>.getElementById) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">document</span>.all) &#123;&#125;&#123;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">document</span>.all[id];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="二、怪癖检测"><a href="#二、怪癖检测" class="headerlink" title="二、怪癖检测"></a>二、怪癖检测</h1><p>识别浏览器的特殊行为，即检测浏览器存在什么缺陷。怪癖检测无法精确地检测特定的浏览器和版本。</p>
-<h1 id="三、用户代理检测"><a href="#三、用户代理检测" class="headerlink" title="三、用户代理检测"></a>三、用户代理检测</h1><p>通过检测用户代理字符串来确定实际使用的浏览器，可以通过 JavaScript 的 <strong>navigator.userAgent</strong> 属性访问。</p>
-<h3 id="1、主要浏览器所使用的呈现引擎如下表："><a href="#1、主要浏览器所使用的呈现引擎如下表：" class="headerlink" title="1、主要浏览器所使用的呈现引擎如下表："></a>1、主要浏览器所使用的呈现引擎如下表：</h3><table><tr align="center"><th>浏览器</th><td>IE</td><td>Opera</td><td>Chrome</td><td>Firefox</td><td>Safari</td><td>Konqueror</td></tr><tr align="center"><th>呈现引擎</th><td>IE</td><td>Opera</td><td>WebKit</td><td>Gecko</td><td>WebKit</td><td>KHTML</td></tr></table>
-
-<h3 id="2、用户代理字符串（userAgent）所包含属性如下表："><a href="#2、用户代理字符串（userAgent）所包含属性如下表：" class="headerlink" title="2、用户代理字符串（userAgent）所包含属性如下表："></a>2、用户代理字符串（userAgent）所包含属性如下表：</h3><table><tr align="center"><th width="25%">字符串项</th><th width="15%">必须吗</th><th width="60%">说明</th></tr><tr align="center"><td>Mozilla 版本号</td><td>是</td><td>Mozilla 的版本号</td></tr><tr align="center"><td>平台</td><td>是</td><td>浏览器运行的平台。可能的值包括 Windows、Mac 和 X11（指 Unix 的 X 窗口系统）</td></tr><tr align="center"><td>加密类型</td><td>是</td><td>加密技术的类型：U 表示 128 位、I 表示 40 位、N 表示未加密</td></tr><tr align="center"><td>操作系统或 CPU</td><td>是</td><td>浏览器运行的操作系统或计算机系统使用的 CPU。在 Windows 平台中，这一项指 Windows 的版本（如 WinNT、Win95，等等）。如果平台是 Macintosh，这一项是 Unix 操作系统的名称，与使用 Unix 命令 uname-sm 得到的名称相同。</td></tr><tr align="center"><td>语言</td><td>是</td><td>浏览器设计时所针对的目标用户语言</td></tr><tr align="center"><td>预先发行版本</td><td>否</td><td>最初用于表示 Mozilla 的预先发行版本，现在则用来表示 Gecko 呈现引擎的版本号</td></tr><tr align="center"><td>Gecko 版本号</td><td>是</td><td>Gecko 呈现引擎的版本号，但由 yyyymmdd 格式的日期表示</td></tr><tr align="center"><td>应用程序或产品</td><td>否</td><td>使用 Gecko 的产品名。可能是 Netscape、Firefox 等</td></tr><tr align="center"><td>应用程序或产品版本号</td><td>否</td><td>应用程序或产品的版本号；用于区分 Mozilla 版本号或 Gecko 版本号</td></tr><br></table>
-
-<h3 id="3、用户代理字符串检测技术"><a href="#3、用户代理字符串检测技术" class="headerlink" title="3、用户代理字符串检测技术"></a>3、用户代理字符串检测技术</h3><p>通过编写脚本检测浏览器呈现引擎、浏览器、平台、Windows 操作系统、移动设备、游戏系统以此来满足项目中需求。</p>
-<p>声明全局变量 client，并使用模块增强模式来封装脚本，示例代码如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> client = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> engine = &#123;</div><div class="line">        <span class="comment">// 呈现引擎</span></div><div class="line">        ie: <span class="number">0</span>,</div><div class="line">        gecko: <span class="number">0</span>,</div><div class="line">        webkit: <span class="number">0</span>,</div><div class="line">        khtml: <span class="number">0</span>,</div><div class="line">        opera: <span class="number">0</span>,</div><div class="line"></div><div class="line">        <span class="comment">// 具体的版本号</span></div><div class="line">        ver: <span class="literal">null</span></div><div class="line">    &#125;;</div><div class="line">	</div><div class="line">    <span class="keyword">var</span> browser = &#123;</div><div class="line">        <span class="comment">// 浏览器</span></div><div class="line">        ie: <span class="number">0</span>,</div><div class="line">        firefox: <span class="number">0</span>,</div><div class="line">        safari: <span class="number">0</span>,</div><div class="line">        konq: <span class="number">0</span>,</div><div class="line">        opera: <span class="number">0</span>,</div><div class="line">        chrome: <span class="number">0</span>,</div><div class="line"></div><div class="line">        <span class="comment">// 具体的版本</span></div><div class="line">        ver: <span class="literal">null</span></div><div class="line">    &#125;;</div><div class="line">    </div><div class="line">    <span class="keyword">var</span> system = &#123;</div><div class="line">        <span class="comment">// 检测平台</span></div><div class="line">        win: <span class="literal">false</span>,</div><div class="line">        mac: <span class="literal">false</span>,</div><div class="line">        x11: <span class="literal">false</span>,</div><div class="line"></div><div class="line">        <span class="comment">// 移动设备</span></div><div class="line">        iphone: <span class="literal">false</span>,</div><div class="line">        ipod: <span class="literal">false</span>,</div><div class="line">        ipad: <span class="literal">false</span>,</div><div class="line">        ios: <span class="literal">false</span>,</div><div class="line">        android: <span class="literal">false</span>,</div><div class="line">        nokiaN: <span class="literal">false</span>,</div><div class="line">        winMobile: <span class="literal">false</span>,</div><div class="line"></div><div class="line">        <span class="comment">// 游戏系统</span></div><div class="line">        wii: <span class="literal">false</span>,</div><div class="line">        ps: <span class="literal">false</span></div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="comment">// 在此检测呈现引擎、平台和设备（各部分代码以下给出）</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">        engine: engine,</div><div class="line">        browser: browser,</div><div class="line">        system: system</div><div class="line">    &#125;;</div><div class="line">&#125;();</div><div class="line"></div><div class="line"><span class="keyword">var</span> userAgent = navigator.userAgent;</div></pre></td></tr></table></figure>
-<h4 id="（1）、识别呈现引擎以及浏览器"><a href="#（1）、识别呈现引擎以及浏览器" class="headerlink" title="（1）、识别呈现引擎以及浏览器"></a>（1）、识别呈现引擎以及浏览器</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * 识别呈现浏览器步骤如下：</div><div class="line"> * </div><div class="line"> * 1. 第一步：检测 Opera</div><div class="line"> * 2. 第二步：检测 WebKit</div><div class="line"> * 3. 第三步：检测 KHTML</div><div class="line"> * 4. 第四步：检测 Gecko</div><div class="line"> * 5. 第五步：检测 IE</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.opera) &#123;</div><div class="line">    alert(<span class="string">"Opera"</span>);</div><div class="line">    engine.ver = browser.ver = <span class="built_in">window</span>.opera.version();</div><div class="line">    engine.opera = browser.opera = <span class="built_in">parseFloat</span>(engine.ver);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/AppleWebKit\/(\S+)/</span>.test(userAgent)) &#123;</div><div class="line">    alert(<span class="string">"AppleWebKit"</span>);</div><div class="line">    engine.ver = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">    engine.webkit = <span class="built_in">parseFloat</span>(engine.ver);</div><div class="line"></div><div class="line">    <span class="comment">// 确定是 Chrome 还是 Safari</span></div><div class="line">    <span class="keyword">if</span> (<span class="regexp">/Chrome\/(\S+)/</span>.test(userAgent)) &#123;</div><div class="line">        browser.ver = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">        browser.chrome = <span class="built_in">parseFloat</span>(browser.ver);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/Version\/(\S+)/</span>.test(userAgent)) &#123;</div><div class="line">        browser.ver = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">        browser.safari = <span class="built_in">parseFloat</span>(browser.ver);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 近似地确定版本号</span></div><div class="line">        <span class="keyword">var</span> safariVersion = <span class="number">1</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (engine.webkit &lt; <span class="number">100</span>) &#123;</div><div class="line">            safariVersion = <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (engine.webkit &lt; <span class="number">312</span>) &#123;</div><div class="line">            safariVersion = <span class="number">1.2</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (engine.webkit &lt; <span class="number">412</span>) &#123;</div><div class="line">            safariVersion = <span class="number">1.3</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            safariVersion = <span class="number">2</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        browser.safari = browser.ver = safariVersion;</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/KHTML\/(\S+)/</span>.test(userAgent) || <span class="regexp">/Konqueror\/([^;]+)/</span>.test(userAgent)) &#123;</div><div class="line">    alert(<span class="string">"KHTML"</span>);</div><div class="line"></div><div class="line">    engine.ver = browser.ver = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">    engine.khtml = browser.konq = <span class="built_in">parseFloat</span>(engine.ver);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/rv:([^\)]+)\) Gecko\/\d&#123;8&#125;/</span>.test(userAgent)) &#123;</div><div class="line">    alert(<span class="string">"Gecko"</span>);</div><div class="line"></div><div class="line">    engine.ver = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">    engine.gecko = <span class="built_in">parseFloat</span>(engine.ver);</div><div class="line"></div><div class="line">    <span class="comment">// 确定是不是 Firefox</span></div><div class="line">    <span class="keyword">if</span> (<span class="regexp">/Firefox\/(\S+)/</span>.test(userAgent)) &#123;</div><div class="line">        browser.ver = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">        browser.firefox = <span class="built_in">parseFloat</span>(browser.ver);</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="regexp">/MSIE ([^;]+)/</span>.test(userAgent)) &#123;</div><div class="line">    alert(<span class="string">"IE"</span>);</div><div class="line"></div><div class="line">    engine.ver = browser.ver = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">    engine.ie = browser.ie = <span class="built_in">parseFloat</span>(engine.ver);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>有了以上代码，就可以对浏览器进行检测，示例代码如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (client.engine.webkit) &#123;</div><div class="line">    <span class="keyword">if</span> (client.browser.chrome) &#123;</div><div class="line">        alert(<span class="string">"Chrome : "</span> + client.browser.chrome);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.browser.safari) &#123;</div><div class="line">        alert(<span class="string">"Safari : "</span> + client.browser.safari);</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.engine.gecko) &#123;</div><div class="line">    <span class="keyword">if</span> (client.browser.firefox) &#123;</div><div class="line">        alert(<span class="string">"Firefox : "</span> + client.browser.firefox);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alert(<span class="string">"Not Firefox Browser"</span>);</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.engine.opera) &#123;</div><div class="line">    <span class="keyword">if</span> (client.browser.opera) &#123;</div><div class="line">        alert(<span class="string">"Opera : "</span> + client.browser.opera);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alert(<span class="string">"Not Opera Browser"</span>);</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.engine.khtml) &#123;</div><div class="line">    <span class="keyword">if</span> (client.browser.konq) &#123;</div><div class="line">        alert(<span class="string">"konq : "</span> + client.browser.konq);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alert(<span class="string">"Not konq Browser"</span>);</div><div class="line">    &#125;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.engine.ie) &#123;</div><div class="line">    <span class="keyword">if</span> (client.browser.ie) &#123;</div><div class="line">        alert(<span class="string">"IE : "</span> + client.browser.ie);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        alert(<span class="string">"Not IE Browser"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="（2）、识别平台"><a href="#（2）、识别平台" class="headerlink" title="（2）、识别平台"></a>（2）、识别平台</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> platform = navigator.platform;</div><div class="line"></div><div class="line">system.win = platform.indexOf(<span class="string">"Win"</span>) == <span class="number">0</span>;</div><div class="line">system.mac = platform.indexOf(<span class="string">"Mac"</span>) == <span class="number">0</span>;</div><div class="line">system.x11 = (platform.indexOf(<span class="string">"x11"</span>) == <span class="number">0</span>) || (platform.indexOf(<span class="string">"Linux"</span>) == <span class="number">0</span>);</div><div class="line"></div><div class="line">alert(<span class="string">"Win : "</span> + system.win);</div><div class="line">alert(<span class="string">"Mac : "</span> + system.mac);</div><div class="line">alert(<span class="string">"X11 : "</span> + system.x11);</div></pre></td></tr></table></figure>
-<h4 id="（3）、识别-Windows-操作系统"><a href="#（3）、识别-Windows-操作系统" class="headerlink" title="（3）、识别 Windows 操作系统"></a>（3）、识别 Windows 操作系统</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (system.win) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="regexp">/Win(?:dows )?([^do]&#123;2&#125;)\s?(\d+\.\d+)?/</span>.test(userAgent)) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="built_in">RegExp</span>[<span class="string">"$1"</span>] == <span class="string">"NT"</span>) &#123;</div><div class="line">            <span class="keyword">switch</span>(<span class="built_in">RegExp</span>[$<span class="number">2</span>]) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="string">"5.0"</span>:</div><div class="line">                    system.win = <span class="string">"2000"</span>;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line"></div><div class="line">                <span class="keyword">case</span> <span class="string">"5.1"</span>:</div><div class="line">                    system.win = <span class="string">"XP"</span>;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line"></div><div class="line">                <span class="keyword">case</span> <span class="string">"6.0"</span>:</div><div class="line">                    system.win = <span class="string">"Vista"</span>;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line"></div><div class="line">                <span class="keyword">case</span> <span class="string">"6.1"</span>:</div><div class="line">                    system.win = <span class="string">"7"</span>;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line"></div><div class="line">                <span class="keyword">default</span>:</div><div class="line">                    system.win = <span class="string">"NT"</span>;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">RegExp</span>[<span class="string">"$1"</span>] == <span class="string">"9x"</span>) &#123;</div><div class="line">             system.win = <span class="string">"ME"</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">             system.win = <span class="built_in">RegExp</span>[<span class="string">"$1"</span>];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>根据以上代码检测 Windows 操作系统</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (client.system.win == <span class="string">"2000"</span>) &#123;</div><div class="line">    alert(<span class="string">"Windows 2000"</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.system.win == <span class="string">"XP"</span>) &#123;</div><div class="line">    alert(<span class="string">"Windows XP"</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.system.win == <span class="string">"Vista"</span>) &#123;</div><div class="line">    alert(<span class="string">"Windows Vista"</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.system.win == <span class="string">"7"</span>) &#123;</div><div class="line">    alert(<span class="string">"Windows 7"</span>);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.system.win == <span class="string">"NT"</span>) &#123;</div><div class="line">    alert(<span class="string">"Windows NT"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="4-、识别移动设备"><a href="#4-、识别移动设备" class="headerlink" title="(4)、识别移动设备"></a>(4)、识别移动设备</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">system.iphone = userAgent.indexOf(<span class="string">"iPhone"</span>) &gt; <span class="number">-1</span>;</div><div class="line">system.ipod = userAgent.indexOf(<span class="string">"iPod"</span>) &gt; <span class="number">-1</span>;</div><div class="line">system.ipad = userAgent.indexOf(<span class="string">"iPad"</span>) &gt; <span class="number">-1</span>;</div><div class="line"></div><div class="line"><span class="comment">// 检测 iOS 版本</span></div><div class="line"><span class="keyword">if</span> (system.mac &amp;&amp; userAgent.indexOf(<span class="string">"Mobile"</span>) &gt; <span class="number">-1</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="regexp">/CPU (?:iPhone )?OS (\d+_\d+)/</span>.test(userAgent)) &#123;</div><div class="line">        system.ios = <span class="built_in">parseFloat</span>(<span class="built_in">RegExp</span>.$<span class="number">1.</span>replace(<span class="string">"_"</span>, <span class="string">"."</span>));</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 无法检测出来</span></div><div class="line">        system.ios = <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 检测 Android 版本</span></div><div class="line"><span class="keyword">if</span> (<span class="regexp">/Android (\d+\.\d+)/</span>.test(userAgent)) &#123;</div><div class="line">    system.android = <span class="built_in">parseFloat</span>(<span class="built_in">RegExp</span>.$<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 检测 诺基亚 N 系列</span></div><div class="line">system.nokiaN = userAgent.indexOf(<span class="string">"NokiaN"</span>) &gt; <span class="number">-1</span>;</div><div class="line"></div><div class="line"><span class="comment">// 检测 Windows Mobile</span></div><div class="line"><span class="keyword">if</span> (system.win == <span class="string">"CE"</span>) &#123;</div><div class="line">    system.winMobile = system.win;</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (system.win == <span class="string">"Ph"</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="regexp">/Windows Phone OS (\d+.\d+)/</span>.test(userAgent)) &#123;</div><div class="line">        system.win = <span class="string">"Phone"</span>;</div><div class="line">        system.winMobile = <span class="built_in">parseFloat</span>(<span class="built_in">RegExp</span>[<span class="string">"$1"</span>]);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>检测手机，示例代码如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (client.engine.webkit) &#123;</div><div class="line">    <span class="keyword">if</span> (client.system.ios) &#123;</div><div class="line">        alert(<span class="string">"iOS 手机"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.system.android) &#123;</div><div class="line">        alert(<span class="string">"Android 手机"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (client.system.nokiaN) &#123;</div><div class="line">        alert(<span class="string">"诺基亚 N 系列手机"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="（5）、识别游戏系统"><a href="#（5）、识别游戏系统" class="headerlink" title="（5）、识别游戏系统"></a>（5）、识别游戏系统</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">system.wii = userAgent.indexOf(<span class="string">"Wii"</span>) &gt; <span class="number">-1</span>;</div><div class="line">system.ps = <span class="regexp">/playstation/i</span>.test(userAgent);</div></pre></td></tr></table></figure>
-<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第九章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1767,7 +1815,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1789,7 +1837,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
