@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2020-08-29T08:52:49.147Z</updated>
+  <updated>2020-08-30T09:47:08.480Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -14,6 +14,152 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>update 实现原理</title>
+    <link href="http://panzeyong.com/2020/08/30/update-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/"/>
+    <id>http://panzeyong.com/2020/08/30/update-实现原理/</id>
+    <published>2020-08-30T09:44:17.000Z</published>
+    <updated>2020-08-30T09:47:08.480Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 <strong>《Vue 实例挂载实现原理》</strong> 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：<code>vm._update(vm._render(), hydrating)</code>。上一节 <strong>《render 实现原理》</strong> 中对 <code>vm._render</code> 进行了分析；那么这一节将要分析 <code>vm._update</code> 的实现原理。</p>
+<p><code>_update</code> 是 Vue 实例的一个私有方法，有两个时机被调用：<strong>一个是首次渲染；一个是数据更新时触发调用。（响应式原理分析涉及）</strong>作用的是将 <code>render</code> 渲染生成的 VNode 转换为真实的 DOM 节点。</p>
+<p>那么该方法是定义在 <code>src/core/instance/lifecycle.js</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">Vue.prototype._update = <span class="function"><span class="keyword">function</span> (<span class="params">vnode: VNode, hydrating?: boolean</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">  <span class="keyword">const</span> prevEl = vm.$el</div><div class="line">  <span class="keyword">const</span> prevVnode = vm._vnode</div><div class="line">  <span class="keyword">const</span> restoreActiveInstance = setActiveInstance(vm)</div><div class="line">  vm._vnode = vnode</div><div class="line">  <span class="comment">// Vue.prototype.__patch__ is injected in entry points</span></div><div class="line">  <span class="comment">// based on the rendering backend used.</span></div><div class="line">  <span class="keyword">if</span> (!prevVnode) &#123;</div><div class="line">    <span class="comment">// initial render</span></div><div class="line">    vm.$el = vm.__patch__(vm.$el, vnode, hydrating, <span class="literal">false</span> <span class="comment">/* removeOnly */</span>)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// updates</span></div><div class="line">    vm.$el = vm.__patch__(prevVnode, vnode)</div><div class="line">  &#125;</div><div class="line">  restoreActiveInstance()</div><div class="line">  <span class="comment">// update __vue__ reference</span></div><div class="line">  <span class="keyword">if</span> (prevEl) &#123;</div><div class="line">    prevEl.__vue__ = <span class="literal">null</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (vm.$el) &#123;</div><div class="line">    vm.$el.__vue__ = vm</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// if parent is an HOC, update its $el as well</span></div><div class="line">  <span class="keyword">if</span> (vm.$vnode &amp;&amp; vm.$parent &amp;&amp; vm.$vnode === vm.$parent._vnode) &#123;</div><div class="line">    vm.$parent.$el = vm.$el</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// updated hook is called by the scheduler to ensure that children are</span></div><div class="line">  <span class="comment">// updated in a parent's updated hook.</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面结合例子来分析<strong>首次渲染</strong>调用时的实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Vue(&#123;</div><div class="line">    render: h =&gt; h(<span class="string">'div'</span>, &#123;</div><div class="line">        attrs: &#123;</div><div class="line">            id: <span class="string">'content'</span></div><div class="line">        &#125;</div><div class="line">    &#125;, [</div><div class="line">        h(<span class="string">'h1'</span>, <span class="string">'我是标题1'</span>),</div><div class="line">        h(<span class="string">'h2'</span>, <span class="string">'我是标题2'</span>)</div><div class="line">    ]),</div><div class="line">&#125;).$mount(<span class="string">'#app'</span>)</div></pre></td></tr></table></figure>
+<ul>
+<li><p>第 <code>3</code> 行将在 <code>mountComponent</code> 方法获取到 <code>vm.$el</code> 赋值给变量 <code>prevEl</code>，它是一个真实的 DOM 节点，即 <code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>；</p>
+</li>
+<li><p>第 <code>4</code> 行 <code>vm._vnode</code> 为 <code>null</code>，赋值给变量 <code>prevVnode</code>；</p>
+</li>
+<li><p>由于 <code>prevVnode</code> 为 <code>null</code>，逻辑进入到第 <code>11</code> 行代码，也是该方法的核心逻辑实现。</p>
+</li>
+</ul>
+<p>接下来重点来分析 <code>vm.__patch__</code> 的实现，该方法定义在 <code>src/platform/web/runtime/index.js</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Vue.prototype.__patch__ = inBrowser ? patch : noop</div></pre></td></tr></table></figure>
+<p>这个方法实际上在不同的平台，其定义是不一样的。上面是在 Web 平台的定义；Weex 平台的定义如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Vue.prototype.__patch__ = patch</div></pre></td></tr></table></figure>
+<p>在 Web 平台中，是否是服务端渲染对其也产生影响。因为在服务端渲染中，没有真实的浏览器 DOM 渲染环境，不需要将 VNode 转换成真实 DOM，调用的是空函数；而在浏览器环境中，有真实的 DOM 渲染环境，需要将 VNode 转换成真实的 DOM，指向方法 <code>patch</code>。</p>
+<p>方法 <code>patch</code> 定义在 <code>`src/platform/web/runtime/patch.js</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> patch: <span class="built_in">Function</span> = createPatchFunction(&#123; nodeOps, modules &#125;)</div></pre></td></tr></table></figure>
+<p>调用 <code>createPatchFunction</code> 方法，传入一个对象，包含两个参数：<code>nodeOps</code> 封装了一系列操作 DOM 的方法；<code>modules</code> 定义了一些模块（<code>attrs</code>、<code>style</code>、<code>class</code>、<code>event</code>、<code>transition</code>）钩子函数的实现，此处不展开分析。</p>
+<p>那么再来看 <code>createPatchFunction</code> 是如何实现的？该方法定义在 <code>src/core/vdom/patch.js</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">createPatchFunction</span> (<span class="params">backend</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> i, j</div><div class="line">  <span class="keyword">const</span> cbs = &#123;&#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> &#123; modules, nodeOps &#125; = backend</div><div class="line"></div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; hooks.length; ++i) &#123;</div><div class="line">    cbs[hooks[i]] = []</div><div class="line">    <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; modules.length; ++j) &#123;</div><div class="line">      <span class="keyword">if</span> (isDef(modules[j][hooks[i]])) &#123;</div><div class="line">        cbs[hooks[i]].push(modules[j][hooks[i]])</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  ......（此处省略定义一系列辅助方法的实现）</div><div class="line">  </div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">patch</span> (<span class="params">oldVnode, vnode, hydrating, removeOnly</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (isUndef(vnode)) &#123;</div><div class="line">      <span class="keyword">if</span> (isDef(oldVnode)) invokeDestroyHook(oldVnode)</div><div class="line">      <span class="keyword">return</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">let</span> isInitialPatch = <span class="literal">false</span></div><div class="line">    <span class="keyword">const</span> insertedVnodeQueue = []</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (isUndef(oldVnode)) &#123;</div><div class="line">      <span class="comment">// empty mount (likely as component), create new root element</span></div><div class="line">      isInitialPatch = <span class="literal">true</span></div><div class="line">      createElm(vnode, insertedVnodeQueue)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">const</span> isRealElement = isDef(oldVnode.nodeType)</div><div class="line">      <span class="keyword">if</span> (!isRealElement &amp;&amp; sameVnode(oldVnode, vnode)) &#123;</div><div class="line">        <span class="comment">// patch existing root node</span></div><div class="line">        patchVnode(oldVnode, vnode, insertedVnodeQueue, <span class="literal">null</span>, <span class="literal">null</span>, removeOnly)</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (isRealElement) &#123;</div><div class="line">          <span class="comment">// mounting to a real element</span></div><div class="line">          <span class="comment">// check if this is server-rendered content and if we can perform</span></div><div class="line">          <span class="comment">// a successful hydration.</span></div><div class="line">          <span class="keyword">if</span> (oldVnode.nodeType === <span class="number">1</span> &amp;&amp; oldVnode.hasAttribute(SSR_ATTR)) &#123;</div><div class="line">            oldVnode.removeAttribute(SSR_ATTR)</div><div class="line">            hydrating = <span class="literal">true</span></div><div class="line">          &#125;</div><div class="line">          <span class="keyword">if</span> (isTrue(hydrating)) &#123;</div><div class="line">            <span class="keyword">if</span> (hydrate(oldVnode, vnode, insertedVnodeQueue)) &#123;</div><div class="line">              invokeInsertHook(vnode, insertedVnodeQueue, <span class="literal">true</span>)</div><div class="line">              <span class="keyword">return</span> oldVnode</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">              warn(</div><div class="line">                <span class="string">'The client-side rendered virtual DOM tree is not matching '</span> +</div><div class="line">                <span class="string">'server-rendered content. This is likely caused by incorrect '</span> +</div><div class="line">                <span class="string">'HTML markup, for example nesting block-level elements inside '</span> +</div><div class="line">                <span class="string">'&lt;p&gt;, or missing &lt;tbody&gt;. Bailing hydration and performing '</span> +</div><div class="line">                <span class="string">'full client-side render.'</span></div><div class="line">              )</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">          <span class="comment">// either not server-rendered, or hydration failed.</span></div><div class="line">          <span class="comment">// create an empty node and replace it</span></div><div class="line">          oldVnode = emptyNodeAt(oldVnode)</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// replacing existing element</span></div><div class="line">        <span class="keyword">const</span> oldElm = oldVnode.elm</div><div class="line">        <span class="keyword">const</span> parentElm = nodeOps.parentNode(oldElm)</div><div class="line"></div><div class="line">        <span class="comment">// create new node</span></div><div class="line">        createElm(</div><div class="line">          vnode,</div><div class="line">          insertedVnodeQueue,</div><div class="line">          <span class="comment">// extremely rare edge case: do not insert if old element is in a</span></div><div class="line">          <span class="comment">// leaving transition. Only happens when combining transition +</span></div><div class="line">          <span class="comment">// keep-alive + HOCs. (#4590)</span></div><div class="line">          oldElm._leaveCb ? <span class="literal">null</span> : parentElm,</div><div class="line">          nodeOps.nextSibling(oldElm)</div><div class="line">        )</div><div class="line"></div><div class="line">        <span class="comment">// update parent placeholder node element, recursively</span></div><div class="line">        <span class="keyword">if</span> (isDef(vnode.parent)) &#123;</div><div class="line">          <span class="keyword">let</span> ancestor = vnode.parent</div><div class="line">          <span class="keyword">const</span> patchable = isPatchable(vnode)</div><div class="line">          <span class="keyword">while</span> (ancestor) &#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; cbs.destroy.length; ++i) &#123;</div><div class="line">              cbs.destroy[i](ancestor)</div><div class="line">            &#125;</div><div class="line">            ancestor.elm = vnode.elm</div><div class="line">            <span class="keyword">if</span> (patchable) &#123;</div><div class="line">              <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; cbs.create.length; ++i) &#123;</div><div class="line">                cbs.create[i](emptyNode, ancestor)</div><div class="line">              &#125;</div><div class="line">              <span class="comment">// #6513</span></div><div class="line">              <span class="comment">// invoke insert hooks that may have been merged by create hooks.</span></div><div class="line">              <span class="comment">// e.g. for directives that uses the "inserted" hook.</span></div><div class="line">              <span class="keyword">const</span> insert = ancestor.data.hook.insert</div><div class="line">              <span class="keyword">if</span> (insert.merged) &#123;</div><div class="line">                <span class="comment">// start at index 1 to avoid re-invoking component mounted hook</span></div><div class="line">                <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; insert.fns.length; i++) &#123;</div><div class="line">                  insert.fns[i]()</div><div class="line">                &#125;</div><div class="line">              &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">              registerRef(ancestor)</div><div class="line">            &#125;</div><div class="line">            ancestor = ancestor.parent</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// destroy old node</span></div><div class="line">        <span class="keyword">if</span> (isDef(parentElm)) &#123;</div><div class="line">          removeVnodes([oldVnode], <span class="number">0</span>, <span class="number">0</span>)</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(oldVnode.tag)) &#123;</div><div class="line">          invokeDestroyHook(oldVnode)</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    invokeInsertHook(vnode, insertedVnodeQueue, isInitialPatch)</div><div class="line">    <span class="keyword">return</span> vnode.elm</div><div class="line">  &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>第 <code>7</code> ~ <code>14</code> 行循环遍历 <code>hooks</code>，其定义如下：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> hooks = [<span class="string">'create'</span>, <span class="string">'activate'</span>, <span class="string">'update'</span>, <span class="string">'remove'</span>, <span class="string">'destroy'</span>]</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<pre><code>和 `modules`，用遍历 `cbs` 来保存每个 `hook` 对应的钩子函数；
+</code></pre><ul>
+<li><p>省略一系列辅助方法；</p>
+</li>
+<li><p>返回函数 <code>patch</code>，也就是说，调用 <code>vm.__patch__</code> 方法时，其实调用的是 <code>patch</code> 方法。</p>
+</li>
+</ul>
+<p><code>patch</code> 方法接收 4 个参数：</p>
+<ul>
+<li><p><code>oldVnode</code>：表示旧的 Vnode，它可以是一个 DOM 对象，也可以是不存在的；</p>
+</li>
+<li><p><code>vnode</code>：表示执行 <code>vm._render</code> 返回的 VNode 节点；</p>
+</li>
+<li><p><code>hydrating</code>：表示是否服务端渲染；</p>
+</li>
+<li><p><code>removeOnly</code>：表示给 <code>transition-group</code> 使用的。</p>
+</li>
+</ul>
+<p>结合上面给出的例子来分析 <code>patch</code> 的实现：</p>
+<ul>
+<li><p>第 <code>19</code> ~ <code>22</code> 行代码中，由于传入的参数是 <code>vnode</code> 是上一步 <code>vm._render</code> 渲染生成的 vnode，不为 <code>null</code>，此逻辑跳过；</p>
+<p>  <img src="/images/vue/param_vnode.png" alt=""></p>
+</li>
+<li><p>传入参数 <code>oldVnode</code> 是一个真实的 DOM 节点，即 <code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>，没有进入到第 <code>27</code> ~ <code>30</code> 行代码，而是进入到 <code>else</code> 里面的逻辑了；</p>
+<p>  <img src="/images/vue/param_old_vnode.png" alt=""></p>
+</li>
+<li><p>由于 <code>oldVnode</code> 是真实 DOM 节点，<code>isRealElement</code> 为 <code>true</code>，因此逻辑进入到第 <code>37</code> ~ <code>115</code> 里。其中有几处比较关键的代码实现：</p>
+<ul>
+<li><p>通过方法 <code>emptyNodeAt</code> 把 <code>oldVnode</code> 转换成虚拟 VNode，即</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">oldVnode = emptyNodeAt(oldVnode)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>- 声明变量保存值
+
+    <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// replacing existing element</span></div><div class="line">      <span class="keyword">const</span> oldElm = oldVnode.elm  <span class="comment">// 保存真实 DOM 节点（div#app）</span></div><div class="line">      <span class="keyword">const</span> parentElm = nodeOps.parentNode(oldElm)（保存当前节点的父节点，此处指的是 body）</div></pre></td></tr></table></figure>
+
+
+- 第 `69` ~ `77` 调用方法 `createElm` 创建新节点，此方法是核心方法，稍后分析；
+
+- 第 `110` ~ `112` 行由于创建了新节点，需要将旧节点删除。
+
+    ![](/images/vue/create_vnode.png)
+</code></pre><p>接着再来看核心方法 <code>createElm</code> 的具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createElm</span> (<span class="params"></span></span></div><div class="line">    vnode,</div><div class="line">    insertedVnodeQueue,</div><div class="line">    parentElm,</div><div class="line">    refElm,</div><div class="line">    nested,</div><div class="line">    ownerArray,</div><div class="line">    index</div><div class="line">  ) &#123;</div><div class="line">    <span class="keyword">if</span> (isDef(vnode.elm) &amp;&amp; isDef(ownerArray)) &#123;</div><div class="line">      <span class="comment">// This vnode was used in a previous render!</span></div><div class="line">      <span class="comment">// now it's used as a new node, overwriting its elm would cause</span></div><div class="line">      <span class="comment">// potential patch errors down the road when it's used as an insertion</span></div><div class="line">      <span class="comment">// reference node. Instead, we clone the node on-demand before creating</span></div><div class="line">      <span class="comment">// associated DOM element for it.</span></div><div class="line">      vnode = ownerArray[index] = cloneVNode(vnode)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    vnode.isRootInsert = !nested <span class="comment">// for transition enter check</span></div><div class="line">    <span class="keyword">if</span> (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) &#123;</div><div class="line">      <span class="keyword">return</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> data = vnode.data</div><div class="line">    <span class="keyword">const</span> children = vnode.children</div><div class="line">    <span class="keyword">const</span> tag = vnode.tag</div><div class="line">    <span class="keyword">if</span> (isDef(tag)) &#123;</div><div class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (data &amp;&amp; data.pre) &#123;</div><div class="line">          creatingElmInVPre++</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (isUnknownElement(vnode, creatingElmInVPre)) &#123;</div><div class="line">          warn(</div><div class="line">            <span class="string">'Unknown custom element: &lt;'</span> + tag + <span class="string">'&gt; - did you '</span> +</div><div class="line">            <span class="string">'register the component correctly? For recursive components, '</span> +</div><div class="line">            <span class="string">'make sure to provide the "name" option.'</span>,</div><div class="line">            vnode.context</div><div class="line">          )</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      vnode.elm = vnode.ns</div><div class="line">        ? nodeOps.createElementNS(vnode.ns, tag)</div><div class="line">        : nodeOps.createElement(tag, vnode)</div><div class="line">      setScope(vnode)</div><div class="line"></div><div class="line">      <span class="comment">/* istanbul ignore if */</span></div><div class="line">      <span class="keyword">if</span> (__WEEX__) &#123;</div><div class="line">        <span class="comment">// in Weex, the default insertion order is parent-first.</span></div><div class="line">        <span class="comment">// List items can be optimized to use children-first insertion</span></div><div class="line">        <span class="comment">// with append="tree".</span></div><div class="line">        <span class="keyword">const</span> appendAsTree = isDef(data) &amp;&amp; isTrue(data.appendAsTree)</div><div class="line">        <span class="keyword">if</span> (!appendAsTree) &#123;</div><div class="line">          <span class="keyword">if</span> (isDef(data)) &#123;</div><div class="line">            invokeCreateHooks(vnode, insertedVnodeQueue)</div><div class="line">          &#125;</div><div class="line">          insert(parentElm, vnode.elm, refElm)</div><div class="line">        &#125;</div><div class="line">        createChildren(vnode, children, insertedVnodeQueue)</div><div class="line">        <span class="keyword">if</span> (appendAsTree) &#123;</div><div class="line">          <span class="keyword">if</span> (isDef(data)) &#123;</div><div class="line">            invokeCreateHooks(vnode, insertedVnodeQueue)</div><div class="line">          &#125;</div><div class="line">          insert(parentElm, vnode.elm, refElm)</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        createChildren(vnode, children, insertedVnodeQueue)</div><div class="line">        <span class="keyword">if</span> (isDef(data)) &#123;</div><div class="line">          invokeCreateHooks(vnode, insertedVnodeQueue)</div><div class="line">        &#125;</div><div class="line">        insert(parentElm, vnode.elm, refElm)</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; data &amp;&amp; data.pre) &#123;</div><div class="line">        creatingElmInVPre--</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isTrue(vnode.isComment)) &#123;</div><div class="line">      vnode.elm = nodeOps.createComment(vnode.text)</div><div class="line">      insert(parentElm, vnode.elm, refElm)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      vnode.elm = nodeOps.createTextNode(vnode.text)</div><div class="line">      insert(parentElm, vnode.elm, refElm)</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>该方法接收 7 个参数：</p>
+<ul>
+<li><p><code>vnode</code>：表示执行 <code>vm._render</code> 返回的 VNode 节点；</p>
+</li>
+<li><p><code>insertedVnodeQueue</code>：用来保存 vnode 已经转换为真实 DOM 的 vnode 队列；</p>
+</li>
+<li><p><code>parentElm</code>：表示父节点；</p>
+</li>
+<li><p><code>refElm</code>：表示参考节点；</p>
+</li>
+</ul>
+<p><strong>作用是把虚拟节点 VNode 转换为真实的 DOM 节点，并且插入它的父节点。</strong></p>
+<p>简单分析其逻辑实现：</p>
+<ul>
+<li><p>第 <code>10</code> ~ <code>17</code> 行，不满足条件判断，跳过此处逻辑；</p>
+</li>
+<li><p>第 <code>20</code> 行尝试创建子组件，此处返回  <code>false</code>；</p>
+</li>
+<li><p>接着判断 vnode 是否包含 <code>tag</code> 标签，此 case 中，<code>tag</code> 为 <code>div</code>，因此满足条件，进入到逻辑里面，对其在开发环境做合法性校验，然后再调用平台 DOM 的操作去创建一个占位符元素，即 第 <code>42</code> ~ <code>45</code>；</p>
+</li>
+<li><p>第 <code>48</code> ~ <code>65</code> 是对 <code>weex</code> 平台的逻辑处理，暂时忽略；</p>
+</li>
+<li><p>接着进入到第 <code>67</code> ~ <code>71</code> 行的实现逻辑里，调用方法 <code>createChildren</code>，具体实现如下：</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">function</span> <span class="title">createChildren</span> (<span class="params">vnode, children, insertedVnodeQueue</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(children)) &#123;</div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">      checkDuplicateKeys(children)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; children.length; ++i) &#123;</div><div class="line">      createElm(children[i], insertedVnodeQueue, vnode.elm, <span class="literal">null</span>, <span class="literal">true</span>, children, i)</div><div class="line">    &#125;</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isPrimitive(vnode.text)) &#123;</div><div class="line">    nodeOps.appendChild(vnode.elm, nodeOps.createTextNode(<span class="built_in">String</span>(vnode.text)))</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<pre><code>该方法的作用遍历子虚拟节点，递归调用方法 `createElm` 创建真实 DOM，采用的是深度优先遍历的算法。
+
+接着调用 `invokeCreateHooks` 方法执行所有的 `create` 的钩子函数并把 `vnode` push 到 `insertedVnodeQueue` 中。
+
+最后调用方法 `insert` **将真实 DOM 插入到父节点中，由于是递归调用，子节点会优先于父节点 `insert`**，所以整个 `vnode` 树的插入顺序是**先子后父**。 看下方法 `insert` 的具体实现：
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">insert</span> (<span class="params">parent, elm, ref</span>) </span>&#123;</div><div class="line">   <span class="keyword">if</span> (isDef(parent)) &#123;</div><div class="line">     <span class="keyword">if</span> (isDef(ref)) &#123;</div><div class="line">       <span class="keyword">if</span> (nodeOps.parentNode(ref) === parent) &#123;</div><div class="line">         nodeOps.insertBefore(parent, elm, ref)</div><div class="line">       &#125;</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">       nodeOps.appendChild(parent, elm)</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+
+
+该方法的实现逻辑挺简单，即在满足判断条件时，调用 `nodeOps` 的辅助方法将子节点插入到父节点中，我们来看下这些辅助方法是如何定义的，位于 `src/platform/web/runtime/node-ops.js` 中
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">parentNode</span> (<span class="params">node: Node</span>): ?<span class="title">Node</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> node.parentNode</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">insertBefore</span> (<span class="params">parentNode: Node, newNode: Node, referenceNode: Node</span>) </span>&#123;</div><div class="line">	parentNode.insertBefore(newNode, referenceNode)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">appendChild</span> (<span class="params">node: Node, child: Node</span>) </span>&#123;</div><div class="line">	node.appendChild(child)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+
+从源码实现可以看出，创建真实 DOM 的过程中，其实调用的是原生 DOM 的 API 来操作的。
+</code></pre><ul>
+<li>除了 vnode 包含 <code>tag</code> 外，vnode 还可以是注释节点或者文本节点，如果是这两者之一，则直接创建注释节点或者文本节点，并插入到其父节点中，即 第 <code>77</code> ~ <code>83</code>。</li>
+</ul>
+<p>那么至此简单分析了 <code>update</code> 的实现过程，下面再通过一张流程图简单地描述其主线：</p>
+<p><img src="/images/vue/update.png" alt=""></p>
+<p>那么至此把数据和模板如何渲染成最终 DOM 的过程分析完了，借助 <a href="https://ustbhuangyi.github.io/vue-analysis/v2/data-driven/update.html#%E6%80%BB%E7%BB%93" target="_blank" rel="external">update</a> 里提供的图片更直观地来描述从初始化 Vue 到整个渲染完成的过程：</p>
+<p><img src="/images/vue/init_to_render.png" alt=""></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://ustbhuangyi.github.io/vue-analysis/v2/data-driven/update.html#%E6%80%BB%E7%BB%93" target="_blank" rel="external">update</a> </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在 &lt;strong&gt;《Vue 实例挂载实现原理》&lt;/strong&gt; 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：&lt;code&gt;vm._update(vm._render(), hydrating)&lt;/code&gt;。上一节 &lt;strong&gt;《render 
+    
+    </summary>
+    
+      <category term="Vue" scheme="http://panzeyong.com/categories/Vue/"/>
+    
+    
+      <category term="Vue.js 源码解析" scheme="http://panzeyong.com/tags/Vue-js-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    
+  </entry>
   
   <entry>
     <title>Vue 入口初始化</title>
@@ -1994,101 +2140,6 @@
     
     
       <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java 问题整理</title>
-    <link href="http://panzeyong.com/2017/10/14/Java-%E9%97%AE%E9%A2%98%E6%95%B4%E7%90%86/"/>
-    <id>http://panzeyong.com/2017/10/14/Java-问题整理/</id>
-    <published>2017-10-14T09:20:19.000Z</published>
-    <updated>2020-08-29T09:07:47.252Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、为什么-Java-byte-类型取值范围是-128-127-？"><a href="#一、为什么-Java-byte-类型取值范围是-128-127-？" class="headerlink" title="一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？"></a>一、为什么 Java byte 类型取值范围是 -128 ~ 127 ？</h1><p>要解决这个问题，必须先来弄清楚几个概念：机器数、真值、原码、反码和补码。</p>
-<p><strong>机器数</strong>：数字在计算机中的二进制表示，带符号的，即有正负数之分。在计算机中用一个数的最高位表示符号位，0 表示正数，1 表示负数。例如：</p>
-<p>十进制 +10，转换成二进制是 00001010；</p>
-<p>如果是 -10，转换成二进制则是 10001010。</p>
-<p><strong>真值</strong>：由于符号位的存在，机器数并不能表示真正的数值。比如上面带符号数 10001010，最高位 1 表示负数，其真值是 -10；而其形式值是 138（二进制 10001010 转化为十进制），明显两个值是不相等的。因此，将带符号位的机器数真正的数值称为机器数的真值。例如：</p>
-<p>00001010 真值：10；</p>
-<p>10001010 真值：-10。</p>
-<p><strong>原码</strong>：机器数中最简单的一种表示形式，符号位为 0 表示正数；符号位为 1 表示负数；数值位即真值的绝对值。故原码表示又称为带符号位的绝对值表示。以 8 位二进制为例子：</p>
-<p>10 的原码： 00001010</p>
-<p>-10 的原码：10001010</p>
-<p><strong>反码</strong>：反码通常来作为原码求补码或者补码求原码中间过渡。可以归纳为：</p>
-<ul>
-<li><p>正数的反码是其本身；</p>
-</li>
-<li><p>负数的反码是在原码基础上，符号位不变，各位取反。</p>
-</li>
-</ul>
-<p>10 反码： 00001010</p>
-<p>-10 反码：11110101</p>
-<p><strong>补码</strong>：补码也是一种用二进制表示有符号数的方法。可归纳为下：</p>
-<ul>
-<li><p>正数的补码是其本身；</p>
-</li>
-<li><p>负数的补码是在原码基础上，符号位不变，各位取反，末位加 1（即在反码基础上加 1），也可以理解为负数的补码是其绝对值取反末位加 1。</p>
-</li>
-</ul>
-<p>10 补码：00001010；</p>
-<p>-10 补码：11110110。</p>
-<p>理解了机器数、真值、原码、反码、补码这 5 个概念后，我们就可以来解答这个问题了。</p>
-<p>二进制有原码、反码、补码这三种表示方法，但是在计算机内部二进制的表示方法最终是采用补码。（至于为何采用补码，自己 Google 。）</p>
-<p>在 Java 中，数据类型 byte 占用的空间是 8 位，最高位是符号位。</p>
-<ul>
-<li><p>那么最大整数是 0111111，由于正数的补码是其本身，因此二进制 01111111 转换为十进制为 127；</p>
-</li>
-<li><p>由于有符号之分，其最小负数是 10000000（最大负整数 11111111，即 -1），负数的补码是在原码基础上，符号位不变，各位取反，末位加 1，而且我们又知道二进制是用补码表示，因此我们把计算补码的步骤反过来即可。即 10000000，减 1 得 011111111，各位取反 10000000。由于负数的补码是其绝对值取反加 1，那么 10000000 是最小负数的绝对值，转换成十进制为 128，最小负数是 -128。</p>
-</li>
-<li><p>因此，byte 的取值范围是 -128 ~ 127。</p>
-</li>
-</ul>
-<p>注：本文主要是记录在复习 Java 知识点时所想到或遇到的问题，持续更新中。</p>
-<h1 id="二、Java-中-与-equals-有何区别？"><a href="#二、Java-中-与-equals-有何区别？" class="headerlink" title="二、Java 中 == 与 equals 有何区别？"></a>二、Java 中 == 与 equals 有何区别？</h1><p><strong>==</strong> 是二元操作符，用于比较两个对象的<strong>内存地址</strong>是否相同，如果两个对象的内存地址相同的话，则返回 true；否则返回 false。基本数据类型（int、short、long、char、float、double、boolean、byte）和 复合数据类型。以下通过例子进一步说明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EqualsOperator</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</div><div class="line">        String s1 = <span class="string">"Hello World"</span>;</div><div class="line">        String s2 = <span class="string">"Hello World"</span>;        </div><div class="line">        String s3 = <span class="keyword">new</span> String(<span class="string">"Hello World"</span>);</div><div class="line">        </div><div class="line">        System.out.println(s1 == s2);</div><div class="line">        System.out.println(s1 == s3);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>输出结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span></div><div class="line"><span class="keyword">false</span></div></pre></td></tr></table></figure>
-<p><strong>equals()</strong> 是 Object 类中方法，默认实现是比较两个对象的内存地址，与 <strong>==</strong> 操作符的作用是一样。不管是 Java 提供的类，还是自己自定义的类，默认继承 Object，如果没有对 <strong>equals()</strong> 方法进行重写时，这时 <strong>equals()</strong> 的作用与操作符 <strong>==</strong> 是一样的；但是 Object 的子类大部分都会根据自己的需求对 <strong>equals()</strong> 方法进行重写，既可以比较两个对象的内存地址，也可以比较两个对象所包含的内容，比如 String、Integer 等。</p>
-<p><strong>equals()</strong> 默认实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>很明显可以看出，默认实现是比较两个对象的内存地址。官方文档也给出该方法的具体描述：</p>
-<blockquote>
-<p>equals 方法在非 null 对象引用上实现等价关系：</p>
-<ul>
-<li><p>自反性：对于任何非空引用值 x，x.equals(x) 应该返回 true。</p>
-</li>
-<li><p>对称性：对于任何非空引用值 x 和 y，当且仅当 y.equals(x) 返回 true 时，x.equals(y) 才返回 true。</p>
-</li>
-<li><p>传递性：对于任何非空引用值 x、y 和 z，如果 x.equals(y) 返回 true 并且 y.equals(z) 也返回 true 时，那么 x.equals(z) 返回 true。</p>
-</li>
-<li><p>一致性：对于任何非空引用值 x 和 y，如果对象 equals 对象上比较的信息没有被修改，那么多次调用 x.equals(y) 一致返回 true 或者 一致 返回 false。</p>
-</li>
-<li><p>对于任何非空引用值 x，x.equals(null) 应该返回 false。</p>
-</li>
-</ul>
-<p>Object 类的 equals 方法实现对象上最可能的等价关系;也就是说，对于任何非 null 的引用值 x 和 y，当且仅当 x 和 y 引用同一个对象（x == y 的值为 true）时，此方法返回 true。</p>
-<p>注意：无论什么时候重写此方法，都必须重写 hasCode() 方法，以维护 hasCode() 方法一般的约定，该方法声明相等的对象必须具有相同的哈希码。</p>
-</blockquote>
-<p>那么来看下 String 类是如何重写 equals() 方法的，具体源码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;</div><div class="line">        String anotherString = (String)anObject;</div><div class="line">        <span class="keyword">int</span> n = value.length;</div><div class="line">        <span class="keyword">if</span> (n == anotherString.value.length) &#123;</div><div class="line">            <span class="keyword">char</span> v1[] = value;</div><div class="line">            <span class="keyword">char</span> v2[] = anotherString.value;</div><div class="line">            <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">            <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (v1[i] != v2[i])</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">                i++;</div><div class="line">            &#125;</div><div class="line">                </div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>第 2 ~ 4 行代码判断两个对象的内存地址是否相同，相同的话返回则返回 true；不同的话执行下面语句。第 5 ~ 20 行代码判断两个对象所包含的内容是否相同，相同的话则返回 true；否则返回 false。当以上两个条件都不满足时，则返回 false。</p>
-<p>下面通过例子加深对该知识点的理解：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EqualsMethos</span> </span>&#123;</div><div class="line">    Integer n1 = <span class="keyword">new</span> Integer(<span class="number">47</span>);</div><div class="line">    Integer n2 = <span class="keyword">new</span> Integer(<span class="number">47</span>);</div><div class="line">    System.out.println(n1.equals(n2));</div><div class="line">    </div><div class="line">    Value v1 = <span class="keyword">new</span> Value();</div><div class="line">    Value v2 = <span class="keyword">new</span> Value();</div><div class="line">    v1.i = v2.i = <span class="number">100</span>;</div><div class="line">    System.out.println(v1.equals(v2));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Value</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>输出结果：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">true</span>     <span class="comment">// Integer 类重写 equals() 方法，比较的对象所包含的内容 </span></div><div class="line"><span class="keyword">false</span>    <span class="comment">// 由于 Value 类是自己定义的，没有重写 equals() 方法，继承 Object 类 equals() 方法默认实现，比较的是两个对象的内存地址，这时与 **==** 操作符的作用一样。</span></div></pre></td></tr></table></figure>
-<p>对于 <strong>euqals()</strong> 与 <strong>==</strong> 这知识点异同的比较就说到这里，想要继续更深层的了解就 Google 吧。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、为什么-Java-byte-类型取值范围是-128-127-？&quot;&gt;&lt;a href=&quot;#一、为什么-Java-byte-类型取值范围是-128-127-？&quot; class=&quot;headerlink&quot; title=&quot;一、为什么 Java byte 类型取值范围是 -1
-    
-    </summary>
-    
-      <category term="Java" scheme="http://panzeyong.com/categories/Java/"/>
-    
-    
-      <category term="知识点整理" scheme="http://panzeyong.com/tags/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%95%B4%E7%90%86/"/>
     
   </entry>
   
