@@ -445,9 +445,6 @@
 </ul>
 <pre><code>- 声明变量保存值
 
- <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// replacing existing element</span></div><div class="line"><span class="keyword">const</span> oldElm = oldVnode.elm  <span class="comment">// 保存真实 DOM 节点 div#app</span></div><div class="line"><span class="keyword">const</span> parentElm = nodeOps.parentNode(oldElm)（保存当前节的父节点，此处指的是 body）</div></pre></td></tr></table></figure>
-
-
 - 第 `69` ~ `77` 调用方法 `createElm` 创建新节点，此方法是核心方法，稍后分析；
 
 - 第 `110` ~ `112` 行由于创建了新节点，需要将旧节点删除。

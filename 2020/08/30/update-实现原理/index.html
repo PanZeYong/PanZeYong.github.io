@@ -107,7 +107,7 @@ _update 是 Vue 实例的一个私有方法，有两个时机被调用：一个�
 <meta property="og:image" content="http://panzeyong.com/images/vue/param_old_vnode.png">
 <meta property="og:image" content="http://panzeyong.com/images/vue/update.png">
 <meta property="og:image" content="http://panzeyong.com/images/vue/init_to_render.png">
-<meta property="og:updated_time" content="2020-09-01T14:36:18.958Z">
+<meta property="og:updated_time" content="2020-09-01T14:38:52.134Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="update 实现原理">
 <meta name="twitter:description" content="在 《Vue 实例挂载实现原理》 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：vm._update(vm._render(), hydrating)。上一节 《render 实现原理》 中对 vm._render 进行了分析；那么这一节将要分析 vm._update 的实现原理。
@@ -447,9 +447,6 @@ _update 是 Vue 实例的一个私有方法，有两个时机被调用：一个�
 </li>
 </ul>
 <pre><code>- 声明变量保存值
-
- <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// replacing existing element</span></div><div class="line"><span class="keyword">const</span> oldElm = oldVnode.elm  <span class="comment">// 保存真实 DOM 节点 div#app</span></div><div class="line"><span class="keyword">const</span> parentElm = nodeOps.parentNode(oldElm)（保存当前节的父节点，此处指的是 body）</div></pre></td></tr></table></figure>
-
 
 - 第 `69` ~ `77` 调用方法 `createElm` 创建新节点，此方法是核心方法，稍后分析；
 
