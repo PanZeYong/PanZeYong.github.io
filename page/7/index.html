@@ -268,6 +268,327 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/06/26/第六章-面向对象的程序设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/26/第六章-面向对象的程序设计/" itemprop="url">第 六 章 面向对象的程序设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-26T07:56:20+08:00">
+                2017-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/26/第六章-面向对象的程序设计/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/26/第六章-面向对象的程序设计/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/06/26/第六章-面向对象的程序设计/" class="leancloud_visitors" data-flag-title="第 六 章 面向对象的程序设计">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、理解对象"><a href="#一、理解对象" class="headerlink" title="一、理解对象"></a>一、理解对象</h2><h3 id="1、属性类型"><a href="#1、属性类型" class="headerlink" title="1、属性类型"></a>1、属性类型</h3><ul>
+<li><p>数据属性：数据属性包含一个数据值的位置。在这个位置可以读取和写入值。有以下 4 个描述其行为的特性：</p>
+<ul>
+<li><p>[[Configurable]]：表示是否通过 delete 删除属性从而重新定义属性，能否修改属性的特性，或者能否把属性修改为访问器属性。一旦该属性定义为不可配置，即 false，那么就再也不可能设置为可配置了，即 true。此时，再调用 <strong>Object.defineProperty()</strong> 方法修改除 writable 之外的属性都会导致错。在非严格模式下什么也不会发生，而在严格模式下会导致错误。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Enumerable]]：表示能否通过 for-in 循环返回属性。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Writable]]：表示能否修改属性的值。在非严格模式下，赋值操作将被忽略；在严格模式下，赋值操作将会导致错误。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Value]]：包含这个属性的数据值。读取属性值的时候，从这个位置读；写入属性的时候，把新值保存在这个位置。这个特性的默认值为 undefined。</p>
+<p>  要修改属性默认属性，必须调用 ECMAScript5 的 <strong>Object.defineProperty()</strong> 方法。该方法接收三个参数：属性所在的对象、属性的名字、和一个描述符对象。描述符（descriptor）对象的属性必须是：configurable、enumerable、writable 和 value。例子如下：</p>
+<p>  将属性特性 writable 改为只读</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">person.name = <span class="string">"Julian"</span>;</div><div class="line">person.age = <span class="number">22</span>;</div><div class="line">person.job = <span class="string">"Software Engineer"</span>;</div><div class="line"></div><div class="line">person.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	writable : <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.sayName();        <span class="comment">// 修改之前：Julian</span></div><div class="line">person.name = <span class="string">"Jack"</span>;</div><div class="line">person.sayName();		 <span class="comment">// 修改之后：Julian</span></div></pre></td></tr></table></figure>
+<p>  将属性特性 configurable 改为不可配置（对象 person 使用上面代码）。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">configurable : <span class="literal">false</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.sayName();        <span class="comment">// 修改之前：Julian</span></div><div class="line"><span class="keyword">delete</span> persion.name;</div><div class="line">person.sayName();		 <span class="comment">// 修改之后：Julian</span></div></pre></td></tr></table></figure>
+<p>  在将属性特性 configurable 改为不可配置时再修改其它属性特性（writable 除外），抛出错误。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(person, <span class="string">"name"</span>, &#123;</div><div class="line">	value : <span class="string">"Marry"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 错误提示</span></div><div class="line">Uncaught <span class="built_in">TypeError</span>: Cannot redefine property: name</div><div class="line">  at <span class="built_in">Function</span>.defineProperty (<span class="xml"><span class="tag">&lt;<span class="name">anonymous</span>&gt;</span>)</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>访问器属性</p>
+<ul>
+<li><p>[[Configurable]]：表示能否通过 delete 删除属性从而重新定义属性，能否修改属性的特性，或者能否把属性修改为<strong>数据属性</strong>。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Enumerable]]：表示能否通过 for-in 循环返回属性。（在对象上直接定义的属性，默认值为 true）</p>
+</li>
+<li><p>[[Get]]：在读取属性时调用的函数。默认值为 undefined。只指定该属性时意味着不能写入，在非严格模式下写入属性会被忽略；在严格模式下写入属性会抛出错误。</p>
+</li>
+<li><p>[[Set]]：在写入属性时调用的函数。默认值为 undefined。只指定该属性时意味着不能读取，在非严格模式下读取时返回 undefined；在严格模式下会抛出错误。</p>
+<p><strong>访问器不能直接定义，必须使用 Object.defineProperty() 定义</strong>。</p>
+<p>书中例子，代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> book = &#123;</div><div class="line">	_year: <span class="number">2004</span>,</div><div class="line">	edition: <span class="number">1</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(book, <span class="string">"year"</span>, &#123;</div><div class="line">	get: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"get"</span>);</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>._year;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	set: <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">		<span class="keyword">if</span> (value &gt; <span class="number">2004</span>) &#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"set"</span>);</div><div class="line">			<span class="keyword">this</span>._year = value;</div><div class="line">			<span class="keyword">this</span>.edition += value - <span class="number">2004</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 调用访问器 set</span></div><div class="line">book.year = <span class="number">2007</span>;  </div><div class="line">alert(book.edition); </div><div class="line"></div><div class="line"><span class="comment">// 调用访问器 get</span></div><div class="line">alert(book.year);</div><div class="line"></div><div class="line"><span class="comment">// 如果将属性名 “year” 改为 "_year"，并设置 book._year = 2007，则会导致无限递归，最终导致错误。</span></div><div class="line"></div><div class="line"><span class="comment">// 注：_year 前面的下划线是一种常用的记号，用于表示只能通过对象方法访问属性。</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、定义多个属性"><a href="#2、定义多个属性" class="headerlink" title="2、定义多个属性"></a>2、定义多个属性</h3><p>调用方法 <strong>Object.defineProperties()</strong> 可以为一个对象定义多个属性，该方法接收两个对象参数：第一个对象参数是<strong>要添加和修改其属性的对象</strong>；第二个对象参数是<strong>第二个对象的属性与第一个对象中要添加或修改的属性一一对应</strong>。</p>
+<p>书中例子，代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> book = &#123;&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperties(book, &#123;</div><div class="line">	<span class="comment">// 数据属性</span></div><div class="line">	_year: &#123;</div><div class="line">		value: <span class="number">2005</span></div><div class="line">	&#125;,</div><div class="line">	</div><div class="line">	<span class="comment">// 数据属性</span></div><div class="line">	edition: &#123;</div><div class="line">		value: <span class="number">1</span></div><div class="line">	&#125;,</div><div class="line">	</div><div class="line">	<span class="comment">// 访问器属性</span></div><div class="line">	year: &#123;</div><div class="line">		get: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">this</span>._year;</div><div class="line">		&#125;,</div><div class="line"></div><div class="line">		set: <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</div><div class="line">			<span class="keyword">if</span> (value &gt; <span class="number">2005</span>) &#123;</div><div class="line">				<span class="keyword">this</span>._year = value;</div><div class="line">				<span class="keyword">this</span>.edition += value - <span class="number">2005</span>; </div><div class="line">			&#125;	</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h3 id="3、读取属性的特性"><a href="#3、读取属性的特性" class="headerlink" title="3、读取属性的特性"></a>3、读取属性的特性</h3><p>调用 <strong>Object.getOwnPropertyDescriptor()</strong> 方法可以取得给定属性的描述符。这个方法接收两个参数：属性所在的对象和要读取器描述符的属性名称。返回一个对象。</p>
+<p>书中例子，代码如下：（基于以上代码）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 数据属性</span></div><div class="line"><span class="keyword">var</span> descriptor = <span class="built_in">Object</span>.getOwnPropertyDescriptor(book, <span class="string">"_year"</span>);</div><div class="line">alert(descriptor.value);        <span class="comment">// 2005</span></div><div class="line">alert(descriptor.configurable); <span class="comment">// false</span></div><div class="line">alert(descriptor.writable);     <span class="comment">// false</span></div><div class="line">alert(descriptor.enumerable);   <span class="comment">// false</span></div><div class="line">alert(<span class="keyword">typeof</span> descriptor.get);   <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="comment">// 访问器属性</span></div><div class="line"><span class="keyword">var</span> descriptor = <span class="built_in">Object</span>.getOwnPropertyDescriptor(book, <span class="string">"year"</span>);</div><div class="line">alert(descriptor.value);			 <span class="comment">// undefined  </span></div><div class="line">alert(descriptor.configurable); <span class="comment">// false</span></div><div class="line">alert(descriptor.enumerable);   <span class="comment">// false</span></div><div class="line">alert(<span class="keyword">typeof</span> descriptor.get);   <span class="comment">// function</span></div><div class="line">alert(<span class="keyword">typeof</span> descriptor.set);   <span class="comment">// function</span></div></pre></td></tr></table></figure>
+<h2 id="二、创建对象"><a href="#二、创建对象" class="headerlink" title="二、创建对象"></a>二、创建对象</h2><h3 id="1、工厂模式"><a href="#1、工厂模式" class="headerlink" title="1、工厂模式"></a>1、工厂模式</h3><p>用函数来封装以特定接口创建对象的细节，与 Java 中 class 类似，即将对象类型的属性和方法进行封装。</p>
+<h3 id="2、构造函数模式"><a href="#2、构造函数模式" class="headerlink" title="2、构造函数模式"></a>2、构造函数模式</h3><p>可用来创建特定类型的对象，用 new 操作符来调用，这是与普通函数唯一的区别。</p>
+<h3 id="3、原型模式"><a href="#3、原型模式" class="headerlink" title="3、原型模式"></a>3、原型模式</h3><p>在 JavaScript 中，我们创建的每个函数都包含一个（原型）属性：prototype。prototype 属性是一个指针，指向一个对象，即原型对象，该原型对象包含可由特定类型的所有实例共享的属性和方法。换句话说，该原型对象可以说是调用构造函数而创建的对象实例的原型对象。使用原型对象的好处是让所有对象实例共享它包含的属性和方法。</p>
+<p>书中例子，代码如下：（1）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person.prototype.name = <span class="string">"Marry"</span>;</div><div class="line">Person.prototype.age = <span class="number">22</span>;</div><div class="line">Person.prototype.job = <span class="string">"Software Engineer"</span>;</div><div class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person();</div><div class="line">person1.sayName();</div><div class="line"></div><div class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person();</div><div class="line">person2.sayName();</div><div class="line"></div><div class="line">alert(person1.sayName == person2.sayName); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>理解原型对象</p>
+<ul>
+<li><p>每当我们创建新函数时，就会根据特定规则为该函数创建一个 <strong>prototype</strong> 属性，该属性指向函数的原型对象。在默认情况下，所有原型对象都会自动获取 <strong>constructor</strong> （构造函数）属性，该属性包含一个指向 prototype 属性所在函数的指针。</p>
+</li>
+<li><p>prototype 这个属性连接在于实例与构造函数的原型对象之间，而不是存在于实例与构造函数之间。</p>
+</li>
+<li><p>读取对象属性的原则：先从对象实例进行搜索，搜索不到的话再从原型对象进行搜索。</p>
+</li>
+<li><p>虽然可以通过对象实例访问保存在原型对象中的值，但是却不能通过对象实例修改原型对象中的值。如果我们在对象实例定义与原型对象中同名的属性，则对象实例中的属性会屏蔽原型对象中的属性。</p>
+</li>
+<li><p>使用 delete 操作符可以则可以完全删除实例属性，从而让我们能够重新访问原型中的属性。</p>
+</li>
+</ul>
+</li>
+<li><p>原型与 in 操作符</p>
+<ul>
+<li><p>使用 in 操作符方式：单独使用和在 for-in 循环中使用。</p>
+</li>
+<li><p>单独使用时， in 操作符会在通过对象能够访问给定属性时返回 true，无论该属性存在于实例中还是原型中。</p>
+</li>
+<li><p>同时使用 <strong>hasOwnProperty()</strong> 方法和 in 操作符，就可以确定该属性到底是存在于对象，还是存在于原型中。</p>
+</li>
+<li><p>在 for-in 中，返回的是所有能够通过对象访问的、可枚举的属性，其中既包括存在于实例中的属性，也包括存在于原型中的属性。屏蔽了原型中不可枚举属性（即将 [[Enumerable]]）标记为 false 属性）的实例属性也会在 for-in 循环中返回。（例子如下）</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> object = &#123;</div><div class="line">	toString : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"toString"</span>;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	hasOwnProperty : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"hasOwnProperty"</span>;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	propertyIsEnumerable : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"propertyIsEnumerable"</span>;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	toLocaleString : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"toLocaleString"</span>;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	valueOf : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"valueOf"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">for</span>(<span class="keyword">var</span> o <span class="keyword">in</span> object) &#123;</div><div class="line">	<span class="keyword">if</span> (o == <span class="string">"toString"</span>) &#123;</div><div class="line">		alert(<span class="string">"toString"</span>);</div><div class="line">		alert(o);</div><div class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (o == <span class="string">"toLocaleString"</span>) &#123;</div><div class="line">		alert(<span class="string">"toLocaleString"</span>);</div><div class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (o == <span class="string">"valueOf"</span>) &#123;</div><div class="line">		alert(<span class="string">"valueOf"</span>);</div><div class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (o == <span class="string">"hasOwnProperty"</span>) &#123;</div><div class="line">		alert(<span class="string">"hasOwnProperty"</span>);</div><div class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (o == <span class="string">"propertyIsEnumerable"</span>) &#123;</div><div class="line">		alert(<span class="string">"propertyIsEnumerable"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>更简单的原型语法</p>
+<ul>
+<li><p>用一个包含所有属性和方法的对象字面量来重写整个原型对象。需要注意的是 <strong>constructor</strong> 属性不再指向 <strong>prototype</strong> 属性所在函数（比如 Person），而是指向 Object 构造函数。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line">Person.prototype = &#123;	</div><div class="line">	name : <span class="string">"Jack"</span>,</div><div class="line">	age : <span class="number">22</span>,</div><div class="line">	job : <span class="string">"Software Engineer"</span>,</div><div class="line">	sayName : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		alert(<span class="keyword">this</span>.name);</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>原型的动态性</p>
+<ul>
+<li><p>对原型对象的任何修改都能够立即从实例上反映出来，原因是<strong>实例与原型之间的松散连接关系</strong>。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">	</div><div class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person();</div><div class="line">	</div><div class="line">Person.prototype.sayHi = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="string">"Hi"</span>);</div><div class="line">&#125;;</div><div class="line">	</div><div class="line">person.sayHi();</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果对原型对象进行重写，那情况就不一样。这时存在两个对象，并且毫无关联。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">	</div><div class="line"><span class="keyword">var</span> friend = <span class="keyword">new</span> Person();</div><div class="line">	</div><div class="line">Person.prototype = &#123;	</div><div class="line">	<span class="keyword">constructor</span> : Person,</div><div class="line">	name : "Jack",</div><div class="line">	age : 22,</div><div class="line">	job : "Software Engineer",</div><div class="line">	sayName : function() &#123;</div><div class="line">		alert(<span class="keyword">this</span>.name);</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line">	</div><div class="line">friend.sayName();    <span class="comment">// error</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>实例中的指针仅指向原型，而不指向构造函数。</p>
+</li>
+</ul>
+</li>
+<li><p>构造函数、原型与实例之间关系</p>
+<p>  每个构造函数都有一个原型对象，原型对象都包含一个指向构造函数的指针，而实例都包含一个指向原型对象的内部指针。</p>
+</li>
+</ul>
+<h3 id="4、组合使用构造函数模式和原型模式"><a href="#4、组合使用构造函数模式和原型模式" class="headerlink" title="4、组合使用构造函数模式和原型模式"></a>4、组合使用构造函数模式和原型模式</h3><p>构造函数模式用于定义实例属性，而原型模式用于定义方法和共享的属性。好处是最大限度地节省了内存。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.name = name;</div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">	<span class="keyword">this</span>.job = job;</div><div class="line">	<span class="keyword">this</span>.language = [<span class="string">"JavaScript"</span>, <span class="string">"Java"</span>, <span class="string">"PHP"</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person.prototype = &#123;</div><div class="line">	<span class="keyword">constructor</span> : Person,</div><div class="line">	sayName : function() &#123;</div><div class="line">		alert(<span class="keyword">this</span>.name);</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person();</div><div class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person();</div><div class="line"></div><div class="line">person1.language.push(<span class="string">"Python"</span>);</div><div class="line"></div><div class="line">alert(person1.language);    <span class="comment">// "JavaScript, Java, PHP, Python"</span></div><div class="line">alert(person2.language);    <span class="comment">// "JavaScript, Java, PHP"</span></div><div class="line"></div><div class="line">alert(person1.language == person2.language);    <span class="comment">// false</span></div><div class="line">alert(person1.sayName == person2.sayName);      <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="5、动态原型模式"><a href="#5、动态原型模式" class="headerlink" title="5、动态原型模式"></a>5、动态原型模式</h3><p>把所有信息都封装在了构造函数中，而通过在构造函数中初始化原型（仅在必要的情况下），又保持了同时使用构造函数和原型的优点。换句话说，可以通过检查某个应该存在的方法是否有效，来决定是否需要初始化原型。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>) </span>&#123;</div><div class="line">	<span class="comment">// 属性</span></div><div class="line">	<span class="keyword">this</span>.name = name;</div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">	<span class="keyword">this</span>.job = job;</div><div class="line">	</div><div class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="keyword">this</span>.sayName != <span class="string">"function"</span>) &#123;</div><div class="line">		Person.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			alert(<span class="keyword">this</span>.name);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="6、寄生构造函数模式"><a href="#6、寄生构造函数模式" class="headerlink" title="6、寄生构造函数模式"></a>6、寄生构造函数模式</h3><p>创建一个函数，该函数的作用仅仅是封装创建对象的代码，然后再返回新创建的对象。（与工厂模式类似）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">functuon Person(name, age, job) &#123;</div><div class="line">	<span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">	o.name = name;</div><div class="line">	o.age = age;</div><div class="line">	o.job = job;</div><div class="line">	o.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		alert(<span class="keyword">this</span>.name);</div><div class="line">	&#125;;</div><div class="line">	retrun o;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="7、稳妥构造函数模式"><a href="#7、稳妥构造函数模式" class="headerlink" title="7、稳妥构造函数模式"></a>7、稳妥构造函数模式</h3><p>稳妥对象：指的是没有公共属性，而且其方法也不引用 this 的对象。</p>
+<p>适用场景：一些安全的环境中（这些环境中会禁止使用 this 和 new），或者在防止数据被其它应用程序（如 Mashup 程序）改动时使用。</p>
+<p>稳妥构造函数与寄生构造函数模式区别：</p>
+<ul>
+<li><p>稳妥构造函数新创建对象的实例方法不引用 this；</p>
+</li>
+<li><p>稳妥构造函数不使用 new 操作符调用构造函数。</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age, job</span>) </span>&#123;</div><div class="line">	</div><div class="line">	<span class="comment">// 创建要返回的对象</span></div><div class="line">	<span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">	</div><div class="line">	<span class="comment">// 可以在这里定义私有变量和函数</span></div><div class="line">	</div><div class="line">	<span class="comment">// 添加方法</span></div><div class="line">	o.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		alert(name);</div><div class="line">	&#125;;</div><div class="line">	</div><div class="line">	<span class="keyword">return</span> o;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>继承有两种方式：接口继承和实现继承。接口继承只继承方法签名，而实现继承则继承实际方法。ECMAScript 只支持实现继承，并且主要依靠<strong>原型链</strong>来实现。</p>
+<h3 id="1、原型链"><a href="#1、原型链" class="headerlink" title="1、原型链"></a>1、原型链</h3><p>让一个引用类型继承另一个引用类型的属性和方法。可以简单概括地说：有一个超类，具有属性和方法；通过 new 操作符创建超类实例赋值给子类，即子类的原型指向超类的原型，创建子类实例，指向子类的原型。例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"SuperType"</span>);</div><div class="line">	<span class="keyword">this</span>.property = <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"getSuperValue"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.property;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"SubType"</span>);</div><div class="line">	<span class="keyword">this</span>.subproperty = <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 继承 SuperType</span></div><div class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</div><div class="line"></div><div class="line"><span class="comment">// 使用字面量添加新方法，会导致上一行代码无效（17）</span></div><div class="line">SubType.prototype = &#123;</div><div class="line">	getSubValue: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	someOtherMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 添加新方法</span></div><div class="line">SubType.prototype.getSubValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"getSubValue"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.subproperty;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 覆盖方法</span></div><div class="line">SubType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</div><div class="line">alert(instance.getSuperValue());</div><div class="line">alert(instance.getSubValue());</div><div class="line">alert(instance.property);</div></pre></td></tr></table></figure>
+<p>需要注意的要点：</p>
+<ul>
+<li><p>所有引用类型默认继承 Object，而且这个继承也是通过原型链实现的。也就是说，所有函数的默认原型都是 Object 的实例，因此默认原型都会包含一个内部指针，指向 Object.prototype。</p>
+</li>
+<li><p>在给原型添加新方法或覆盖方法的代码一定要放在替换原型语句之后。</p>
+</li>
+<li><p>在通过原型链实现继承时，不能使用对象字面量创建原型方法。因为这样做就会重写原型链。（ps：还不是很理解）</p>
+</li>
+</ul>
+<p>原型链存在问题：</p>
+<ul>
+<li><p>包含引用类型值所带来的问题，即引用类型值的所有属性是被共享的，这就导致一个实例修改其中属性，也会影响到其它实例。</p>
+</li>
+<li><p>在创建子类型的实例时，不能向超类型的构造函数中传递参数。</p>
+</li>
+</ul>
+<h3 id="2、借用构造函数（伪造对象或经典继承）"><a href="#2、借用构造函数（伪造对象或经典继承）" class="headerlink" title="2、借用构造函数（伪造对象或经典继承）"></a>2、借用构造函数（伪造对象或经典继承）</h3><p>在子类型构造函数的内部调用超类型构造函数。可以这样说，在子类创建新对象时执行超类构造函数中初始化代码，使子类实例各具有自己的一份副本。（ps：纯属自己理解）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.colors = [<span class="string">"red"</span>, <span class="string">"blue"</span>, <span class="string">"green"</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	SuperType.call(<span class="keyword">this</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</div><div class="line">instance.colors.push(<span class="string">"pink"</span>);</div><div class="line">alert(instance.colors);               <span class="comment">// "red, blue, green, pink"</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType();</div><div class="line">alert(instance.colors);               <span class="comment">// "red, blue, green"</span></div></pre></td></tr></table></figure>
+<p>相对于原型链优势：在子类构造函数中向超类型构造函数传递参数。</p>
+<p>借用构造函数存在问题：方法都在构造函数中定义，函数复用无从谈起。</p>
+<h3 id="3、组合继承（伪经典继承）"><a href="#3、组合继承（伪经典继承）" class="headerlink" title="3、组合继承（伪经典继承）"></a>3、组合继承（伪经典继承）</h3><p>使用原型链实现对原型属性和方法的继承，通过借用构造函数来实现对实例属性的继承。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.name = name;</div><div class="line">	<span class="keyword">this</span>.colors = [<span class="string">"red"</span>, <span class="string">"blue"</span>, <span class="string">"green"</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">SuperType.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.name);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name, age</span>) </span>&#123;</div><div class="line">	SuperType.call(<span class="keyword">this</span>, name);</div><div class="line"></div><div class="line">	<span class="keyword">this</span>.age = age;</div><div class="line">&#125;</div><div class="line"></div><div class="line">SubType.prototype = <span class="keyword">new</span> SuperType();</div><div class="line">SubType.prototype.constructor = SubType;</div><div class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="keyword">this</span>.age);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType(<span class="string">"Jack"</span>, <span class="number">22</span>);</div><div class="line">instance.colors.push(<span class="string">"black"</span>);</div><div class="line">alert(instance.colors);       <span class="comment">// "red, blue, green, pink" </span></div><div class="line">instance.sayName();           <span class="comment">// Jack</span></div><div class="line">instance.sayAge();            <span class="comment">// 22</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType(<span class="string">"John"</span>, <span class="number">21</span>);     </div><div class="line">alert(instance.colors);      <span class="comment">// "red, blue, green"</span></div><div class="line">instance.sayAge();           <span class="comment">// John</span></div><div class="line">instance.sayName();          <span class="comment">// 21</span></div></pre></td></tr></table></figure>
+<h3 id="4、原型式继承"><a href="#4、原型式继承" class="headerlink" title="4、原型式继承"></a>4、原型式继承</h3><p>在函数先创建一个临时构造函数，将传入的对象作为这个构造函数的原型，最终返回该类型的新实例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span>(<span class="params">o</span>) </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">F</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">	F.prototype = o;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">new</span> F();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5、寄生式继承（parasitic）"><a href="#5、寄生式继承（parasitic）" class="headerlink" title="5、寄生式继承（parasitic）"></a>5、寄生式继承（parasitic）</h3><p>创建一个仅用于封装继承过程的函数，该函数在内部以某种方式来<strong>增强</strong>对象，最后返回对象。与寄生构造函数和工厂模式类型。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="params">original</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> clone = object(original);        <span class="comment">// object() 原型式继承函数</span></div><div class="line">	clone.sayHi = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		alert(<span class="string">"hi"</span>);</div><div class="line">	&#125;;</div><div class="line">	<span class="keyword">return</span> clone;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="6、寄生组合式继承"><a href="#6、寄生组合式继承" class="headerlink" title="6、寄生组合式继承"></a>6、寄生组合式继承</h3><p>通过借用构造函数来继承属性，通过原型链的混成形式来继承方法。基本思路是：不必为了指定子类型的原型而调用超类型的构造函数，所需要的无非就是超类型原型的副本而已。本质上，就是使用寄生式继承来继承超类型的原型，然后再将结果指定给子类型的原型。(主要是为了避免调用两次超类型构造函数)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType, superType</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> prototype = object(superType.prototype);    <span class="comment">// 创建对象</span></div><div class="line">	prototype.constructor = subType;                <span class="comment">// 增强对象</span></div><div class="line">	subType.prototype = prototype;                 <span class="comment">// 指定对象</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li><p><strong>isPrototypeOf()：</strong>确定对象之间是否存在关系，即如果 [[Prototype]] 指向调用 <strong>isPrototypeOf()</strong> 方法的对象，则返回 true。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(Person.prototype.isPrototypeOf(person1));    <span class="comment">// true</span></div><div class="line">alert(Person.prototype.isPrototypeOf(person2));    <span class="comment">// true</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>Object.getPrototypeOf()</strong>：返回 [[Prototype]] 的值。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1) == Person.prototype);    <span class="comment">// true</span></div><div class="line">alert(<span class="built_in">Object</span>.getPrototypeOf(person1).name);    <span class="comment">// Marry</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>hasOwnProperty()</strong>：可以检测一个属性是存在于实例中，还是存在于原型中。如果给定属性存在于实例对象中，则返回 true；否则返回 false。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">alert(person1.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div><div class="line">alert(person2.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div><div class="line"></div><div class="line">person2.name = <span class="string">"John"</span>;</div><div class="line">person1.sayName();    <span class="comment">// Marry</span></div><div class="line">person2.sayName();    <span class="comment">// John</span></div><div class="line"></div><div class="line">alert(person1.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div><div class="line">alert(person2.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// true</span></div><div class="line"></div><div class="line"><span class="keyword">delete</span> person2.name</div><div class="line">alert(person2.name);  <span class="comment">// Mary</span></div><div class="line">alert(person2.hasOwnProperty(<span class="string">"name"</span>));    <span class="comment">// false</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Object.keys()：</strong>获取对象上所有可枚举的实例属性。该方法接收一个对象作为参数，返回一个包含所有可枚举属性的<strong>字符串数组</strong>。</p>
+</li>
+<li><p><strong>Object.getOwnPropertyNames()：</strong>获取所有实例属性，无论是否可枚举。</p>
+</li>
+<li><p><strong>Object.create()：</strong>该方法用于规范化原型式继承。接收两个参数：一个用作新对象原型的对象和（可选的）一个为新对象定义额外属性的对象。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = &#123;</div><div class="line">	name : <span class="string">"Julian"</span>,</div><div class="line">	friends : [<span class="string">"Ruby"</span>, <span class="string">"Java"</span>, <span class="string">"JavaScript"</span>, <span class="string">"Python"</span>]</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1 = <span class="built_in">Object</span>.create(person, &#123;</div><div class="line">	name : &#123;</div><div class="line">		value : <span class="string">"John"</span></div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第六章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/06/07/Picasso-用法及源码解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1402,261 +1723,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/04/17/Python-学习笔记：字符串/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/17/Python-学习笔记：字符串/" itemprop="url">Python 学习笔记：字符串</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-17T22:27:28+08:00">
-                2017-04-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/04/17/Python-学习笔记：字符串/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/04/17/Python-学习笔记：字符串/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/04/17/Python-学习笔记：字符串/" class="leancloud_visitors" data-flag-title="Python 学习笔记：字符串">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>定义：Python 的字符串是一种对象类型，这种类型用 <code>str</code> 表示，通常用双引号 <code>“”</code> 或者单引号 <code>‘’</code> 表示。Python 字符串不可以被更改，即它们是不可变的。</p>
-<h4 id="拼接字符串"><a href="#拼接字符串" class="headerlink" title="拼接字符串"></a>拼接字符串</h4><p>Python 的字符串是可以拼接，用符号 <code>+</code> 表示；但是与 Java 语言有一点不同的是拼接的两个对象必须是同类型，否则会报错。例子如下：</p>
-<p>两个相同类型 str 拼接（正确）</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"Hello "</span> + <span class="string">"Python"</span></div><div class="line"><span class="string">'Hello Python'</span></div></pre></td></tr></table></figure>
-<p>两个相同类型 int 拼接（正确）</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">5</span> + <span class="number">3</span></div><div class="line"><span class="number">8</span></div></pre></td></tr></table></figure>
-<p>两个不同类型 str 和 int 拼接（错误）</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"Python "</span> + <span class="number">5</span></div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">TypeError: Can<span class="string">'t convert '</span>int<span class="string">' object to str implicitly</span></div></pre></td></tr></table></figure>
-<p>很显然，对于类型都是 str 将多个对象拼接起来；对于类型都是 int 则执行相加操作；对于不同类型则报错。那么对于不同类型的操作该如何转换呢？解决办法如下：</p>
-<ul>
-<li><p>str() 函数</p>
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"Python "</span> + str(<span class="number">3</span>)</div><div class="line"><span class="string">'Python 3'</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>repr() 函数（反引号的替代品）</p>
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"Python "</span> + repr(<span class="number">3</span>)</div><div class="line"><span class="string">'Python 3'</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>str() 与 repr() 区别</p>
-<ul>
-<li><p>str() 将对象转化为可读性好的字符串，适合于 <code>print</code> 输出到终端，其返回值无法用于内建函数 <code>eval</code>。</p>
-</li>
-<li><p>repr() 返回对象的规范字符串表示形式；对于大多数对象而言，<code>eval（repr（obj））== obj</code>，也就是说，大多数情况下可以通过内建函数 <code>eval</code> 重新获取该对象。</p>
-</li>
-<li><p>大部分情况下 <code>str()</code> 用于终端输出，<code>eval()</code> 主要用于调试。</p>
-</li>
-</ul>
-<h4 id="字符串格式化输出"><a href="#字符串格式化输出" class="headerlink" title="字符串格式化输出"></a>字符串格式化输出</h4><p>用于指定输出参数的格式与相对位置的字符串参数。通俗地讲，先定制模板，预留占位符，用对应类型的值填充；常用的占位符有 %s（字符串）、%d（整数）、%f（浮点数）。</p>
-<p>以下通过例子说明</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"I love my %s"</span> % <span class="string">"job"</span> </div><div class="line"><span class="string">'I love my job'</span></div></pre></td></tr></table></figure>
-<p>在这个字符串中，<code>%s</code> 是一个占位符，可以被其它字符串替换，这里替换的是 “job”。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"I'm %d years old"</span> % <span class="number">20</span></div><div class="line"><span class="string">"I'm 20 years old"</span></div></pre></td></tr></table></figure>
-<p>不同占位符也可以混合使用，例子如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"What's your name ? My name is %s and I'm %d years old."</span> % (<span class="string">"John"</span>, <span class="number">15</span>)</div><div class="line"><span class="string">"What's your name ? My name is John and I'm 15 years old."</span></div></pre></td></tr></table></figure>
-<h4 id="字符串常用方法"><a href="#字符串常用方法" class="headerlink" title="字符串常用方法"></a>字符串常用方法</h4><p><strong>index(…)</strong>：子字符串在整个字符串中的索引，即子字符串中第一个字符的位置。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"The programming language Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.index(<span class="string">"Python"</span>)</div><div class="line"><span class="number">25</span></div></pre></td></tr></table></figure>
-<p><strong>isalnum(…)</strong>：字符串中所有字符都是字母数字时返回 True，否则 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python3"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isalnum()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"199993"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isalnum()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isalnum()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># 包含空格，并非全是字母数字，所以返回 False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python 3"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isalnum()</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p><strong>isalpha(…)</strong>：字符串中所有字符都是字母时返回 True，否则 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isalpha()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># 包含数字</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python3"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isalpha()</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="comment"># 包含空格（其它符号也一样，比如 "\"、"%"等）</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Hello Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isalpha()</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p><strong>isdecimal(…)</strong>：字符串中只有十进制字符时返回 True，否则返回 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Unicode 数字</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdecimal()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># byte数字（单字节）</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">b"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdecimal()</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">AttributeError: <span class="string">'bytes'</span> object has no attribute <span class="string">'isdecimal'</span></div><div class="line"></div><div class="line"><span class="comment"># 全角数字（双字节)</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string =<span class="string">"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdecimal()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># 汉字数字</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"五"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdecimal()</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="comment"># 包含字母</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python1993"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdecimal()</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="comment"># 包含空格（其它符号也一样，比如 "\"、"%"等）</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"1993 1993"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdecimal()</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p><strong>isdigit(…)</strong>：字符串中所有字符都是数字 True，否则返回 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Unicode 数字</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdigit()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># byte数字（单字节）</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string =<span class="string">b"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdigit()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># 全角数字（双字节)</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string =<span class="string">"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdigit()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># 汉字数字</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"五"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdigit()</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isdigit()</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p><strong>isnumeric(…)</strong>：字符串中只有数字字符时返回 True，否则返回 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Unicode 数字</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isnumeric()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># byte数字（单字节）</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">b"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isnumeric()</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">AttributeError: <span class="string">'bytes'</span> object has no attribute <span class="string">'isnumeric'</span></div><div class="line"></div><div class="line"><span class="comment"># 全角数字（双字节)</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string =<span class="string">"1"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isnumeric()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="comment"># 汉字数字</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"五"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isnumeric()</div><div class="line"><span class="keyword">True</span></div></pre></td></tr></table></figure>
-<p>提示：isdecimal()、isdigit()、isnumeric() 三个函数区别如上。</p>
-<p><strong>islower(…)</strong>：字符串中所有字符都是小写时返回 True，否则返回 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.islower()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.islower()</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p><strong>isupper(…)</strong>：字符串中所有字符都是大写时返回 True，否则返回 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"PYTHON"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isupper()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.isupper()</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p><strong>join(…)</strong>：将序列中的元素以指定的字符连接成生成新的字符串。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"-"</span> <span class="comment"># 指定的字符</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>seq = <span class="string">"Hello,Python"</span> <span class="comment"># 序列</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.join(seq)</div><div class="line"><span class="string">'H-e-l-l-o-,-P-y-t-h-o-n'</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"-"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>seq = [<span class="string">'Python'</span>, <span class="string">'PHP'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.join(seq)</div><div class="line"><span class="string">'Python-PHP'</span></div></pre></td></tr></table></figure>
-<p><strong>lower(…)</strong>：返回字符串的副本并将其转换为小写。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Welcome to Python World !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.lower()</div><div class="line"><span class="string">'welcome to python world !'</span></div></pre></td></tr></table></figure>
-<p><strong>upper(…)</strong>：返回字符串的副本并将其转换为大写。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Welcome to Python World !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.upper()</div><div class="line"><span class="string">'WELCOME TO PYTHON WORLD !'</span></div></pre></td></tr></table></figure>
-<p><strong>capitalize(…)</strong>：字符串中首字母大写，其它都是小写。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"hello Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.capitalize()</div><div class="line"><span class="string">'Hello python'</span></div></pre></td></tr></table></figure>
-<p><strong>istitle(…)</strong>：字符串中所有单词的首字母大写，其它小写时返回 True，否则返回 False。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"Hello Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.istitle()</div><div class="line"><span class="keyword">True</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"hello Python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.istitle()</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"hello python"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.istitle()</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"HELLO PYTHON"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.istitle()</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
-<p><strong>split(…）</strong>：根据分隔符对字符串进行分割，返回列表。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.split()</div><div class="line">[<span class="string">'I'</span>, <span class="string">'love'</span>, <span class="string">'Python'</span>, <span class="string">'!'</span>]</div></pre></td></tr></table></figure>
-<p><strong>strip(…)</strong>：去掉字符串左右空格。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">" I love Python ! "</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.strip()</div><div class="line"><span class="string">'I love Python !'</span></div></pre></td></tr></table></figure>
-<p><strong>lstrip(…)</strong>：去掉字符串左边空格。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">" I love Python ! "</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.lstrip()</div><div class="line"><span class="string">'I love Python ! '</span></div></pre></td></tr></table></figure>
-<p><strong>rstrip(…)</strong>：去掉字符串右边空格。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">" I love Python ! "</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string.rstrip()</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">' I love Python !'</span></div></pre></td></tr></table></figure>
-<p><strong>len(…)</strong>：返回序列（字符串）的长度。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>len(string)</div><div class="line"><span class="number">15</span></div></pre></td></tr></table></figure>
-<p><strong>in</strong>：判断字符串是否包含某个字符或子字符串，包含的话返回 True；否则返回 False。（区分大小写）</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"python"</span> <span class="keyword">in</span> string</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">"Python"</span> <span class="keyword">in</span> string</div><div class="line"><span class="keyword">True</span></div></pre></td></tr></table></figure>
-<p><strong>max</strong>：根据 ASCII 编码，求出字符串中最大值。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>max(string)</div><div class="line"><span class="string">'y'</span></div></pre></td></tr></table></figure>
-<p><strong>min</strong>：根据 ASCII 编码，求出字符串中最小值。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>min(string)</div><div class="line"><span class="string">' '</span></div></pre></td></tr></table></figure>
-<h4 id="索引与切片"><a href="#索引与切片" class="headerlink" title="索引与切片"></a>索引与切片</h4><p>与其它编程一样，在 Python 中的字符串也可以通过索引获取相应的字符，唯一的区别是获取的方式不一样。在 Python 中，字符串是一种序列，以一种数组的形式存在，可以通过下标获取。最直接的方式还是通过例子来说明吧。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string[<span class="number">7</span>]</div><div class="line"><span class="string">'P'</span></div></pre></td></tr></table></figure>
-<p>这种形式很类似 Java 语言中数组，但是 Java 语言中通过索引获取字符串中某个字符是通过调用 <code>charAt(index)</code> 方法获取到；获取子字符串是通过调用 <code>subString(start, end)</code> 方法，但是在 Python 获取子字符串称为<strong>切片</strong>，获取方式跟字符类似。例子如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 得到从字符串索引为 2 到 7 的子字符串。</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string[<span class="number">2</span>:<span class="number">8</span>]</div><div class="line"><span class="string">'love P'</span></div></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">得到从字符串索引为 <span class="number">2</span> 到末尾的子字符串。</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string[<span class="number">2</span>:]</div><div class="line"><span class="string">'love Python !'</span></div></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 获取全部字符</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string[:]</div><div class="line"><span class="string">'I love Python !'</span></div></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 获取从第一个字符到 9 之前的字符串</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string = <span class="string">"I love Python !"</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>string[:<span class="number">9</span>]</div><div class="line"><span class="string">'I love Py'</span></div></pre></td></tr></table></figure>
-<p>从以上例子可以看出字符串切片的使用用法，以下做下简单的总结：</p>
-<ul>
-<li><p>[a : b]：表示从索引为 a 起到索引 b 之前字符串。(包含起始字符，不包含末尾字符)</p>
-</li>
-<li><p>[:a]：从第一个字符到索引 a 之前的所有字符串。（切片的索引有默认值，省略的第一个索引默认为 0）</p>
-</li>
-<li><p>[a : ]：表示从索引为 a 到末尾字符串。（切片的索引有默认值，省略的第二个索引默认为切片的字符串的大小）</p>
-</li>
-<li><p>[:]：表示原始字符串，但不是复制一份，只是两个变量指向同一个对象。</p>
-</li>
-<li><p>一个过大的索引值(即下标值大于字符串实际长度)将被字符串实际长度所代替，当上边界比下边界大时(即切片左值大于右值)就返回空字符串。</p>
-</li>
-</ul>
-<p>以上只是最近在学 Python 中字符串的小结，也可以说是学习笔记，方便以后查找。（基于 Python3）</p>
-<h5 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h5><p><a href="http://docs.pythontab.com/learnpython/106/" target="_blank" rel="external">http://docs.pythontab.com/learnpython/106/</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1706,7 +1772,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

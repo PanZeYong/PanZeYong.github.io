@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2020-09-01T14:53:23.020Z</updated>
+  <updated>2020-09-02T16:01:33.124Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -14,6 +14,87 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>createComponent 实现原理</title>
+    <link href="http://panzeyong.com/2020/09/02/createComponent-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/"/>
+    <id>http://panzeyong.com/2020/09/02/createComponent-实现原理/</id>
+    <published>2020-09-02T15:59:17.000Z</published>
+    <updated>2020-09-02T16:01:33.124Z</updated>
+    
+    <content type="html"><![CDATA[<p>在《render 实现原理》这一节中，有分析到 <code>createElement</code> 的实现过程，其最终调用的是 <code>_createElement</code>；而在该方法里有一段逻辑对 <code>tag</code> 的判断，如果 <code>tag</code> 类型为 <code>string</code> 时，则进入处理 <code>string</code> 类型的逻辑，前面已经分析过；否则则进入创建组件 Vnode 的逻辑，即要分析 <code>createComponent</code> 的实现过程。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createComponent</span>(<span class="params"></span></span></div><div class="line">    Ctor,</div><div class="line">    data,</div><div class="line">    context,</div><div class="line">    children,</div><div class="line">    tag</div><div class="line">) &#123;</div><div class="line">    <span class="keyword">if</span> (isUndef(Ctor)) &#123;</div><div class="line">        <span class="keyword">return</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> baseCtor = context.$options._base;</div><div class="line"></div><div class="line">    <span class="comment">// plain options object: turn it into a constructor</span></div><div class="line">    <span class="keyword">if</span> (isObject(Ctor)) &#123;</div><div class="line">        Ctor = baseCtor.extend(Ctor);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// if at this stage it's not a constructor or an async component factory,</span></div><div class="line">    <span class="comment">// reject.</span></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> Ctor !== <span class="string">'function'</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">            warn((<span class="string">"Invalid Component definition: "</span> + (<span class="built_in">String</span>(Ctor))), context);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// async component</span></div><div class="line">    <span class="keyword">var</span> asyncFactory;</div><div class="line">    <span class="keyword">if</span> (isUndef(Ctor.cid)) &#123;</div><div class="line">        asyncFactory = Ctor;</div><div class="line">        Ctor = resolveAsyncComponent(asyncFactory, baseCtor);</div><div class="line">        <span class="keyword">if</span> (Ctor === <span class="literal">undefined</span>) &#123;</div><div class="line">            <span class="comment">// return a placeholder node for async component, which is rendered</span></div><div class="line">            <span class="comment">// as a comment node but preserves all the raw information for the node.</span></div><div class="line">            <span class="comment">// the information will be used for async server-rendering and hydration.</span></div><div class="line">            <span class="keyword">return</span> createAsyncPlaceholder(</div><div class="line">                asyncFactory,</div><div class="line">                data,</div><div class="line">                context,</div><div class="line">                children,</div><div class="line">                tag</div><div class="line">            )</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    data = data || &#123;&#125;;</div><div class="line"></div><div class="line">    <span class="comment">// resolve constructor options in case global mixins are applied after</span></div><div class="line">    <span class="comment">// component constructor creation</span></div><div class="line">    resolveConstructorOptions(Ctor);</div><div class="line"></div><div class="line">    <span class="comment">// transform component v-model data into props &amp; events</span></div><div class="line">    <span class="keyword">if</span> (isDef(data.model)) &#123;</div><div class="line">        transformModel(Ctor.options, data);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// extract props</span></div><div class="line">    <span class="keyword">var</span> propsData = extractPropsFromVNodeData(data, Ctor, tag);</div><div class="line"></div><div class="line">    <span class="comment">// functional component</span></div><div class="line">    <span class="keyword">if</span> (isTrue(Ctor.options.functional)) &#123;</div><div class="line">        <span class="keyword">return</span> createFunctionalComponent(Ctor, propsData, data, context, children)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// extract listeners, since these needs to be treated as</span></div><div class="line">    <span class="comment">// child component listeners instead of DOM listeners</span></div><div class="line">    <span class="keyword">var</span> listeners = data.on;</div><div class="line">    <span class="comment">// replace with listeners with .native modifier</span></div><div class="line">    <span class="comment">// so it gets processed during parent component patch.</span></div><div class="line">    data.on = data.nativeOn;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (isTrue(Ctor.options.abstract)) &#123;</div><div class="line">        <span class="comment">// abstract components do not keep anything</span></div><div class="line">        <span class="comment">// other than props &amp; listeners &amp; slot</span></div><div class="line"></div><div class="line">        <span class="comment">// work around flow</span></div><div class="line">        <span class="keyword">var</span> slot = data.slot;</div><div class="line">        data = &#123;&#125;;</div><div class="line">        <span class="keyword">if</span> (slot) &#123;</div><div class="line">            data.slot = slot;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// install component management hooks onto the placeholder node</span></div><div class="line">    installComponentHooks(data);</div><div class="line"></div><div class="line">    <span class="comment">// return a placeholder vnode</span></div><div class="line">    <span class="keyword">var</span> name = Ctor.options.name || tag;</div><div class="line">    <span class="keyword">var</span> vnode = <span class="keyword">new</span> VNode(</div><div class="line">        (<span class="string">"vue-component-"</span> + (Ctor.cid) + (name ? (<span class="string">"-"</span> + name) : <span class="string">''</span>)),</div><div class="line">        data, <span class="literal">undefined</span>, <span class="literal">undefined</span>, <span class="literal">undefined</span>, context, &#123; Ctor: Ctor, propsData: propsData, listeners: listeners, tag: tag, children: children &#125;,</div><div class="line">        asyncFactory</div><div class="line">    );</div><div class="line"></div><div class="line">    <span class="keyword">return</span> vnode</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法接收 5 个参数：</p>
+<ul>
+<li><p><code>Ctor</code>：表示一个组件对象；</p>
+<p>  <img src="/images/vue/create_component_ctor.png" alt="init 逻辑实现"></p>
+</li>
+<li><p><code>data</code>：表示 vnode 数据；</p>
+</li>
+<li><p><code>context</code>：表示 Vue 实例；</p>
+</li>
+<li><p><code>children</code>：表示 vnode 子节点；</p>
+</li>
+<li><p><code>tag</code>：表示标签。</p>
+</li>
+</ul>
+<p>其逻辑实现如下：</p>
+<ul>
+<li><p>第 <code>8</code> ~ <code>10</code> ：判断 <code>Ctor</code> 是否为 <code>null</code>。如果为 <code>null</code> 的话则返回，否则继续执行。</p>
+</li>
+<li><p>第 <code>12</code> ~ <code>17</code> 行：基于 Vue 构造函数<strong>构造子类构造函数</strong>。<code>baseCtor</code> 指向 Vue 构造函数，原因是在初始化 Vue 阶段时，在 <code>src/core/global-api/index.js</code> 文件有这么一段逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// this is used to identify the "base" constructor to extend all plain-object</span></div><div class="line"><span class="comment">// components with in Weex's multi-instance scenarios.</span></div><div class="line">Vue.options._base = Vue</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p> 可能你会发现 <code>_base</code> 是在定义在 <code>Vue.options</code>，而使用的是 <code>Vue.$options._base</code>，究竟是怎么回事呢？其实在创建 Vue 实例时调用的方法 <code>_init</code> 里，有这么一段逻辑：</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div></pre></td><td class="code"><pre><div class="line"> vm.$options = mergeOptions(resolveConstructorOptions(vm.constructor), options || &#123;&#125;, vm);</div><div class="line"> <span class="string">``</span><span class="string">` </span></div><div class="line"> </div><div class="line"> 将用户传入的 `options<span class="string">` 和 Vue 构造函数的 `</span>options<span class="string">` 进行合并，最后将合并后的 `</span>options<span class="string">` 赋值给 `</span>vm.$options<span class="string">`，因此能访问到。</span></div><div class="line"> </div><div class="line"> `baseCtor.extend(Ctor)<span class="string">` 即 `</span>Vue.extend(Ctor)<span class="string">`，构造子类构造函数。</span></div><div class="line"> </div><div class="line">- 第 `<span class="number">29</span><span class="string">` ~ `</span><span class="number">45</span><span class="string">` 行：异步组件处理。</span></div><div class="line"></div><div class="line">- 第 `<span class="number">54</span><span class="string">` ~ `</span><span class="number">56</span><span class="string">` 行：把组件 `</span>v-model<span class="string">` 转换为 `</span>props<span class="string">`  和 `</span>events<span class="string">`。</span></div><div class="line"></div><div class="line">- 第 `<span class="number">59</span><span class="string">` 行：提取 `</span>props<span class="string">`。</span></div><div class="line"></div><div class="line">- 第 `<span class="number">61</span><span class="string">` ~ `</span><span class="number">64</span><span class="string">` 行：存在函数式组件的则创建函数式组件。</span></div><div class="line"></div><div class="line">- 第 `<span class="number">68</span><span class="string">` 行：提取监听器，因为 `</span>data.on<span class="string">` 需要被作为子组件的监听器以代替 DOM 监听器。</span></div><div class="line"></div><div class="line">- 第 `<span class="number">71</span><span class="string">` 行：用 `</span>.native<span class="string">` 代替监听器 `</span>data.on<span class="string">`。（在父组件 patch 过程会被处理）</span></div><div class="line"></div><div class="line">- 第 `<span class="number">73</span><span class="string">` ~ `</span><span class="number">83</span><span class="string">`：存在抽象组件的话则处理抽象组件。</span></div><div class="line"></div><div class="line">- 第 `<span class="number">86</span><span class="string">` 行：安装组件钩子函数 `</span>installComponentHooks<span class="string">`。</span></div><div class="line"></div><div class="line">- 第 `<span class="number">90</span><span class="string">` ~ `</span><span class="number">94</span><span class="string">` 行：实例化组件 Vnode</span></div><div class="line"></div><div class="line">- 返回组件 vnode。</div><div class="line"></div><div class="line">在创建组件的过程中，核心的逻辑有三步：</div><div class="line"> </div><div class="line">- **构造子类构造函数**：`Ctor = baseCtor.extend(Ctor)<span class="string">`。</span></div><div class="line"></div><div class="line">- **安装组件钩子函数**：`installComponentHooks(data)<span class="string">`。</span></div><div class="line"></div><div class="line">- **实例化组件 Vnode**：`<span class="keyword">var</span> vnode = <span class="keyword">new</span> VNode( (<span class="string">"vue-component-"</span> + (Ctor.cid) + (name ? (<span class="string">"-"</span> + name) : <span class="string">''</span>)), data, <span class="literal">undefined</span>, <span class="literal">undefined</span>, <span class="literal">undefined</span>, context,&#123; Ctor: Ctor, propsData: propsData, listeners: listeners, tag: tag, children:children &#125;,asyncFactory);<span class="string">`</span></div><div class="line"></div><div class="line">注意点：**创建组件时 `children<span class="string">` 为 `</span><span class="literal">undefined</span><span class="string">`。**</span></div><div class="line"> </div><div class="line">那么接下来对核心三个步骤进行简要分析，先来看下 `baseCtor.extend(Ctor)<span class="string">` 的具体实现，位于 `</span>src/core/global-api/extend.js<span class="string">` 文件中：</span></div><div class="line"></div><div class="line">`<span class="string">``</span>javascript</div><div class="line"><span class="comment">/**</span></div><div class="line">   * Class inheritance</div><div class="line">   */</div><div class="line">  Vue.extend = <span class="function"><span class="keyword">function</span> (<span class="params">extendOptions: Object</span>): <span class="title">Function</span> </span>&#123;</div><div class="line">    extendOptions = extendOptions || &#123;&#125;</div><div class="line">    <span class="keyword">const</span> Super = <span class="keyword">this</span></div><div class="line">    <span class="keyword">const</span> SuperId = Super.cid</div><div class="line">    <span class="keyword">const</span> cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = &#123;&#125;)</div><div class="line">    <span class="keyword">if</span> (cachedCtors[SuperId]) &#123;</div><div class="line">      <span class="keyword">return</span> cachedCtors[SuperId]</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> name = extendOptions.name || Super.options.name</div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; name) &#123;</div><div class="line">      validateComponentName(name)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> Sub = <span class="function"><span class="keyword">function</span> <span class="title">VueComponent</span> (<span class="params">options</span>) </span>&#123;</div><div class="line">      <span class="keyword">this</span>._init(options)</div><div class="line">    &#125;</div><div class="line">    Sub.prototype = <span class="built_in">Object</span>.create(Super.prototype)</div><div class="line">    Sub.prototype.constructor = Sub</div><div class="line">    Sub.cid = cid++</div><div class="line">    Sub.options = mergeOptions(</div><div class="line">      Super.options,</div><div class="line">      extendOptions</div><div class="line">    )</div><div class="line">    Sub[<span class="string">'super'</span>] = Super</div><div class="line"></div><div class="line">    <span class="comment">// For props and computed properties, we define the proxy getters on</span></div><div class="line">    <span class="comment">// the Vue instances at extension time, on the extended prototype. This</span></div><div class="line">    <span class="comment">// avoids Object.defineProperty calls for each instance created.</span></div><div class="line">    <span class="keyword">if</span> (Sub.options.props) &#123;</div><div class="line">      initProps(Sub)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (Sub.options.computed) &#123;</div><div class="line">      initComputed(Sub)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// allow further extension/mixin/plugin usage</span></div><div class="line">    Sub.extend = Super.extend</div><div class="line">    Sub.mixin = Super.mixin</div><div class="line">    Sub.use = Super.use</div><div class="line"></div><div class="line">    <span class="comment">// create asset registers, so extended classes</span></div><div class="line">    <span class="comment">// can have their private assets too.</span></div><div class="line">    ASSET_TYPES.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">type</span>) </span>&#123;</div><div class="line">      Sub[type] = Super[type]</div><div class="line">    &#125;)</div><div class="line">    <span class="comment">// enable recursive self-lookup</span></div><div class="line">    <span class="keyword">if</span> (name) &#123;</div><div class="line">      Sub.options.components[name] = Sub</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// keep a reference to the super options at extension time.</span></div><div class="line">    <span class="comment">// later at instantiation we can check if Super's options have</span></div><div class="line">    <span class="comment">// been updated.</span></div><div class="line">    Sub.superOptions = Super.options</div><div class="line">    Sub.extendOptions = extendOptions</div><div class="line">    Sub.sealedOptions = extend(&#123;&#125;, Sub.options)</div><div class="line"></div><div class="line">    <span class="comment">// cache constructor</span></div><div class="line">    cachedCtors[SuperId] = Sub</div><div class="line">    <span class="keyword">return</span> Sub</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法接收一个参数：<code>extendOptions</code>，指向 <code>export default {}</code> 即平时我们在编写 Vue 组件时导出的对象。</p>
+<ul>
+<li><p>第 <code>6</code> 行：<code>Super</code> 指向的是 Vue 构造函数。</p>
+</li>
+<li><p>第 <code>8</code> ~ <code>11</code> 行：变量 <code>cachedCtors</code> 通过 <code>SuperId</code> 来缓存组件，即同一个组件在多个地方导入，只会创建一次，其余都是直接从缓存获取。</p>
+</li>
+<li><p>第 <code>14</code> ~ <code>16</code> 行：在非生产环境对组件名称做校验。</p>
+</li>
+<li><p>第 <code>18</code> ~ <code>20</code> 行：声明 VueComponent 构造函数赋值给 <code>Sub</code>。</p>
+</li>
+<li><p>第 <code>21</code> ~ <code>22</code> 行：采用经典的原型继承方式把一个纯对象转换为一个继承于 Vue 的 <code>Sub</code>，并在后续对 <code>Sub</code> 进行扩展。</p>
+</li>
+<li><p>第 <code>24</code> ~ <code>27</code> 行：对 <code>Super</code> 构造函数自带的 <code>options</code> 和用户传进来的 <code>options</code> 进行合并，并赋值给 <code>Sub.options</code>。</p>
+</li>
+<li><p>第 <code>33</code> ~ <code>35</code> 行：如果存在 <code>props</code> 的话，则初始化 <code>props</code>。</p>
+</li>
+<li><p>第 <code>36</code> ~ <code>38</code> 行：如果存在 <code>computed</code> 的话，则初始化 <code>computed</code>。</p>
+</li>
+<li><p>第 <code>63</code> 行：缓存 <code>Sub</code> 构造函数。</p>
+</li>
+<li><p>返回 <code>Sub</code> 构造函数。</p>
+</li>
+</ul>
+<p>接着来看下安装组件钩子函数的具体实现，即 <code>installComponentHooks</code> 方法，位于 <code>src/core/vdom/create-component.js</code> 中</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">function</span> <span class="title">installComponentHooks</span> (<span class="params">data: VNodeData</span>) </span>&#123;</div><div class="line"> 	<span class="keyword">const</span> hooks = data.hook || (data.hook = &#123;&#125;)</div><div class="line"> 	<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; hooksToMerge.length; i++) &#123;</div><div class="line"> 		<span class="keyword">const</span> key = hooksToMerge[i]</div><div class="line"> 		<span class="keyword">const</span> existing = hooks[key]</div><div class="line"> 		<span class="keyword">const</span> toMerge = componentVNodeHooks[key]</div><div class="line"> 		<span class="keyword">if</span> (existing !== toMerge &amp;&amp; !(existing &amp;&amp; existing._merged)) &#123;</div><div class="line"> 			hooks[key] = existing ? mergeHook(toMerge, existing) : toMerge</div><div class="line"> 		&#125;</div><div class="line"> 	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>先来看下两个变量：<code>hooksToMerge</code> 和 <code>componentVNodeHooks</code> 具体指的是什么？</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">// inline hooks to be invoked on component VNodes during patch</span></div><div class="line"><span class="keyword">const</span> componentVNodeHooks = &#123;</div><div class="line">  init (vnode: VNodeWithData, hydrating: boolean): ?boolean &#123;</div><div class="line">    <span class="keyword">if</span> (</div><div class="line">      vnode.componentInstance &amp;&amp;</div><div class="line">      !vnode.componentInstance._isDestroyed &amp;&amp;</div><div class="line">      vnode.data.keepAlive</div><div class="line">    ) &#123;</div><div class="line">      <span class="comment">// kept-alive components, treat as a patch</span></div><div class="line">      <span class="keyword">const</span> mountedNode: any = vnode <span class="comment">// work around flow</span></div><div class="line">      componentVNodeHooks.prepatch(mountedNode, mountedNode)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">const</span> child = vnode.componentInstance = createComponentInstanceForVnode(</div><div class="line">        vnode,</div><div class="line">        activeInstance</div><div class="line">      )</div><div class="line">      child.$mount(hydrating ? vnode.elm : <span class="literal">undefined</span>, hydrating)</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  prepatch (oldVnode: MountedComponentVNode, vnode: MountedComponentVNode) &#123;</div><div class="line">    <span class="keyword">const</span> options = vnode.componentOptions</div><div class="line">    <span class="keyword">const</span> child = vnode.componentInstance = oldVnode.componentInstance</div><div class="line">    updateChildComponent(</div><div class="line">      child,</div><div class="line">      options.propsData, <span class="comment">// updated props</span></div><div class="line">      options.listeners, <span class="comment">// updated listeners</span></div><div class="line">      vnode, <span class="comment">// new parent vnode</span></div><div class="line">      options.children <span class="comment">// new children</span></div><div class="line">    )</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  insert (vnode: MountedComponentVNode) &#123;</div><div class="line">    <span class="keyword">const</span> &#123; context, componentInstance &#125; = vnode</div><div class="line">    <span class="keyword">if</span> (!componentInstance._isMounted) &#123;</div><div class="line">      componentInstance._isMounted = <span class="literal">true</span></div><div class="line">      callHook(componentInstance, <span class="string">'mounted'</span>)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (vnode.data.keepAlive) &#123;</div><div class="line">      <span class="keyword">if</span> (context._isMounted) &#123;</div><div class="line">        <span class="comment">// vue-router#1212</span></div><div class="line">        <span class="comment">// During updates, a kept-alive component's child components may</span></div><div class="line">        <span class="comment">// change, so directly walking the tree here may call activated hooks</span></div><div class="line">        <span class="comment">// on incorrect children. Instead we push them into a queue which will</span></div><div class="line">        <span class="comment">// be processed after the whole patch process ended.</span></div><div class="line">        queueActivatedComponent(componentInstance)</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        activateChildComponent(componentInstance, <span class="literal">true</span> <span class="comment">/* direct */</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line"></div><div class="line">  destroy (vnode: MountedComponentVNode) &#123;</div><div class="line">    <span class="keyword">const</span> &#123; componentInstance &#125; = vnode</div><div class="line">    <span class="keyword">if</span> (!componentInstance._isDestroyed) &#123;</div><div class="line">      <span class="keyword">if</span> (!vnode.data.keepAlive) &#123;</div><div class="line">        componentInstance.$destroy()</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        deactivateChildComponent(componentInstance, <span class="literal">true</span> <span class="comment">/* direct */</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">const</span> hooksToMerge = <span class="built_in">Object</span>.keys(componentVNodeHooks)</div></pre></td></tr></table></figure>
+<p><code>componentVNodeHooks</code> 是一个对象，定义了四个钩子函数：<code>init</code>、<code>prepatch</code>、<code>insert</code>、<code>destroy</code>；而 <code>hooksToMerge</code> 是一个数组，数组元素是这 4 个钩子函数。</p>
+<p>回到 <code>installComponentHooks</code> 方法，其逻辑是把 <code>componentVNodeHooks</code> 的钩子函数合并到 <code>data.hook</code>，然后在 VNode 执行 <code>patch</code> 过程中会执行相应的钩子函数。需要注意下合并策略，如果 <code>data.hook</code> 已经存在相应的钩子函数，则调用 <code>mergeHook</code> 函数进行合并。</p>
+<p>最后通过一一张流程图简单地概括下其主线逻辑：</p>
+<p><img src="/images/vue/create_component.png" alt="init 逻辑实现"></p>
+<p>以上对组件创建的过程做了简要分析，随着不断地学习以及更进一步地加深理解，会继承完善。</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://ustbhuangyi.github.io/vue-analysis/v2/components/create-component.html#%E6%9E%84%E9%80%A0%E5%AD%90%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0" target="_blank" rel="external">createComponent</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在《render 实现原理》这一节中，有分析到 &lt;code&gt;createElement&lt;/code&gt; 的实现过程，其最终调用的是 &lt;code&gt;_createElement&lt;/code&gt;；而在该方法里有一段逻辑对 &lt;code&gt;tag&lt;/code&gt; 的判断，如果 &lt;code&gt;t
+    
+    </summary>
+    
+      <category term="Vue" scheme="http://panzeyong.com/categories/Vue/"/>
+    
+    
+      <category term="Vue.js 源码解析" scheme="http://panzeyong.com/tags/Vue-js-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    
+  </entry>
   
   <entry>
     <title>update 实现原理</title>
@@ -1809,327 +1890,6 @@
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>第十二章DOM2 和 DOM3</title>
-    <link href="http://panzeyong.com/2017/10/17/%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0DOM2-%E5%92%8C-DOM3/"/>
-    <id>http://panzeyong.com/2017/10/17/第十二章DOM2-和-DOM3/</id>
-    <published>2017-10-16T23:30:31.000Z</published>
-    <updated>2017-10-31T11:10:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、DOM-发展史"><a href="#一、DOM-发展史" class="headerlink" title="一、DOM 发展史"></a>一、DOM 发展史</h1><h3 id="1、DOM-1：支持-XML-1-0"><a href="#1、DOM-1：支持-XML-1-0" class="headerlink" title="1、DOM 1：支持 XML 1.0"></a>1、DOM 1：支持 XML 1.0</h3><h3 id="2、DOM-2"><a href="#2、DOM-2" class="headerlink" title="2、DOM 2"></a>2、DOM 2</h3><ul>
-<li><p>DOM 2 级核心（DOM Level 2 Core）：在 DOM 1 基础上构建，为节点添加了更多方法和属性。支持 XML 1.0 和命名空间。</p>
-</li>
-<li><p>DOM 2 级 HTML（DOM Level 2 HTML）：在 DOM 1 级基础上构建，添加了更多属性、方法和新接口。</p>
-</li>
-<li><p>DOM 2 级视图（DOM Level 2 Views）：为文档定义了基于样式信息的不同视图。</p>
-</li>
-<li><p>DOM 2 级样式（DOM Level 2 Style）：定义了如何以编程方式来访问和改变 CSS 样式信息。</p>
-</li>
-<li><p>DOM 2 级事件（DOM Level 2 Events）：说明如何使用事件与 DOM 文档交互。</p>
-</li>
-<li><p>DOM 2 级遍历和范围（DOM Level 2 Traversal and Range）：引入了遍历 DOM 文档和选择其特定部分的新接口。</p>
-</li>
-</ul>
-<h3 id="3、DOM-3"><a href="#3、DOM-3" class="headerlink" title="3、DOM 3"></a>3、DOM 3</h3><ul>
-<li><p>DOM 3 级核心（DOM Level 3 Core）</p>
-</li>
-<li><p>DOM 3 级加载与保存（DOM Level 3 Load and Save）</p>
-</li>
-<li><p>DOM 3 级验证（DOM Level 3 Validation）</p>
-</li>
-</ul>
-<h1 id="二、DOM-变化"><a href="#二、DOM-变化" class="headerlink" title="二、DOM 变化"></a>二、DOM 变化</h1><h3 id="（一）、XML-命名空间变化"><a href="#（一）、XML-命名空间变化" class="headerlink" title="（一）、XML 命名空间变化"></a>（一）、XML 命名空间变化</h3><p>使用 xmlns 来指定命名空间特性</p>
-<h3 id="（二）、Node-类型变化"><a href="#（二）、Node-类型变化" class="headerlink" title="（二）、Node 类型变化"></a>（二）、Node 类型变化</h3><h4 id="1、在-DOM2-级中，Node-类型包含下列特定于命名空间的属性"><a href="#1、在-DOM2-级中，Node-类型包含下列特定于命名空间的属性" class="headerlink" title="1、在 DOM2 级中，Node 类型包含下列特定于命名空间的属性"></a>1、在 DOM2 级中，Node 类型包含下列特定于命名空间的属性</h4><ul>
-<li><p><strong>localName</strong>：不带命名空间前缀的节点名称。</p>
-</li>
-<li><p><strong>namespaceURI</strong>：命名空间 URI 或者（在未指定的情况下是）null.</p>
-</li>
-<li><p><strong>prefix</strong>：命名空间前缀或者（在未指定的情况下是）null。</p>
-</li>
-</ul>
-<h4 id="2、DOM3"><a href="#2、DOM3" class="headerlink" title="2、DOM3"></a>2、DOM3</h4><ul>
-<li><p><strong>isDefaultNamespace(namespaceURI)</strong>：在指定的 namespaceURI 是当前节点的默认命名空间的情况下返回 true；</p>
-</li>
-<li><p><strong>lookupNamespaceURI(prefix)</strong>：返回给定 prefix 的命名空间。</p>
-</li>
-<li><p><strong>lookupPrefix(namespaceURI)</strong>：返回给定 namespaceURI 的前缀。</p>
-</li>
-</ul>
-<h3 id="三-、Document-类型的变化"><a href="#三-、Document-类型的变化" class="headerlink" title="(三)、Document 类型的变化"></a>(三)、Document 类型的变化</h3><ul>
-<li><p><strong>createElementNS(namespaceURI, tagName)</strong>：使用给定的 tagName 创建一个属性命名空间 namespaceURI 新元素。</p>
-</li>
-<li><p><strong>createAttributeNS(namespaceURI, attributeName)</strong>：使用给定的 attributeName 创建一个属于命名空间 namespaceURI 的新特性。</p>
-</li>
-<li><p><strong>getElementsByTagNameNS(namespaceURI, tagName)</strong>：返回属于命名空间 namespaceURI 的 tagName 元素的 NodeList.</p>
-</li>
-</ul>
-<h3 id="（四）、Element-类型的变化"><a href="#（四）、Element-类型的变化" class="headerlink" title="（四）、Element 类型的变化"></a>（四）、Element 类型的变化</h3><ul>
-<li><p><strong>getAttributeNS(namespaceURI, localName)</strong>：取得属于命名空间 namespaceURI 且名为 localName 的特性。</p>
-</li>
-<li><p><strong>getAttributeNodeNS(namespaceURI, localName)</strong>：取得属于命名空间 namespaceURI 且名为 localName 的特性节点。</p>
-</li>
-<li><p><strong>getElementsByTagNameNS(namespaceURI, tagName)</strong>：返回属于命名空间 namespaceURI 的 tagName 元素的 NodeList。</p>
-</li>
-<li><p><strong>hasAttributeNS(namespaceURI, localName)</strong>：确定当前元素是否有一个名为  localName 的特性，而且该特性的命名空间是 namespaceURI。</p>
-</li>
-<li><p><strong>removeAttributeNS(namespaceURI, localName)</strong>：删除属于命名空间 namespaceURI 且名为 localName 的特性。</p>
-</li>
-<li><p><strong>setAttributeNS(namespaceURI, qualifiedName, value)</strong>：设置属于命名空间 namespaceURI 且名为 qualifiedName 的特性的值为 value。</p>
-</li>
-<li><p><strong>setAttributeNodeNS(attNode)</strong>：设置属于命名空间 namespaceURI 的特性节点。</p>
-</li>
-</ul>
-<h3 id="（五）、NamedNodeMap-类型变化"><a href="#（五）、NamedNodeMap-类型变化" class="headerlink" title="（五）、NamedNodeMap 类型变化"></a>（五）、NamedNodeMap 类型变化</h3><ul>
-<li><p><strong>getNamedItemNS(namespaceURI, localName)</strong>：取得属于命名空间 namespaceURI 且名为 localName 的项。</p>
-</li>
-<li><p><strong>removeNamedItemNS(namespaceURI, localName)</strong>：移除属于命名空间 namespaceURI 且名为 localName 的项。</p>
-</li>
-<li><p><strong>setNamedItemNS(node)</strong>：添加 node，这个节点已经事先指定了命名空间信息。</p>
-</li>
-</ul>
-<h3 id="（六）、DocumentType-类型变化"><a href="#（六）、DocumentType-类型变化" class="headerlink" title="（六）、DocumentType 类型变化"></a>（六）、DocumentType 类型变化</h3><ul>
-<li><p><strong>publicId、systemId</strong>：文档类型声明中的信息段。</p>
-</li>
-<li><p><strong>internalSubset</strong>：用于访问包含在文档类型声明中的额外定义。</p>
-</li>
-</ul>
-<h3 id="（七）、Document-类型变化"><a href="#（七）、Document-类型变化" class="headerlink" title="（七）、Document 类型变化"></a>（七）、Document 类型变化</h3><ul>
-<li><p><strong>importNode()</strong>：从一个文档中取得一个节点，然后将其导入到另外一个文档，使其成为这个文档结构的一部分。接收两个参数：要复制的节点和一个表示是否复制子节点的布尔值。</p>
-</li>
-<li><p><strong>document.implementation</strong> 新方法</p>
-<ul>
-<li><p><strong>createDocumentType()</strong>：创建新的 DocumentType 节点。接收 3 个参数：文档类型名称、publicId、systemId。（DOM 级核心）</p>
-</li>
-<li><p><strong>createDocument()</strong>：创建新文档。接收 3 个参数：文档元素中的 namespaceURI、文档元素的标签名、新文档的文档类型。（DOM 级核心）</p>
-</li>
-<li><p><strong>createHTMLDocument()</strong>：创建一个完整的 HTML 文档，包括 <html>、<head>、<title> 和 <body> 元素。接收一个参数：新创建文档的标题。返回新的 HTML 文档。（DOM 级 HTML ）。</body></title></head></html></p>
-</li>
-<li><p><strong>defaultView</strong>：保存着一个指针，指向拥有给定文档的窗口（或框架）。（DOM 级视图）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> parentWindow = <span class="built_in">document</span>.defaultView || <span class="built_in">document</span>.parentWindow;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="（八）、Node-类型的变化"><a href="#（八）、Node-类型的变化" class="headerlink" title="（八）、Node 类型的变化"></a>（八）、Node 类型的变化</h3><ul>
-<li><p><strong>isSupported()</strong>：用于确定当前节点具有的能力。接收两个参数：特性名和特性版本号。</p>
-</li>
-<li><p><strong>isSameNode()</strong>：接收一个节点参数，并在传入节点与引用节点相同时返回 true。所谓相同，是指两个节点引用的是同一个对象。</p>
-</li>
-<li><p><strong>isEqualNode()</strong>：接收一个节点参数，并在传入节点与引用的节点相等时返回 true。所谓相等，指的是两个节点是相同的类型,具有相同的属性，而且它们的 attributes 和 childNodes 属性也相等。</p>
-</li>
-<li><p><strong>setUserData()</strong>：将数据指定给节点，接收 3 个参数：要设置的键、实际的数据（可以是任何数据）和处理函数。函数作用：在带有数据的节点被复制、删除、重命名或者引入一个文档时调用。接收 5 个参数：表示操作类型的数值（1 数据键、数据值、源节点和目标节点。在删除节点时，源节点是 null；除在复制节点时，目标节点均为 null。</p>
- <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> div = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</div><div class="line">div.setUserData(<span class="string">"name"</span>, <span class="string">"Nicholas"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">operation,key, value, src, dest</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (operation == <span class="number">1</span>) &#123;</div><div class="line">        dest.setUserData(key, value, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><strong>contentDocument</strong>:表示框架内容的文档对象。</li>
-</ul>
-<h1 id="三、DOM2-级样式"><a href="#三、DOM2-级样式" class="headerlink" title="三、DOM2 级样式"></a>三、DOM2 级样式</h1><h3 id="1、定义样式三种方法："><a href="#1、定义样式三种方法：" class="headerlink" title="1、定义样式三种方法："></a>1、定义样式三种方法：</h3><ul>
-<li><p>通过 &lt;link/&gt; 元素包含外部样式表文件；</p>
-</li>
-<li><p>使用 &lt;style/&gt; 元素定义嵌入式样式；</p>
-</li>
-<li><p>使用 style 特性定义针对特定元素的样式。</p>
-</li>
-</ul>
-<h3 id="2、style（CSSStyleDeclaration）对象属性和方法"><a href="#2、style（CSSStyleDeclaration）对象属性和方法" class="headerlink" title="2、style（CSSStyleDeclaration）对象属性和方法"></a>2、style（CSSStyleDeclaration）对象属性和方法</h3><ul>
-<li><p><strong>cssText</strong>：可以访问到 style 特性中的 CSS 代码。</p>
-</li>
-<li><p><strong>length</strong>：元素设置 CSS 属性的数量。</p>
-</li>
-<li><p><strong>parentRule</strong>：表示 CSS 信息的 CSSRule 对象。</p>
-<ul>
-<li><p><strong>getPropertyCSSValue(propertyName)</strong>：返回包含给定值的 CSSValue 对象。</p>
-</li>
-<li><p><strong>CSSValue：cssText 和 cssValueType</strong>。cssText 表示属性值；cssValueType 表示类型值：0 表示继承值；1 表示基本的值；2 表示值列表；3 表示自定义的值。</p>
-</li>
-<li><p><strong>getPropertyPriority(propertyName)</strong>：如果给定的属性使用了 !important 设置，则返回 “important”；否则，返回空字符串。</p>
-</li>
-<li><p><strong>getPropertyValue(propertyName)</strong>：返回给定属性的字符串值。</p>
-</li>
-<li><p><strong>item(index)</strong>：返回给定位置的 CSS 属性的名称。</p>
-</li>
-<li><p><strong>removeProperty(propertyName)</strong>：从样式中删除给定属性。</p>
-</li>
-<li><p><strong>setProperty(propertyName, value, priority)</strong>：将给定属性设置为相应的值，并加上优先权标志（“important” 或者一个空字符串）</p>
-</li>
-<li><p><strong>document.defaultView</strong> 提供方法</p>
-<ul>
-<li><strong>getComputedStyle()</strong>：接收两个参数：取得技术样式的元素和一个伪元素字符串。返回 CSSStyleDeclaration 对象。IE 不支持该方法，与之类似的是 currentStyle 属性，用法类似。</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> sheet = <span class="built_in">document</span>.styleSheets[<span class="number">1</span>];</div><div class="line"><span class="keyword">var</span> rules = sheet.cssRules || sheet.rules;</div><div class="line"><span class="keyword">var</span> rule = rules[<span class="number">0</span>];</div><div class="line">alert(rule.cssText);</div><div class="line">alert(rule.parentRule);</div><div class="line">alert(rule.parentStyleSheet);</div><div class="line">alert(rule.selectorText);</div><div class="line">alert(rule.style.cssText);</div><div class="line">alert(rule.type);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="3、操作样式表"><a href="#3、操作样式表" class="headerlink" title="3、操作样式表"></a>3、操作样式表</h3><p>CSSStyleSheet，表示样式表，继承 StyleSheet， document.styleSheets。CSSStyleSheet 对象属性是 sheet（IE 则是 styleSheet）。</p>
-<ul>
-<li><p>StyleSheet 接口继承属性</p>
-<ul>
-<li><p><strong>disabled</strong>：表示样式表是否被禁用；这个属性是可读/可写。true 表示禁用样式表。</p>
-</li>
-<li><p><strong>href</strong>：如果样式表是通过 <link> 包含的，则是样式表的 URL；否则，是 null。</p>
-</li>
-<li><p><strong>media</strong>：当前样式表支持的所有媒体类型的集合。（MediaList）</p>
-</li>
-<li><p><strong>ownerNode</strong>：指向拥有当前样式表的节点的指针。如果当前样式表是其他样式表通过 @import 导入的，则这个属性值为 null。IE 不支持这个属性。(HTMLLinkElement 和 HTMLStyleElement)</p>
-</li>
-<li><p><strong>parentStyleSheet</strong>：在当前样式表是通过 @import 导入的情况下，这是属性是一个指向导入它的样式表的指针。</p>
-</li>
-<li><p><strong>title：ownerNode</strong> 中 title 属性的值。</p>
-</li>
-<li><p><strong>type</strong>：表示样式表类型的字符串。</p>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p>CSSStyleSheet 支持属性</p>
-<ul>
-<li><p><strong>cssRules</strong>：样式表中包含的样式规则的集合。IE 不支持这个属性，但是有一个类似的属性 rules。类型是 CSSRuleList。</p>
-</li>
-<li><p><strong>ownerRule</strong>：如果样式表是通过 @import 导入的，这个属性就是一个指针，指向表示导入的规则；否则，值为 null。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>deleteRule(index)</strong>：删除 cssRules 集合中指定位置的规则。IE 不支持这个方法，但是支持 removeRule() 方法。</p>
-</li>
-<li><p><strong>insertRule(index)</strong>：向 cssRules 集合中指定的位置插入 rule 字符串。IE 不支持这个方法，但是支持一个类似 addRule() 方法。</p>
-</li>
-</ul>
-</li>
-<li><p>CSS 规则</p>
-<ul>
-<li><p><strong>cssText</strong>：返回整条规则对应的文本。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>parentRule</strong>：如果当前规则是导入的规则，这个属性引用的就是导入规则；否则，这个值为 null。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>parentStyleSheet</strong>：当前规则所属的样式表。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>selectorText</strong>：返回当前规则的选择符文本。只有 Opera 浏览器可读可写。</p>
-</li>
-<li><p><strong>style</strong>：一个 CSSStyleDeclaration 对象，可以通过它设置和取得规则中特定的样式值。</p>
-</li>
-<li><p><strong>type</strong>：表示规则类型的常量值。IE 不支持这个属性。</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertRule</span>(<span class="params">sheet, selectorText, cssText, position</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (sheet.insertRule) &#123;</div><div class="line">        sheet.insertRule(selectorText + <span class="string">"&#123;"</span> + cssText + <span class="string">"&#125;"</span>, position);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sheet.addRule) &#123;</div><div class="line">        sheet.addRule(selectorText, cssText, position);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">deleteRule</span>(<span class="params">sheet, index</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (sheet.deleteRule) &#123;</div><div class="line">        sheet.deleteRule(index);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sheet.removeRule) &#123;</div><div class="line">        sheet.removeRule(index);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4、元素大小"><a href="#4、元素大小" class="headerlink" title="4、元素大小"></a>4、元素大小</h3><ul>
-<li><p>偏移量</p>
-<ul>
-<li><p><strong>offsetHeight</strong>：元素在垂直方向上占用的空间大小，以像素计。包括元素的高度、（可见的）水平滚动条的高度、上边框的高度和下边框的高度。</p>
-</li>
-<li><p><strong>offsetWidth</strong>：元素在水平方向上占用的空间大小，以像素计。包括元素的宽度、（可见的）垂直滚动条的宽度、左边框宽度和右边框宽度。</p>
-</li>
-<li><p><strong>offsetLeft</strong>：元素的左外边框至包含元素的左内边框之间的像素距离。（类似 Android 中 marginLeft）</p>
-</li>
-<li><p><strong>offsetTop</strong>：元素的上外边框至包含元素的上内边框之间的像素距离。类似 Android 中 marginTop）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getElementLeft</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> actualLeft = element.offsetLeft;</div><div class="line">    <span class="keyword">var</span> current = element.offsetParent;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (current !== <span class="literal">null</span>) &#123;</div><div class="line">	    actualLeft += current.offsetLeft;</div><div class="line">	    current = current.offsetParent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> actualLeft;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getElementTop</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> actualTop = element.offsetTop;</div><div class="line">    <span class="keyword">var</span> current = element.offsetParent;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (current !== <span class="literal">null</span>) &#123;</div><div class="line">        actualTop += current.offsetTop;</div><div class="line">        current = current.offsetParent;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> actualTop;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>客户区大小（内容 + 内边距）</p>
-<ul>
-<li><p><strong>clientWidth</strong>：元素内容区宽度加上左右内边距宽度。</p>
-</li>
-<li><p><strong>clientHeight</strong>：元素内容区高度加上上下内边距高度。</p>
-</li>
-</ul>
-</li>
-<li><p>滚动大小</p>
-<ul>
-<li><p><strong>scrollHeight</strong>：在没有滚动条的情况下，元素内容的总高度。</p>
-</li>
-<li><p><strong>scrollWidth</strong>：在没有滚动条的情况下，元素内容的总宽度。</p>
-</li>
-<li><p><strong>scrollLeft</strong>：被隐藏在内容区域左侧的像素数。</p>
-</li>
-<li><p><strong>scrollTop</strong>：被隐藏在内容区域上方的像素数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getBoundingClientRect</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> scrollTop = <span class="built_in">document</span>.documentElement.scrollTop;</div><div class="line">    <span class="keyword">var</span> scrollLeft = <span class="built_in">document</span>.documentElement.scrollLeft;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (element.getBoundingClientRect) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">arguments</span>.callee.offset != <span class="string">"number"</span>) &#123;</div><div class="line">            <span class="keyword">var</span> temp = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</div><div class="line">            temp.style.cssText = <span class="string">"position:absolute;left:0;top:0;"</span></div><div class="line">            <span class="built_in">document</span>.body.appendChild(temp);</div><div class="line">            <span class="built_in">arguments</span>.callee.offset = -temp.getBoundingClientRect().top - scrollTop;</div><div class="line">            temp = <span class="literal">null</span>;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">var</span> rect = element.getBoundingClientRect();</div><div class="line">        <span class="keyword">var</span> offset = <span class="built_in">arguments</span>.callee.offset;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            left: rect.left + offset,</div><div class="line">            right: rect.right + offset,</div><div class="line">            top: rect.top + offset,</div><div class="line">            bottom: rect.bottom + offset</div><div class="line">        &#125;;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">var</span> actualLeft = getElementLeft(element);</div><div class="line">        <span class="keyword">var</span> actualTop = getElementTop(element);</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            left: actualLeft - scrollLeft,</div><div class="line">            right: actualLeft + element.offsetWidth - scrollLeft,</div><div class="line">            top: actualTop - scrollTop,</div><div class="line">            bottom: actualTop + element.offsetHeight - scrollTop</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="四、遍历"><a href="#四、遍历" class="headerlink" title="四、遍历"></a>四、遍历</h1><h3 id="NodeIterator"><a href="#NodeIterator" class="headerlink" title="NodeIterator"></a>NodeIterator</h3><ul>
-<li><p><strong>document.createNodeIterator()</strong>：创建 NodeIterator 实例，接收 4 个参数：</p>
-<ul>
-<li><p><strong>root</strong>：想要作为搜索起点的树中的节点；</p>
-</li>
-<li><p><strong>whatToShow</strong>：表示要访问哪些节点的数字代码；whatToShow 参数是一个位掩码，以常量的形式在 NodeFilter 类型中定义，可以在 HTML 中使用的有：</p>
-<ul>
-<li><p>1、NodeFilter.SHOW_ALL：显示所有类型的节点。</p>
-</li>
-<li><p>2、NodeFilter.SHOW_TEXT：显示文本节点。</p>
-</li>
-<li><p>3、NodeFilter.SHOW_COMMENT：显示注释节点。</p>
-</li>
-<li><p>4、NodeFilter.SHOW_DOCUMENT：显示文档节点。</p>
-</li>
-<li><p>5、NodeFilter.SHOW_DOCUMENT_TYPE：显示文档类型。</p>
-</li>
-<li><p>6、NodeFilter.SHOW_ELEMENT：显示元素节点。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>filter</strong>：是一个 NodeFilter 对象，或者一个表示应该接受还是拒绝某种特定节点的函数；可以通过该参数 filter 来指定自定义的 NodeFilter 对象；每个 NodeFilter 对象只有一个方法，即 acceptNode()，该方法有两个返回值：</p>
-<ul>
-<li><p>NodeFilter.FILTER_ACCEPT：应该访问给定的节点；</p>
-</li>
-<li><p>NodeFilter.FILTER_SKIP：不应该访问给定的节点。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>entityReferenceExpansion</strong>：布尔值，表示是否要扩展实体引用。（HTML 页面不能扩展实体引用）</p>
-</li>
-</ul>
-</li>
-<li><p><strong>nextNode()</strong>：向前前进一步。</p>
-</li>
-<li><p><strong>previousNode()</strong>：向后后退一步。</p>
-</li>
-</ul>
-<h3 id="TreeWalker-是-NodeIterator-的一个更高级的版本。"><a href="#TreeWalker-是-NodeIterator-的一个更高级的版本。" class="headerlink" title="TreeWalker 是 NodeIterator 的一个更高级的版本。"></a>TreeWalker 是 NodeIterator 的一个更高级的版本。</h3><ul>
-<li><p><strong>nextNode()</strong>：向前前进一步。</p>
-</li>
-<li><p><strong>previousNode()</strong>：向后后退一步。</p>
-</li>
-<li><p><strong>parentNode()</strong>：遍历到当前节点的父节点。</p>
-</li>
-<li><p><strong>firstChild(</strong>)：遍历到当前节点的第一个子节点。</p>
-</li>
-<li><p><strong>lastChild()</strong>：遍历到当前节点的最后一个子节点。</p>
-</li>
-<li><p><strong>nextSibling()</strong>：遍历到当前节点的下一个同辈节点。</p>
-</li>
-<li><p><strong>previousSibling()</strong>：遍历到当前节点的上一个同辈节点。</p>
-</li>
-<li><p><strong>currentNode</strong>：便是任何遍历方法在上一次遍历中返回的节点。</p>
-<p>创建 TreeWalk 对象使用 document.createTreeWalk()，接收 4 个参数，与 document.createNodeIterator() 方法类似。</p>
-<ul>
-<li><p>NodeFilter.FILTER_SKIP：跳过相应节点继续前进到子树中的下一个节点。</p>
-</li>
-<li><p>NodeFilter.FILTER_REJECT：跳过相应节点及该节点的整个子树。    </p>
-</li>
-</ul>
-</li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、DOM-发展史&quot;&gt;&lt;a href=&quot;#一、DOM-发展史&quot; class=&quot;headerlink&quot; title=&quot;一、DOM 发展史&quot;&gt;&lt;/a&gt;一、DOM 发展史&lt;/h1&gt;&lt;h3 id=&quot;1、DOM-1：支持-XML-1-0&quot;&gt;&lt;a href=&quot;#1、DOM-1
-    
-    </summary>
-    
-      <category term="JavaScript" scheme="http://panzeyong.com/categories/JavaScript/"/>
-    
-    
-      <category term="《JavaScript 高级程序设计》学习笔记" scheme="http://panzeyong.com/tags/%E3%80%8AJavaScript-%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E3%80%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
   </entry>
   

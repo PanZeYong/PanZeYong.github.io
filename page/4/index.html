@@ -268,6 +268,271 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/12/15/Java-集合框架：Vector（JDK-8）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/15/Java-集合框架：Vector（JDK-8）/" itemprop="url">Java 集合框架：Vector（JDK 8）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-15T08:54:05+08:00">
+                2017-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/15/Java-集合框架：Vector（JDK-8）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/15/Java-集合框架：Vector（JDK-8）/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/12/15/Java-集合框架：Vector（JDK-8）/" class="leancloud_visitors" data-flag-title="Java 集合框架：Vector（JDK 8）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>Vector 底层是由<strong>数组</strong>实现，是一个<strong>动态数组</strong>，其容量能自动增长或者减少。Vector 继承 AbstractList<e> 抽象类，实现 List<e>、RandomAccess、Clone、java.io.Serializable 接口。其实现原理与 ArrayList 类似。</e></e></p>
+<ul>
+<li><p>Vector 继承 AbstractList<e> 抽象类，实现 List<e> 接口。它是一个数组队列，提供了增删改查以及遍历等功能。</e></e></p>
+</li>
+<li><p>Vector 实现 RandomAccess 接口，提供快速随机访问功能。RandomAccess 接口被 List 实现主要用来支持快速随机访问，通过数组下标随机访问元素。</p>
+</li>
+<li><p>Vector 实现 Clone 接口，重写 Object clone() 方法可以克隆对象。</p>
+</li>
+<li><p>Vector 实现 java.io.Serializable 接口，可以进行序列化和反序列化，方便数据在网络进行传输。</p>
+</li>
+</ul>
+<p>Vector 允许添加所有元素，包括 null 元素。</p>
+<p>与 ArrayList 一样，Vector 支持容量自动增长，但是增长方式与 ArrayList 略有不同。Vector 通过维护 <strong>capacity</strong> 和 <strong>capacityIncrement</strong> 这两个属性来优化其内存管理，而 capacityIncrement 是容量增长的系数，当 Vector 容量不足时，如果 capacityIncrement 为 0 的话，那么 Vector 容量扩容为原先的 2 倍（newCapacity = 2 * oldCapacity）；如果 capacityIncrement 大于 0，那么扩容后的容量为 oldCapacity + capacityIncrement。扩容的原理其实是对数组进行复制，对需要移动的元素进行移动，相当消耗性能的。如果可能的话，在实例化 Vector 的时候指定其容量。</p>
+<p>与 ArrayList 不一样的是，Vector 是线程安全，方法实现加上 synchronized 关键字。正因为其线程安全，这就导致其在单线程下性能不如 ArrayList。如果不在多线程下使用，推荐使用 ArrayList。</p>
+<p>Vector 是在 Java 1.2 实现 List 接口，使其成为 Java 集合框架的一员，而并不是一开始就存在的。</p>
+<h1 id="二、Vector-继承关系图"><a href="#二、Vector-继承关系图" class="headerlink" title="二、Vector 继承关系图"></a>二、Vector 继承关系图</h1><p><img src="/images/java/collection/vector/vector.png" alt=""></p>
+<h1 id="三、Vector-源码分析"><a href="#三、Vector-源码分析" class="headerlink" title="三、Vector 源码分析"></a>三、Vector 源码分析</h1><h3 id="1、属性"><a href="#1、属性" class="headerlink" title="1、属性"></a>1、属性</h3><p>从源码可以看出，Vector 提供的属性如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 存储 Vector 包含所有元素的数组</span></div><div class="line"><span class="keyword">protected</span> Object[] elementData;</div><div class="line"></div><div class="line"><span class="comment">// Vector 所包含的元素个数</span></div><div class="line"><span class="keyword">protected</span> <span class="keyword">int</span> capacityIncrement;</div><div class="line"></div><div class="line"><span class="comment">// Vector 容量自动增长的增量，如果小于等于 0，那么增量为原先容量的一倍</span></div><div class="line"><span class="keyword">protected</span> <span class="keyword">int</span> capacityIncrement;</div><div class="line"></div><div class="line"><span class="comment">// 序列号版本号</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">2767605614048989439L</span>;</div></pre></td></tr></table></figure>
+<p>Vector 底层是由数组实现，所有元素都存储在 elementData 数组中，当 Vector 容量大于 elementData 的容量时，则需要扩容；那么到底如何扩容取决于属性 capacityIncrement 的值，如果 capacityIncrement 不为 0，那么扩容的增量就是它，即 oldCapacity + capacityIncrement；如果 capacityIncrement 小于等于 0，那么扩容的增量即为原先的一倍，即 oldCapacity + oldCapacity。至于 capacityIncrement 这个属性，则是 Vector 所包含元素的个数。</p>
+<h3 id="2、构造函数"><a href="#2、构造函数" class="headerlink" title="2、构造函数"></a>2、构造函数</h3><p>Vector 提供 4 个不同版本的构造函数，它们之间有着一定的联系，具体实现看下面的分析。</p>
+<p>无参构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 构造空的 Vector，默认大小为 10，容量的增量系数为 0</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>(<span class="number">10</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在无参构造函数里，调用了传一个参数的构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 用指定的初始容量和容量增量系数为 0 构造空 Vector</div><div class="line"> * </div><div class="line"> * <span class="doctag">@initialCapacity</span> vector 初始容量</div><div class="line"> * <span class="doctag">@throws</span> 如果 initialCapacity 为负数，则抛出异常 java.lang.IllegalArgumentException </div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(<span class="keyword">int</span> initialCapacity)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>(initialCapacity, <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着调用带两个参数的构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">int</span> capacityIncrement)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>();</div><div class="line">    <span class="comment">// 检查 initialCapacity 是否小于 0，是的话则抛出异常</span></div><div class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal Capacity: "</span> + initialCapacity);</div><div class="line">    <span class="comment">// 实例化数组对象，数组大小为 initialCapacity</span></div><div class="line">    <span class="keyword">this</span>.elementData = <span class="keyword">new</span> Object[initialCapacity];</div><div class="line">    <span class="keyword">this</span>.capacityIncrement = capacityIncrement;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>到这里，才真正创建初始容量为 initialCapacity 的数组对象以及指定容量增长系统 this.capacityIncrement。</p>
+<p>构造包含指定集合所有元素的 Vector 的构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 构造一个包含指定集合元素的 Vector</div><div class="line"> * </div><div class="line"> * <span class="doctag">@param</span> c 集合 c 中的元素添加到 Vector</div><div class="line"> * <span class="doctag">@throws</span> NullPointerException 如果指定集合为 null ，则抛出空指针</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</div><div class="line">    <span class="comment">// 集合 c 转换为数组赋值给数组 elementData</span></div><div class="line">    elementData = c.toArray();</div><div class="line">    <span class="comment">// 数组的长度</span></div><div class="line">    elementCount = elementData.length;</div><div class="line">    <span class="comment">// c.toArray might (incorrectly) not return Object[] (see 6260652)</span></div><div class="line">    <span class="comment">// 转换数组返回值可能不是 Object[]，如果是这样的话，则执行下面的语句</span></div><div class="line">    <span class="keyword">if</span> (elementData.getClass() != Object[].class)</div><div class="line">        elementData = Arrays.copyOf(elementData, elementCount, Object[].class);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果看过 <a href="http://panzeyong.com/2017/11/07/Java-%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%EF%BC%9AArrayList/">ArrayList</a> 这篇文章对 ArrayList 的分析的话，那么对该方法的逻辑实现应该不陌生，而且基本一模一样，所以这里就不再做分析了。</p>
+<h3 id="3、添加元素"><a href="#3、添加元素" class="headerlink" title="3、添加元素"></a>3、添加元素</h3><p>Vector 提供多个添加元素版本，有将元素添加到 Vector，也有将元素添加到 Vector 指定位置，至于是怎么实现的，见下面分析。</p>
+<h4 id="（1）、add-Object"><a href="#（1）、add-Object" class="headerlink" title="（1）、add(Object)"></a>（1）、add(Object)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 把指定元素添加到 Vector 末尾</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> e 添加到 Vector 元素</div><div class="line"> * <span class="doctag">@returns</span> true</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addElement</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 在添加元素到数组 elementData 之前检测 elementData 容量是否满足</span></div><div class="line">    ensureCapacityHelper(elementCount + <span class="number">1</span>);</div><div class="line">    <span class="comment">// 将元素 e 添加到数组 elementData</span></div><div class="line">    elementData[elementCount++] = e;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看第 10 行代码方法 ensureCapacityHelper(elementCount + 1) 的具体实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 这实现了 ensureCapacity 的非同步语义。此类中的同步方法可以在内部调用</div><div class="line"> * 此方法来确保容量，而不会产生额外同步的代价。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityHelper</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</div><div class="line">    <span class="comment">// overflow-conscious code</span></div><div class="line">    <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)</div><div class="line">        grow(minCapacity);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里假设数组 elementData 已经添加了 10 个元素，容量等于初始容量，现在要再添加 1 一个新元素，也就是说，传给方法 ensureCapacityHelper(int minCapacity) 的参数 minCapacity 值为 11，那么来第 3 行代码，显示条件是成立的，第 4 行代码被执行，看下具体实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</div><div class="line">    <span class="comment">// overflow-conscious code</span></div><div class="line">    <span class="comment">// 保存扩容前数组的容量</span></div><div class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</div><div class="line">    <span class="comment">// 根据 capacityIncrement 的值来决定扩容。这里假设 capacityIncrement 为 0，那么增加的容量是原来的一倍，即 newCapacity = 2 * oldCapacity</span></div><div class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + ((capacityIncrement &gt; <span class="number">0</span>) ?capacityIncrement : oldCapacity);</div><div class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</div><div class="line">        newCapacity = minCapacity;</div><div class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</div><div class="line">        newCapacity = hugeCapacity(minCapacity);</div><div class="line">    <span class="comment">// 复制源数组到目标数组，实现扩容</span></div><div class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>到这里，应该终于知道前面为何一直扩容取决于属性 capacityIncrement，答案在第 6 行代码。第 12 行代码实现扩容操作，最终调用 <code>System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));</code>，而该方法是 native 方法，在底层实现对数组复制操作，对需要移动的元素进行移动，从而实现了扩容操作。</p>
+<h4 id="（2）、add-int-index-E-element"><a href="#（2）、add-int-index-E-element" class="headerlink" title="（2）、add(int index, E element)"></a>（2）、add(int index, E element)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 在 Vector 指定的位置插入指定的元素，将当前位置的元素（如果有的话）和任何随后的元素移动到右侧（在其索引中增加 1）</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> index 指定的元素将被插入的索引</div><div class="line"> * <span class="doctag">@params</span> element 将被插入的元素</div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>&#123;</div><div class="line">    insertElementAt(element, index);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看第 9 行代码的具体实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 将指定的对象作为 Vector 的组件插入到 Vector 指定的索引；此 Vector</div><div class="line"> * 每个具有大于或者等于指定索引的索引的组件都需要向右移动，以使其大于先前</div><div class="line"> * 的索引值。</div><div class="line"> * </div><div class="line"> * 索引必须是大于 0 并且小于或等于当前 Vector 的大小（如果索引等于当前</div><div class="line"> * Vector 的大小，那么则将新元素插入到 Vector 尾）。</div><div class="line"> * </div><div class="line"> * 此方法与 add(int，E) 方法（它是 List 接口的一部分）的功能相同。</div><div class="line"> * 请注意，add 方法颠倒了参数的顺序，以更贴近地匹配数组的用法。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> obj 插入组件</div><div class="line"> * <span class="doctag">@params</span> index 插入新组件的索引</div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">insertElementAt</span><span class="params">(E obj, <span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="comment">// Vector 结构发生改变，插入属性 modCount 会加 1</span></div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 检查 index 是否越界</span></div><div class="line">    <span class="keyword">if</span> (index &gt; elementCount) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt; "</span> + elementCount);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 在添加元素之前检查容量，不满足的话则扩容</span></div><div class="line">    ensureCapacityHelper(elementCount + <span class="number">1</span>);</div><div class="line">    <span class="comment">// 将源数组需要移动的元素移到目标数组</span></div><div class="line">    System.arraycopy(elementData, index, elementData, index + <span class="number">1</span>, elementCount - index);</div><div class="line">    <span class="comment">// 在指定索引插入元素</span></div><div class="line">    elementData[index] = obj;</div><div class="line">    <span class="comment">// 数组大小加 1</span></div><div class="line">    elementCount++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现逻辑不是很复杂，将指定的对象作为 Vector 的组件插入到 Vector 指定的索引。第 20 ~ 22 行代码检查数组是否越界；第 24 行代码检查容量是否满足，具体分析上面已经分析过；第 25 行代码实现对数组的复制，换句话说，即对需要的移动的元素进行移动。那么至于是如何移动元素的，看下面图解</p>
+<p><img src="/images/java/collection/vector/add_by_index.png" alt=""></p>
+<h4 id="（3）、addAll-Collection"><a href="#（3）、addAll-Collection" class="headerlink" title="（3）、addAll(Collection)"></a>（3）、addAll(Collection)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 将指定集合中包含的所有元素插入到 Vector 尾</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> 插入到 Vector 的元素</div><div class="line"> * <span class="doctag">@returns</span> true</div><div class="line"> * <span class="doctag">@throws</span> 如果指定的集合 c 是 null，则抛出异常 java.lang.NullPointerException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 指定集合转换为数组</span></div><div class="line">    Object[] a = c.toArray();</div><div class="line">    <span class="keyword">int</span> numNew = a.length;</div><div class="line">    <span class="comment">// 在插入元素之前检查容量是否满足</span></div><div class="line">    ensureCapacityHelper(elementCount + numNew);</div><div class="line">    <span class="comment">// 把指定集合 c 包含的元素插入到 Vector 尾</span></div><div class="line">    System.arraycopy(a, <span class="number">0</span>, elementData, elementCount, numNew);</div><div class="line">    <span class="comment">// 更新 elementData 数组的大小</span></div><div class="line">    elementCount += numNew;</div><div class="line">    <span class="keyword">return</span> numNew != <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法实现逻辑与 add(Object) 类似，区别只在于 allAll(Collection) 往 Vector 添加多个元素，而 add(Object) 值添加一个元素。至于具体分析细节可参考 add(Object) 方法。</p>
+<h4 id="（4）、addAll-int-Collection"><a href="#（4）、addAll-int-Collection" class="headerlink" title="（4）、addAll(int, Collection)"></a>（4）、addAll(int, Collection)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 将指定集合中的所有元素插入到指定位置 Vector 中。将当前位置的元素（如果有的话）和随后的元素移动到右侧（增加它们的索引）</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> index 在 index 插入指定集合的第一个元素</div><div class="line"> * <span class="doctag">@params</span> c 插入到 Vector 的元素</div><div class="line"> * <span class="doctag">@returns</span> true</div><div class="line"> * <span class="doctag">@throws</span> 如果指定的集合 c 是 null，则抛出异常 java.lang.NullPointerException</div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">addAll</span><span class="params">(<span class="keyword">int</span> index, Collection&lt;? extends E&gt; c)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 检查 index 是否越界</span></div><div class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt; elementCount)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line">    <span class="comment">// 指定集合转换为数组</span></div><div class="line">    Object[] a = c.toArray();</div><div class="line">    <span class="keyword">int</span> numNew = a.length;</div><div class="line">    <span class="comment">// 在插入元素之前检查容量是否满足</span></div><div class="line">    ensureCapacityHelper(elementCount + numNew);</div><div class="line">    <span class="comment">// 需要移动元素个数</span></div><div class="line">    <span class="keyword">int</span> numMoved = elementCount - index;</div><div class="line">    <span class="comment">// 对需要移动的元素进行移动，即复制到目标数组</span></div><div class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</div><div class="line">        System.arraycopy(elementData, index, elementData, index + numNew, numMoved);</div><div class="line">    <span class="comment">// 将指定集合包含的元素插入到 Vector</span></div><div class="line">    System.arraycopy(a, <span class="number">0</span>, elementData, index, numNew);</div><div class="line">    elementCount += numNew;</div><div class="line">    <span class="keyword">return</span> numNew != <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法的功能是在 Vector 指定位置插入指定集合包含的所有元素，这就需要对元素进行移动，即将源数组的元素复制到目标数组，那么至于是怎么移动的呢，来看下图解</p>
+<p><img src="/images/java/collection/vector/add_collection.png" alt=""></p>
+<h4 id="（5）、addElement-E-obj"><a href="#（5）、addElement-E-obj" class="headerlink" title="（5）、addElement(E obj)"></a>（5）、addElement(E obj)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 将指定组件添加到 Vector 尾，其大小增加 1。如果 Vector 的大小大于其容量，那么它的容量就会增加。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> obj 添加组件</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addElement</span><span class="params">(E obj)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    ensureCapacityHelper(elementCount + <span class="number">1</span>);</div><div class="line">    elementData[elementCount++] = obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法等价于方法 add(Object)，实现逻辑基本相同，可参考以上分析。</p>
+<h3 id="4、删除元素"><a href="#4、删除元素" class="headerlink" title="4、删除元素"></a>4、删除元素</h3><p>同样，Vector 也提供多个版本删除元素，开发者可以根据自己的需求调用不同的 API，那么来看下它们的具体实现。</p>
+<h4 id="1-、remove-Object"><a href="#1-、remove-Object" class="headerlink" title="(1)、remove(Object)"></a>(1)、remove(Object)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 删除 Vector 第一个与指定元素 o 相同的元素，如果 Vector 不包含指定元</div><div class="line"> * 素 o，则不发生改变。换句话说，移除最小索引 i 的元素 </div><div class="line"> * (o==null ? get(i)==null : o.equals(get(i)))（指定元素存在的情况下）</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> 从 Vector 移除的元素（指定元素存在的情况下） </div><div class="line"> * <span class="doctag">@returns</span> 如果 Vector 包含指定元素的话，则返回 true </div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> removeElement(o);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看第 10 行代码的源码实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 从 Vector 移除与参数匹配的第一个元素，如果 Vector 包含该对象，</div><div class="line"> * 则 Vector 索引大于或等于该对象索引的元素都需要向左移动，</div><div class="line"> * 使其索引比之前小。该方法等价于 remove(Object)</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> obj 被移除组件</div><div class="line"> * <span class="doctag">@returns</span> 如果 Vector 包含指定组件，返回 true；否则返回 false</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">removeElement</span><span class="params">(Object obj)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 搜索指定元素在 Vector 出现的索引，存在的返回大于等于 0 的数；否则返回 -1</span></div><div class="line">    <span class="keyword">int</span> i = indexOf(obj);</div><div class="line">    <span class="keyword">if</span> (i &gt;= <span class="number">0</span>) &#123;</div><div class="line">        removeElementAt(i);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先调用方法 indexOf(Object) 遍历指定元素在 Vector 中第一次出现的索引，如果存在的话的返回指定元素在 Vector 的索引，否则返回 -1；那么接下来看下是如何遍历的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 返回 Vector 指定元素第一次出现的索引，如果 Vector 不包含该指定元素，</div><div class="line"> * 则返回 -1。更通常地来说，返回最低索引 i，使得 (o==null ? </div><div class="line"> * get(i)==null : o.equals(get(i)))，如果不存在的话则返回 -1。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> o 搜索的元素</div><div class="line"> * <span class="doctag">@returns</span> 返回 Vector 指定元素第一次出现的索引，如果 Vector 不包含该指定元素，则返回 -1。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> indexOf(o, <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>紧接着又调用方法 indexOf(Object, int)，源码实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 返回 Vector 指定元素第一次出现的索引，如果 Vector 不包含该指定元素，</div><div class="line"> * 则返回 -1。更通常地来说，返回最低索引 i，使得 (i &gt;= index &amp;&amp; </div><div class="line"> * (o==null ? get(i)==null : o.equals(get(i))))，</div><div class="line"> * 如果不存在的话则返回 -1。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> o 搜索的元素</div><div class="line"> * <span class="doctag">@params</span> index 从 Vector 开始搜索的索引</div><div class="line"> * <span class="doctag">@returns</span> 返回 Vector 指定元素第一次出现的索引，如果 Vector 不包含该指定元素，则返回 -1。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@throws</span> 如果指定索引是负数的话，则抛出 java.lang.IndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(Object o, <span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index ; i &lt; elementCount ; i++)</div><div class="line">            <span class="keyword">if</span> (elementData[i]==<span class="keyword">null</span>)</div><div class="line">                <span class="keyword">return</span> i;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = index ; i &lt; elementCount ; i++)</div><div class="line">            <span class="keyword">if</span> (o.equals(elementData[i]))</div><div class="line">                <span class="keyword">return</span> i;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先判断指定搜索元素 o 是否为 null，如果为 null 的话，则执行第 14 - 16 行代码，即遍历数组 elementData 是否存在 null 元素，存在的话返回其索引，否则返回 -1；如果 o 不为 null 的话，则执行第 18 - 20 行代码，即遍历数组 elementData 是否存在该元素，存在的话则返回其索引，否则返回 -1。</p>
+<p>回到方法 removeElement(Object)，假设 Vector 包含指定元素，调用方法 indexOf(Object) 的索引大于等于 0，那么将会执行第 13 - 16 行，即执行移除指定元素操作，真正执行该操作的方法是 removeElementAt(int)，具体实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 删除指定索引的组件。此时 Vector 中每个大于或等于指定索引的索引的组件</div><div class="line"> * 需要向左移动，以使其索引小于先前的值。Vector 的大小减 1。</div><div class="line"> * 索引值必须是大于等于 0，并且小于当前 Vector 的大小。</div><div class="line"> * 该方法功能与 remvoe(int) 一样，但是需要注意的一点是 remove(int) 返回存储在指定位置的旧值。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> index 删除对象的索引</div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeElementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 检查 index 是否越界</span></div><div class="line">    <span class="keyword">if</span> (index &gt;= elementCount) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> + elementCount);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (index &lt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 需要移动元素的个数</span></div><div class="line">    <span class="keyword">int</span> j = elementCount - index - <span class="number">1</span>;</div><div class="line">    <span class="comment">// 对需要移动的元素进行移动，即从源数组复制到指定位置的目标数组</span></div><div class="line">    <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</div><div class="line">        System.arraycopy(elementData, index + <span class="number">1</span>, elementData, index, j);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// elementData 大小减少 1</span></div><div class="line">    elementCount--;</div><div class="line">    <span class="comment">// 将被移除元素腾出来的空间置 null，释放资源</span></div><div class="line">    elementData[elementCount] = <span class="keyword">null</span>; <span class="comment">/* to let gc do its work */</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>理解了如何在 Vector 指定位置添加元素后，再来理解如何在 Vector 指定位置删除元素应该很容易的，同样是需要对部分元素进行移动的，其实就是从源数组复制到指定位置的目标数组，通过图解加深理解</p>
+<p><img src="/images/java/collection/vector/remove_by_index.png" alt=""></p>
+<h4 id="2-、remove-int"><a href="#2-、remove-int" class="headerlink" title="(2)、remove(int)"></a>(2)、remove(int)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 删除 Vector 指定位置的元素，将指定元素随后的元素向左移动，</div><div class="line"> * 返回从 Vector 删除的元素。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> index 删除元素索引</div><div class="line"> * <span class="doctag">@returns</span> 被删除的元素 </div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line">        </div><div class="line">    E oldValue = elementData(index);</div><div class="line">    </div><div class="line">    <span class="keyword">int</span> numMoved = elementCount - index - <span class="number">1</span>;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)</div><div class="line">        System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index, numMoved);</div><div class="line">    </div><div class="line">    elementData[--elementCount] = <span class="keyword">null</span>; <span class="comment">// Let gc do its work</span></div><div class="line">    </div><div class="line">    <span class="keyword">return</span> oldValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法基本与 removeElementAt(int) 等价，但是有点区别的是该方法有返回值，即返回被删除的元素；而 removeElementAt(int) 没有返回值。</p>
+<h4 id="（3）、removeAllElements"><a href="#（3）、removeAllElements" class="headerlink" title="（3）、removeAllElements()"></a>（3）、removeAllElements()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 移除 Vector 所有组件以及设置其 size 为 0。</div><div class="line"> * 功能等价于方法 clear()</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeAllElements</span><span class="params">()</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// Let gc do its work</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; elementCount; i++)</div><div class="line">        elementData[i] = <span class="keyword">null</span>;</div><div class="line">        </div><div class="line">    elementCount = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现逻辑很简单，就不再分析了。</p>
+<h4 id="（4）、removeRange-int-fromIndex-int-toIndex"><a href="#（4）、removeRange-int-fromIndex-int-toIndex" class="headerlink" title="（4）、removeRange(int fromIndex, int toIndex)"></a>（4）、removeRange(int fromIndex, int toIndex)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 从 Vector 删除所用介于 fromIndex（包括）和 toIndex（不包括）之间的所有元素。</div><div class="line"> * 将任何后续的元素向左移动（索引减 1）。通过调用 （toIndex - fromIndex）来缩短 Vector（如果 toIndex == fromIndex），此操作无效。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeRange</span><span class="params">(<span class="keyword">int</span> fromIndex, <span class="keyword">int</span> toIndex)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="comment">// 需要移动元素个数</span></div><div class="line">    <span class="keyword">int</span> numMoved = elementCount - toIndex;</div><div class="line">    <span class="comment">// 将源数组复制到指定位置的目标数组</span></div><div class="line">    System.arraycopy(elementData, toIndex, elementData, fromIndex, numMoved);</div><div class="line">    </div><div class="line">    <span class="comment">// Let gc do its work</span></div><div class="line">    <span class="comment">// 释放资源</span></div><div class="line">    <span class="keyword">int</span> newElementCount = elementCount - (toIndex-fromIndex);</div><div class="line">    <span class="keyword">while</span> (elementCount != newElementCount)</div><div class="line">        elementData[--elementCount] = <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>相信理解了以上方法之后，对该方法也不难理解。在这里只是列出来而已，让大家知道有这个方法。</p>
+<h3 id="5、修改元素"><a href="#5、修改元素" class="headerlink" title="5、修改元素"></a>5、修改元素</h3><p>对于修改元素，Vector 提供两个版本，区别在于是否有返回值。</p>
+<h4 id="（1）、set-int-E"><a href="#（1）、set-int-E" class="headerlink" title="（1）、set(int, E)"></a>（1）、set(int, E)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 用指定的元素替换 Vector 指定位置的元素</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> index 要替换元素的索引</div><div class="line"> * <span class="doctag">@params</span> element 元素存储在指定的位置</div><div class="line"> * <span class="doctag">@returns</span> 之前在指定位置的元素 </div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），</div><div class="line"> * 则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line">    </div><div class="line">    E oldValue = elementData(index);</div><div class="line">    elementData[index] = element;</div><div class="line">    <span class="keyword">return</span> oldValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先检查 index 是否越界，是的话就抛出异常；否则继续执行。保存 Vector 指定位置元素的值作为返回值返回，接着修改指定位置 index 的值。</p>
+<h4 id="2-、setElementAt-E-obj-int-index"><a href="#2-、setElementAt-E-obj-int-index" class="headerlink" title="(2)、setElementAt(E obj, int index)"></a>(2)、setElementAt(E obj, int index)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 将 Vector 指定索引的组件设置为指定的对象，该位置原先的组件被丢弃。</div><div class="line"> * 索引必须是大于或等于0的值，并且小于矢量的当前大小。</div><div class="line"> * 此方法功能与 set(int, E) 相同。注意 set 方法颠倒参数顺序，以更接近数组的使用。还有一点区别的是 set 方法返回存储在指定位置的旧值。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> obj 替换 Vector 指定位置的新值</div><div class="line"> * <span class="doctag">@params</span> index 指定索引 </div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），</div><div class="line"> * 则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setElementAt</span><span class="params">(E obj, <span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (index &gt;= elementCount) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> + elementCount);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    elementData[index] = obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="6、查询元素"><a href="#6、查询元素" class="headerlink" title="6、查询元素"></a>6、查询元素</h3><p>对于查询元素，Vector 提供多个版本，由于实现 RandomAccess 接口，因此具有随机快速访问元素功能，即通过索引快速访问元素，Vector 查询元素都是通过索引访问元素实现的。</p>
+<h4 id="（1）、elementAt-int"><a href="#（1）、elementAt-int" class="headerlink" title="（1）、elementAt(int)"></a>（1）、elementAt(int)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 返回指定索引的组件。</div><div class="line"> * 该方法功能与 get(int) 相同</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> index Vector 索引</div><div class="line"> * <span class="doctag">@returns</span> 指定索引的组件 </div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），</div><div class="line"> * 则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">elementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (index &gt;= elementCount) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index + <span class="string">" &gt;= "</span> + elementCount);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="2-、elementData-int"><a href="#2-、elementData-int" class="headerlink" title="(2)、elementData(int)"></a>(2)、elementData(int)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line"><span class="function">E <span class="title">elementData</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> (E) elementData[index];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="3-、get-int"><a href="#3-、get-int" class="headerlink" title="(3)、get(int)"></a>(3)、get(int)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 返回 Vector 指定位置的元素</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> index 返回元素的索引</div><div class="line"> * <span class="doctag">@returns</span> 指定索引的对象</div><div class="line"> * <span class="doctag">@throws</span> 如果索引越界（index &lt; 0 || index &gt; size），</div><div class="line"> * 则抛出 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (index &gt;= elementCount)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ArrayIndexOutOfBoundsException(index);</div><div class="line">    <span class="keyword">return</span> elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="（4）、firstElement"><a href="#（4）、firstElement" class="headerlink" title="（4）、firstElement()"></a>（4）、firstElement()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 返回 Vector 第一个组件</div><div class="line"> * </div><div class="line"> * <span class="doctag">@returns</span> 返回 Vector 第一个组件</div><div class="line"> * <span class="doctag">@thorws</span> 如果 Vector 没有组件，则抛出异常 NoSuchElementException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">firstElement</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (elementCount == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> elementData(<span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="（5）、lastElement"><a href="#（5）、lastElement" class="headerlink" title="（5）、lastElement()"></a>（5）、lastElement()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 返回 Vector 最后一个组件</div><div class="line"> * </div><div class="line"> * <span class="doctag">@returns</span> Vector 最后一个组件</div><div class="line"> * <span class="doctag">@thorws</span> 如果 Vector 没有组件，则抛出异常 NoSuchElementException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">lastElement</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (elementCount == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> elementData(elementCount - <span class="number">1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="7、遍历元素"><a href="#7、遍历元素" class="headerlink" title="7、遍历元素"></a>7、遍历元素</h3><p>对于遍历元素，Vector 提供多个版本，每个版本执行的效率有所差别。我们先来理解源码实现，然后再通过例子加以说明。</p>
+<h4 id="1-、elements"><a href="#1-、elements" class="headerlink" title="(1)、elements()"></a>(1)、elements()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 返回 Vector 中所有组件对应的 Enumeration。被返回的 Enumeration 生成 Vector 中所有的组件。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@returns</span> Vector 中组件的枚举</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> Enumeration&lt;E&gt; <span class="title">elements</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Enumeration&lt;E&gt;() &#123;</div><div class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</div><div class="line">        </div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasMoreElements</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> count &lt; elementCount;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="function"><span class="keyword">public</span> E <span class="title">nextElement</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">synchronized</span> (Vector.<span class="keyword">this</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (count &lt; elementCount) &#123;</div><div class="line">                    <span class="keyword">return</span> elementData(count++);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException(<span class="string">"Vector Enumeration"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>elements() 方法返回一个 Enumeration<e> 对象，而 Enumeration<e> 是一个接口，在方法 elements() 实现 Enumeration<e> 两个方法：hasMoreElements() 和 nextElement()。对于方法 hasMoreElements() 是判断是否还有下一个元素；而 nextElement() 遍历整个 Vector，返回下一个元素。</e></e></e></p>
+<h4 id="（2）、iterator"><a href="#（2）、iterator" class="headerlink" title="（2）、iterator()"></a>（2）、iterator()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 以合适的顺序返回 Vector 中元素的迭代器。</div><div class="line"> * 返回的迭代器是 fail-fast（“快速失败”机制）。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Itr();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>创建类 Itr 对象并返回，即返回 Iterator<e> 对象，类 Itr 实现 Iterator<e> 接口，并实现该接口中的方法 hasNext()、next()、remove()、forEachRemaining(Consumer)，以下给出该类的源码，以供理解。</e></e></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Itr</span> <span class="keyword">implements</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">int</span> cursor;       <span class="comment">// index of next element to return</span></div><div class="line">    <span class="keyword">int</span> lastRet = -<span class="number">1</span>; <span class="comment">// index of last element returned; -1 if no such</span></div><div class="line">    </div><div class="line">    <span class="keyword">int</span> expectedModCount = modCount;</div><div class="line">    </div><div class="line">    <span class="comment">// 判断是否还有下一个元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasNext</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// Racy but within spec, since modifications are checked</span></div><div class="line">        <span class="comment">// within or after synchronization in next/previous</span></div><div class="line">        <span class="keyword">return</span> cursor != elementCount;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">// 返回下一个元素</span></div><div class="line">    <span class="function"><span class="keyword">public</span> E <span class="title">next</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (Vector.<span class="keyword">this</span>) &#123;</div><div class="line">            checkForComodification();</div><div class="line">            <span class="keyword">int</span> i = cursor;</div><div class="line">            <span class="keyword">if</span> (i &gt;= elementCount)</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NoSuchElementException();</div><div class="line">            cursor = i + <span class="number">1</span>;</div><div class="line">            <span class="keyword">return</span> elementData(lastRet = i);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (lastRet == -<span class="number">1</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException();</div><div class="line">        <span class="keyword">synchronized</span> (Vector.<span class="keyword">this</span>) &#123;</div><div class="line">            checkForComodification();</div><div class="line">            Vector.<span class="keyword">this</span>.remove(lastRet);</div><div class="line">            expectedModCount = modCount;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        cursor = lastRet;</div><div class="line">        lastRet = -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEachRemaining</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> E&gt; action)</span> </span>&#123;</div><div class="line">        Objects.requireNonNull(action);</div><div class="line">        <span class="keyword">synchronized</span> (Vector.<span class="keyword">this</span>) &#123;</div><div class="line">            <span class="keyword">final</span> <span class="keyword">int</span> size = elementCount;</div><div class="line">            <span class="keyword">int</span> i = cursor;</div><div class="line">            <span class="keyword">if</span> (i &gt;= size) &#123;</div><div class="line">                <span class="keyword">return</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">            <span class="keyword">final</span> E[] elementData = (E[]) Vector.<span class="keyword">this</span>.elementData;</div><div class="line">            <span class="keyword">if</span> (i &gt;= elementData.length) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">while</span> (i != size &amp;&amp; modCount == expectedModCount) &#123;</div><div class="line">                action.accept(elementData[i++]);</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// update once at end of iteration to reduce heap write traffic</span></div><div class="line">            cursor = i;</div><div class="line">            lastRet = i - <span class="number">1</span>;</div><div class="line">            checkForComodification();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">checkForComodification</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (modCount != expectedModCount)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ConcurrentModificationException();</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="（3）、通过索引随机快速访问"><a href="#（3）、通过索引随机快速访问" class="headerlink" title="（3）、通过索引随机快速访问"></a>（3）、通过索引随机快速访问</h4><h4 id="（4）、foreach-增强循环遍历访问"><a href="#（4）、foreach-增强循环遍历访问" class="headerlink" title="（4）、foreach 增强循环遍历访问"></a>（4）、foreach 增强循环遍历访问</h4><h4 id="（5）、例子"><a href="#（5）、例子" class="headerlink" title="（5）、例子"></a>（5）、例子</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.Enumeration;</div><div class="line"><span class="keyword">import</span> java.util.Iterator;</div><div class="line"><span class="keyword">import</span> java.util.Vector;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VectorTraverseDemo</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Vector&lt;Integer&gt; vector;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> MAX = <span class="number">999</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">init</span> <span class="params">()</span> </span>&#123;</div><div class="line">        vector = <span class="keyword">new</span> Vector();</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; MAX; i++) &#123;</div><div class="line">            vector.add(i);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 调用方法 elements() 遍历 Vector 元素</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">elementsAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">long</span> startTime = System.currentTimeMillis();</div><div class="line">        </div><div class="line">        Enumeration enumeration = vector.elements();</div><div class="line"></div><div class="line">        <span class="keyword">while</span>(enumeration.hasMoreElements()) &#123;</div><div class="line">            enumeration.nextElement();        </div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">long</span> endTime = System.currentTimeMillis();</div><div class="line">        <span class="keyword">long</span> time = endTime - startTime;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"Elements() Method Access Time: "</span> + time + <span class="string">"ms"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 调用 iterator() 方法遍历 Vector 元素</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">iteratorAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">long</span> startTime = System.currentTimeMillis();</div><div class="line">        </div><div class="line">        Iterator iterator = vector.iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span>(iterator.hasNext()) &#123;</div><div class="line">            iterator.next();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">long</span> endTime = System.currentTimeMillis();</div><div class="line">        <span class="keyword">long</span> time = endTime - startTime;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"Iterator() Method Access Time: "</span> + time + <span class="string">"ms"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * foreach 增强循环遍历 Vector 元素</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">foreachAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">long</span> startTime = System.currentTimeMillis();</div><div class="line">        </div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> item : vector) &#123;</div><div class="line">            <span class="keyword">int</span> i = item;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">long</span> endTime = System.currentTimeMillis();</div><div class="line">        <span class="keyword">long</span> time = endTime - startTime;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"Foreach Access Time: "</span> + time + <span class="string">"ms"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">randomAccess</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">long</span> startTime = System.currentTimeMillis();</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; vector.size(); i++) &#123;</div><div class="line">            vector.get(i);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">long</span> endTime = System.currentTimeMillis();</div><div class="line">        <span class="keyword">long</span> time = endTime - startTime;</div><div class="line"></div><div class="line">        System.out.println(<span class="string">"Random Access Time: "</span> + time + <span class="string">"ms"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        init();</div><div class="line">        elementsAccess();</div><div class="line">        iteratorAccess();</div><div class="line">        foreachAccess();</div><div class="line">        randomAccess();</div><div class="line">    &#125;   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">MAX = <span class="number">999</span></div><div class="line">Elements() Method Access Time: <span class="number">0</span> <span class="function">ms</span></div><div class="line"><span class="title">Iterator</span><span class="params">()</span> Method Access Time: 0 ms</div><div class="line">Foreach Access Time: 0 ms</div><div class="line">Random Access Time: 1 ms</div><div class="line">-----------------------------------</div><div class="line"></div><div class="line">MAX = <span class="number">9999</span></div><div class="line">Elements() Method Access Time: <span class="number">1</span> <span class="function">ms</span></div><div class="line"><span class="title">Iterator</span><span class="params">()</span> Method Access Time: 1 ms</div><div class="line">Foreach Access Time: 1 ms</div><div class="line">Random Access Time: 0 ms</div><div class="line">-----------------------------------</div><div class="line"></div><div class="line">MAX = <span class="number">99999</span></div><div class="line">Elements() Method Access Time: <span class="number">5</span> <span class="function">ms</span></div><div class="line"><span class="title">Iterator</span><span class="params">()</span> Method Access Time: 6 ms</div><div class="line">Foreach Access Time: 7 ms</div><div class="line">Random Access Time: 7 ms</div><div class="line">-----------------------------------</div><div class="line"></div><div class="line">MAX = <span class="number">999999</span></div><div class="line">Elements() Method Access Time: <span class="number">28</span> <span class="function">ms</span></div><div class="line"><span class="title">Iterator</span><span class="params">()</span> Method Access Time: 29 ms</div><div class="line">Foreach Access Time: 31 ms</div><div class="line">Random Access Time: 50 ms</div><div class="line">-----------------------------------</div><div class="line"></div><div class="line">MAX = <span class="number">9999999</span></div><div class="line">Elements() Method Access Time: <span class="number">270</span> <span class="function">ms</span></div><div class="line"><span class="title">Iterator</span><span class="params">()</span> Method Access Time: 266 ms</div><div class="line">Foreach Access Time: 265 ms</div><div class="line">Random Access Time: 513 ms</div></pre></td></tr></table></figure>
+<p>从运行结果可以看出，随着数据量不断递增，不同的遍历方式的效率渐趋明显；而对于数量小的话，遍历效率基本相同。</p>
+<h3 id="8、判断-Vector-是否包含指定元素"><a href="#8、判断-Vector-是否包含指定元素" class="headerlink" title="8、判断 Vector 是否包含指定元素"></a>8、判断 Vector 是否包含指定元素</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 如果 Vector 包含指定元素，那么返回 true。换句话说，</div><div class="line"> * 当且仅当 Vector 至少包含一个元素 e，使得 (o==null ? e==null : o.equals(e))。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> o 搜索的元素</div><div class="line"> * <span class="doctag">@returns</span> 如果 Vector 包含指定元素，那么返回 true。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">contains</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> indexOf(o, <span class="number">0</span>) &gt;= <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看到第 9 行代码，应该很熟悉吧，见上面分析。</p>
+<h3 id="9、判断-Vector-的大小是否-0"><a href="#9、判断-Vector-的大小是否-0" class="headerlink" title="9、判断 Vector 的大小是否 0"></a>9、判断 Vector 的大小是否 0</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * 判断 Vector 是否不包含任何组件。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@returns</span> 有且仅当 Vector 不包含任何组件时返回 true，换句话说，size 为 0；否则返回 false。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> elementCount == <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="10、获取-Vector-大小"><a href="#10、获取-Vector-大小" class="headerlink" title="10、获取 Vector 大小"></a>10、获取 Vector 大小</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 返回 Vector 包含组件的数量</div><div class="line"> * </div><div class="line"> * <span class="doctag">@returns</span> 返回 Vector 包含组件的数量</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> elementCount;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="11、改变-Vector-大小"><a href="#11、改变-Vector-大小" class="headerlink" title="11、改变 Vector 大小"></a>11、改变 Vector 大小</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 设置 Vector 的大小。如果新的大小比当前大小大的话，那么将创建 null 添加到 Vector 末尾；如果新的大小比当前大小小的话，那么 Vector 索引为 newSize 以及之后的索引将被置为 null。</div><div class="line"> * </div><div class="line"> * <span class="doctag">@params</span> newSize Vector 新大小</div><div class="line"> * <span class="doctag">@throws</span> 如果 newSize 是负数，那么抛出异常 java.lang.ArrayIndexOutOfBoundsException</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setSize</span><span class="params">(<span class="keyword">int</span> newSize)</span> </span>&#123;</div><div class="line">    modCount++;</div><div class="line">    <span class="keyword">if</span> (newSize &gt; elementCount) &#123;</div><div class="line">        ensureCapacityHelper(newSize);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = newSize ; i &lt; elementCount ; i++) &#123;</div><div class="line">            elementData[i] = <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    elementCount = newSize;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果 newSize 当前数组 elementData 容量大的话，那么执行第 10 行代码，很眼熟吧，即对 Vector 进行扩容，在Vector 尾添加 （newSize - elementCount） null 元素；如果小的话，那么执行第 12 - 14 行代码，即将Vector 索引为 newSize 及之后索引的元素置 null。</p>
+<h3 id="12、获取-Vector-容量"><a href="#12、获取-Vector-容量" class="headerlink" title="12、获取 Vector 容量"></a>12、获取 Vector 容量</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * 返回 Vector 当前容量</div><div class="line"> * </div><div class="line"> * <span class="doctag">@returns</span> 当前容量（内部数组 elementData 的长度）</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">capacity</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> elementData.length;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h1><ul>
+<li><p>Vector 底层是基于数组实现的，是一个动态数组；</p>
+</li>
+<li><p>Vector 允许添加所有元素，包括 null 元素；</p>
+</li>
+<li><p>Vector 是线程安全；</p>
+</li>
+<li><p>Vector 实现 RandomAccess 接口，支持通过索引随机快速访问元素；</p>
+</li>
+<li><p>Vector 支持容量自增长，通过 capacity 和 capacityIncrement 这两个属性来维护。容量增长的机制如下：当增长系数 capacityIncrement 大于 0 时，那么 Vector 增加的容量为增长系数 capacityIncrement，扩容后的容量为 oldCapacity + capacityIncrement；如果增长系数 capacityIncrement 等于 0，那么 Vector 增加的容量为原来的一倍，扩容后的容量为 oldCapacity * 2。</p>
+</li>
+</ul>
+<h1 id="五、Vector-与-ArrayList-区别"><a href="#五、Vector-与-ArrayList-区别" class="headerlink" title="五、Vector 与 ArrayList 区别"></a>五、Vector 与 ArrayList 区别</h1><table><tr><th></th><th style="text-align:center">不同点</th><th style="text-align:center">相同点</th></tr><tr><td rowspan="4" style="text-align:center">Vector</td><td style="text-align:center">同步、线程安全</td><td rowspan="8">1、底层基于数组实现，是一个动态数组；<br> 2、继承抽象类 AbstractList，实现 List 接口，提供增删改查以及遍历功能；<br>3、实现 RandomAccess 接口，支持随机快速访问元素功能；<br> 4、实现接口 java.io.Serializable，支持序列化和反序列化；<br> 5、实现接口 Clone，支持克隆对象；<br> 6、允许添加任何元素，包括 null 元素</td></tr><tr><td style="text-align:center">容量扩容根据增长系数 capacityIncrement </td></tr><tr><td style="text-align:center">支持 Enumeration、foreach、iterator、for 遍历</td></tr><tr><td style="text-align:center">需要额外开销来维护同步锁，性能慢</td></tr><tr><td rowspan="4" style="text-align:center">ArrayList</td><td style="text-align:center">异步、线程不安全</td></tr><tr><td style="text-align:center">容量扩容为旧容量的 1.5 倍</td></tr><tr><td style="text-align:center">支持 foreach、iterator、for 遍历</td></tr><tr><td style="text-align:center">不需要额外开销来维护同步锁，性能快</td></tr></table>
+
+<p>以上是自己对 Vector 的初始，由于水平有限，如果文中有错误的，欢迎指出！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/12/06/Java-集合框架：LinkedList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1310,460 +1575,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/10/17/第十二章DOM2-和-DOM3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/17/第十二章DOM2-和-DOM3/" itemprop="url">第十二章DOM2 和 DOM3</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T07:30:31+08:00">
-                2017-10-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/10/17/第十二章DOM2-和-DOM3/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/10/17/第十二章DOM2-和-DOM3/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/10/17/第十二章DOM2-和-DOM3/" class="leancloud_visitors" data-flag-title="第十二章DOM2 和 DOM3">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、DOM-发展史"><a href="#一、DOM-发展史" class="headerlink" title="一、DOM 发展史"></a>一、DOM 发展史</h1><h3 id="1、DOM-1：支持-XML-1-0"><a href="#1、DOM-1：支持-XML-1-0" class="headerlink" title="1、DOM 1：支持 XML 1.0"></a>1、DOM 1：支持 XML 1.0</h3><h3 id="2、DOM-2"><a href="#2、DOM-2" class="headerlink" title="2、DOM 2"></a>2、DOM 2</h3><ul>
-<li><p>DOM 2 级核心（DOM Level 2 Core）：在 DOM 1 基础上构建，为节点添加了更多方法和属性。支持 XML 1.0 和命名空间。</p>
-</li>
-<li><p>DOM 2 级 HTML（DOM Level 2 HTML）：在 DOM 1 级基础上构建，添加了更多属性、方法和新接口。</p>
-</li>
-<li><p>DOM 2 级视图（DOM Level 2 Views）：为文档定义了基于样式信息的不同视图。</p>
-</li>
-<li><p>DOM 2 级样式（DOM Level 2 Style）：定义了如何以编程方式来访问和改变 CSS 样式信息。</p>
-</li>
-<li><p>DOM 2 级事件（DOM Level 2 Events）：说明如何使用事件与 DOM 文档交互。</p>
-</li>
-<li><p>DOM 2 级遍历和范围（DOM Level 2 Traversal and Range）：引入了遍历 DOM 文档和选择其特定部分的新接口。</p>
-</li>
-</ul>
-<h3 id="3、DOM-3"><a href="#3、DOM-3" class="headerlink" title="3、DOM 3"></a>3、DOM 3</h3><ul>
-<li><p>DOM 3 级核心（DOM Level 3 Core）</p>
-</li>
-<li><p>DOM 3 级加载与保存（DOM Level 3 Load and Save）</p>
-</li>
-<li><p>DOM 3 级验证（DOM Level 3 Validation）</p>
-</li>
-</ul>
-<h1 id="二、DOM-变化"><a href="#二、DOM-变化" class="headerlink" title="二、DOM 变化"></a>二、DOM 变化</h1><h3 id="（一）、XML-命名空间变化"><a href="#（一）、XML-命名空间变化" class="headerlink" title="（一）、XML 命名空间变化"></a>（一）、XML 命名空间变化</h3><p>使用 xmlns 来指定命名空间特性</p>
-<h3 id="（二）、Node-类型变化"><a href="#（二）、Node-类型变化" class="headerlink" title="（二）、Node 类型变化"></a>（二）、Node 类型变化</h3><h4 id="1、在-DOM2-级中，Node-类型包含下列特定于命名空间的属性"><a href="#1、在-DOM2-级中，Node-类型包含下列特定于命名空间的属性" class="headerlink" title="1、在 DOM2 级中，Node 类型包含下列特定于命名空间的属性"></a>1、在 DOM2 级中，Node 类型包含下列特定于命名空间的属性</h4><ul>
-<li><p><strong>localName</strong>：不带命名空间前缀的节点名称。</p>
-</li>
-<li><p><strong>namespaceURI</strong>：命名空间 URI 或者（在未指定的情况下是）null.</p>
-</li>
-<li><p><strong>prefix</strong>：命名空间前缀或者（在未指定的情况下是）null。</p>
-</li>
-</ul>
-<h4 id="2、DOM3"><a href="#2、DOM3" class="headerlink" title="2、DOM3"></a>2、DOM3</h4><ul>
-<li><p><strong>isDefaultNamespace(namespaceURI)</strong>：在指定的 namespaceURI 是当前节点的默认命名空间的情况下返回 true；</p>
-</li>
-<li><p><strong>lookupNamespaceURI(prefix)</strong>：返回给定 prefix 的命名空间。</p>
-</li>
-<li><p><strong>lookupPrefix(namespaceURI)</strong>：返回给定 namespaceURI 的前缀。</p>
-</li>
-</ul>
-<h3 id="三-、Document-类型的变化"><a href="#三-、Document-类型的变化" class="headerlink" title="(三)、Document 类型的变化"></a>(三)、Document 类型的变化</h3><ul>
-<li><p><strong>createElementNS(namespaceURI, tagName)</strong>：使用给定的 tagName 创建一个属性命名空间 namespaceURI 新元素。</p>
-</li>
-<li><p><strong>createAttributeNS(namespaceURI, attributeName)</strong>：使用给定的 attributeName 创建一个属于命名空间 namespaceURI 的新特性。</p>
-</li>
-<li><p><strong>getElementsByTagNameNS(namespaceURI, tagName)</strong>：返回属于命名空间 namespaceURI 的 tagName 元素的 NodeList.</p>
-</li>
-</ul>
-<h3 id="（四）、Element-类型的变化"><a href="#（四）、Element-类型的变化" class="headerlink" title="（四）、Element 类型的变化"></a>（四）、Element 类型的变化</h3><ul>
-<li><p><strong>getAttributeNS(namespaceURI, localName)</strong>：取得属于命名空间 namespaceURI 且名为 localName 的特性。</p>
-</li>
-<li><p><strong>getAttributeNodeNS(namespaceURI, localName)</strong>：取得属于命名空间 namespaceURI 且名为 localName 的特性节点。</p>
-</li>
-<li><p><strong>getElementsByTagNameNS(namespaceURI, tagName)</strong>：返回属于命名空间 namespaceURI 的 tagName 元素的 NodeList。</p>
-</li>
-<li><p><strong>hasAttributeNS(namespaceURI, localName)</strong>：确定当前元素是否有一个名为  localName 的特性，而且该特性的命名空间是 namespaceURI。</p>
-</li>
-<li><p><strong>removeAttributeNS(namespaceURI, localName)</strong>：删除属于命名空间 namespaceURI 且名为 localName 的特性。</p>
-</li>
-<li><p><strong>setAttributeNS(namespaceURI, qualifiedName, value)</strong>：设置属于命名空间 namespaceURI 且名为 qualifiedName 的特性的值为 value。</p>
-</li>
-<li><p><strong>setAttributeNodeNS(attNode)</strong>：设置属于命名空间 namespaceURI 的特性节点。</p>
-</li>
-</ul>
-<h3 id="（五）、NamedNodeMap-类型变化"><a href="#（五）、NamedNodeMap-类型变化" class="headerlink" title="（五）、NamedNodeMap 类型变化"></a>（五）、NamedNodeMap 类型变化</h3><ul>
-<li><p><strong>getNamedItemNS(namespaceURI, localName)</strong>：取得属于命名空间 namespaceURI 且名为 localName 的项。</p>
-</li>
-<li><p><strong>removeNamedItemNS(namespaceURI, localName)</strong>：移除属于命名空间 namespaceURI 且名为 localName 的项。</p>
-</li>
-<li><p><strong>setNamedItemNS(node)</strong>：添加 node，这个节点已经事先指定了命名空间信息。</p>
-</li>
-</ul>
-<h3 id="（六）、DocumentType-类型变化"><a href="#（六）、DocumentType-类型变化" class="headerlink" title="（六）、DocumentType 类型变化"></a>（六）、DocumentType 类型变化</h3><ul>
-<li><p><strong>publicId、systemId</strong>：文档类型声明中的信息段。</p>
-</li>
-<li><p><strong>internalSubset</strong>：用于访问包含在文档类型声明中的额外定义。</p>
-</li>
-</ul>
-<h3 id="（七）、Document-类型变化"><a href="#（七）、Document-类型变化" class="headerlink" title="（七）、Document 类型变化"></a>（七）、Document 类型变化</h3><ul>
-<li><p><strong>importNode()</strong>：从一个文档中取得一个节点，然后将其导入到另外一个文档，使其成为这个文档结构的一部分。接收两个参数：要复制的节点和一个表示是否复制子节点的布尔值。</p>
-</li>
-<li><p><strong>document.implementation</strong> 新方法</p>
-<ul>
-<li><p><strong>createDocumentType()</strong>：创建新的 DocumentType 节点。接收 3 个参数：文档类型名称、publicId、systemId。（DOM 级核心）</p>
-</li>
-<li><p><strong>createDocument()</strong>：创建新文档。接收 3 个参数：文档元素中的 namespaceURI、文档元素的标签名、新文档的文档类型。（DOM 级核心）</p>
-</li>
-<li><p><strong>createHTMLDocument()</strong>：创建一个完整的 HTML 文档，包括 <html>、<head>、<title> 和 <body> 元素。接收一个参数：新创建文档的标题。返回新的 HTML 文档。（DOM 级 HTML ）。</body></title></head></html></p>
-</li>
-<li><p><strong>defaultView</strong>：保存着一个指针，指向拥有给定文档的窗口（或框架）。（DOM 级视图）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> parentWindow = <span class="built_in">document</span>.defaultView || <span class="built_in">document</span>.parentWindow;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="（八）、Node-类型的变化"><a href="#（八）、Node-类型的变化" class="headerlink" title="（八）、Node 类型的变化"></a>（八）、Node 类型的变化</h3><ul>
-<li><p><strong>isSupported()</strong>：用于确定当前节点具有的能力。接收两个参数：特性名和特性版本号。</p>
-</li>
-<li><p><strong>isSameNode()</strong>：接收一个节点参数，并在传入节点与引用节点相同时返回 true。所谓相同，是指两个节点引用的是同一个对象。</p>
-</li>
-<li><p><strong>isEqualNode()</strong>：接收一个节点参数，并在传入节点与引用的节点相等时返回 true。所谓相等，指的是两个节点是相同的类型,具有相同的属性，而且它们的 attributes 和 childNodes 属性也相等。</p>
-</li>
-<li><p><strong>setUserData()</strong>：将数据指定给节点，接收 3 个参数：要设置的键、实际的数据（可以是任何数据）和处理函数。函数作用：在带有数据的节点被复制、删除、重命名或者引入一个文档时调用。接收 5 个参数：表示操作类型的数值（1 数据键、数据值、源节点和目标节点。在删除节点时，源节点是 null；除在复制节点时，目标节点均为 null。</p>
- <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> div = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</div><div class="line">div.setUserData(<span class="string">"name"</span>, <span class="string">"Nicholas"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">operation,key, value, src, dest</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (operation == <span class="number">1</span>) &#123;</div><div class="line">        dest.setUserData(key, value, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><strong>contentDocument</strong>:表示框架内容的文档对象。</li>
-</ul>
-<h1 id="三、DOM2-级样式"><a href="#三、DOM2-级样式" class="headerlink" title="三、DOM2 级样式"></a>三、DOM2 级样式</h1><h3 id="1、定义样式三种方法："><a href="#1、定义样式三种方法：" class="headerlink" title="1、定义样式三种方法："></a>1、定义样式三种方法：</h3><ul>
-<li><p>通过 &lt;link/&gt; 元素包含外部样式表文件；</p>
-</li>
-<li><p>使用 &lt;style/&gt; 元素定义嵌入式样式；</p>
-</li>
-<li><p>使用 style 特性定义针对特定元素的样式。</p>
-</li>
-</ul>
-<h3 id="2、style（CSSStyleDeclaration）对象属性和方法"><a href="#2、style（CSSStyleDeclaration）对象属性和方法" class="headerlink" title="2、style（CSSStyleDeclaration）对象属性和方法"></a>2、style（CSSStyleDeclaration）对象属性和方法</h3><ul>
-<li><p><strong>cssText</strong>：可以访问到 style 特性中的 CSS 代码。</p>
-</li>
-<li><p><strong>length</strong>：元素设置 CSS 属性的数量。</p>
-</li>
-<li><p><strong>parentRule</strong>：表示 CSS 信息的 CSSRule 对象。</p>
-<ul>
-<li><p><strong>getPropertyCSSValue(propertyName)</strong>：返回包含给定值的 CSSValue 对象。</p>
-</li>
-<li><p><strong>CSSValue：cssText 和 cssValueType</strong>。cssText 表示属性值；cssValueType 表示类型值：0 表示继承值；1 表示基本的值；2 表示值列表；3 表示自定义的值。</p>
-</li>
-<li><p><strong>getPropertyPriority(propertyName)</strong>：如果给定的属性使用了 !important 设置，则返回 “important”；否则，返回空字符串。</p>
-</li>
-<li><p><strong>getPropertyValue(propertyName)</strong>：返回给定属性的字符串值。</p>
-</li>
-<li><p><strong>item(index)</strong>：返回给定位置的 CSS 属性的名称。</p>
-</li>
-<li><p><strong>removeProperty(propertyName)</strong>：从样式中删除给定属性。</p>
-</li>
-<li><p><strong>setProperty(propertyName, value, priority)</strong>：将给定属性设置为相应的值，并加上优先权标志（“important” 或者一个空字符串）</p>
-</li>
-<li><p><strong>document.defaultView</strong> 提供方法</p>
-<ul>
-<li><strong>getComputedStyle()</strong>：接收两个参数：取得技术样式的元素和一个伪元素字符串。返回 CSSStyleDeclaration 对象。IE 不支持该方法，与之类似的是 currentStyle 属性，用法类似。</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> sheet = <span class="built_in">document</span>.styleSheets[<span class="number">1</span>];</div><div class="line"><span class="keyword">var</span> rules = sheet.cssRules || sheet.rules;</div><div class="line"><span class="keyword">var</span> rule = rules[<span class="number">0</span>];</div><div class="line">alert(rule.cssText);</div><div class="line">alert(rule.parentRule);</div><div class="line">alert(rule.parentStyleSheet);</div><div class="line">alert(rule.selectorText);</div><div class="line">alert(rule.style.cssText);</div><div class="line">alert(rule.type);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="3、操作样式表"><a href="#3、操作样式表" class="headerlink" title="3、操作样式表"></a>3、操作样式表</h3><p>CSSStyleSheet，表示样式表，继承 StyleSheet， document.styleSheets。CSSStyleSheet 对象属性是 sheet（IE 则是 styleSheet）。</p>
-<ul>
-<li><p>StyleSheet 接口继承属性</p>
-<ul>
-<li><p><strong>disabled</strong>：表示样式表是否被禁用；这个属性是可读/可写。true 表示禁用样式表。</p>
-</li>
-<li><p><strong>href</strong>：如果样式表是通过 <link> 包含的，则是样式表的 URL；否则，是 null。</p>
-</li>
-<li><p><strong>media</strong>：当前样式表支持的所有媒体类型的集合。（MediaList）</p>
-</li>
-<li><p><strong>ownerNode</strong>：指向拥有当前样式表的节点的指针。如果当前样式表是其他样式表通过 @import 导入的，则这个属性值为 null。IE 不支持这个属性。(HTMLLinkElement 和 HTMLStyleElement)</p>
-</li>
-<li><p><strong>parentStyleSheet</strong>：在当前样式表是通过 @import 导入的情况下，这是属性是一个指向导入它的样式表的指针。</p>
-</li>
-<li><p><strong>title：ownerNode</strong> 中 title 属性的值。</p>
-</li>
-<li><p><strong>type</strong>：表示样式表类型的字符串。</p>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p>CSSStyleSheet 支持属性</p>
-<ul>
-<li><p><strong>cssRules</strong>：样式表中包含的样式规则的集合。IE 不支持这个属性，但是有一个类似的属性 rules。类型是 CSSRuleList。</p>
-</li>
-<li><p><strong>ownerRule</strong>：如果样式表是通过 @import 导入的，这个属性就是一个指针，指向表示导入的规则；否则，值为 null。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>deleteRule(index)</strong>：删除 cssRules 集合中指定位置的规则。IE 不支持这个方法，但是支持 removeRule() 方法。</p>
-</li>
-<li><p><strong>insertRule(index)</strong>：向 cssRules 集合中指定的位置插入 rule 字符串。IE 不支持这个方法，但是支持一个类似 addRule() 方法。</p>
-</li>
-</ul>
-</li>
-<li><p>CSS 规则</p>
-<ul>
-<li><p><strong>cssText</strong>：返回整条规则对应的文本。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>parentRule</strong>：如果当前规则是导入的规则，这个属性引用的就是导入规则；否则，这个值为 null。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>parentStyleSheet</strong>：当前规则所属的样式表。IE 不支持这个属性。</p>
-</li>
-<li><p><strong>selectorText</strong>：返回当前规则的选择符文本。只有 Opera 浏览器可读可写。</p>
-</li>
-<li><p><strong>style</strong>：一个 CSSStyleDeclaration 对象，可以通过它设置和取得规则中特定的样式值。</p>
-</li>
-<li><p><strong>type</strong>：表示规则类型的常量值。IE 不支持这个属性。</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertRule</span>(<span class="params">sheet, selectorText, cssText, position</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (sheet.insertRule) &#123;</div><div class="line">        sheet.insertRule(selectorText + <span class="string">"&#123;"</span> + cssText + <span class="string">"&#125;"</span>, position);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sheet.addRule) &#123;</div><div class="line">        sheet.addRule(selectorText, cssText, position);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">deleteRule</span>(<span class="params">sheet, index</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (sheet.deleteRule) &#123;</div><div class="line">        sheet.deleteRule(index);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sheet.removeRule) &#123;</div><div class="line">        sheet.removeRule(index);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4、元素大小"><a href="#4、元素大小" class="headerlink" title="4、元素大小"></a>4、元素大小</h3><ul>
-<li><p>偏移量</p>
-<ul>
-<li><p><strong>offsetHeight</strong>：元素在垂直方向上占用的空间大小，以像素计。包括元素的高度、（可见的）水平滚动条的高度、上边框的高度和下边框的高度。</p>
-</li>
-<li><p><strong>offsetWidth</strong>：元素在水平方向上占用的空间大小，以像素计。包括元素的宽度、（可见的）垂直滚动条的宽度、左边框宽度和右边框宽度。</p>
-</li>
-<li><p><strong>offsetLeft</strong>：元素的左外边框至包含元素的左内边框之间的像素距离。（类似 Android 中 marginLeft）</p>
-</li>
-<li><p><strong>offsetTop</strong>：元素的上外边框至包含元素的上内边框之间的像素距离。类似 Android 中 marginTop）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getElementLeft</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> actualLeft = element.offsetLeft;</div><div class="line">    <span class="keyword">var</span> current = element.offsetParent;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (current !== <span class="literal">null</span>) &#123;</div><div class="line">	    actualLeft += current.offsetLeft;</div><div class="line">	    current = current.offsetParent;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> actualLeft;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getElementTop</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> actualTop = element.offsetTop;</div><div class="line">    <span class="keyword">var</span> current = element.offsetParent;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (current !== <span class="literal">null</span>) &#123;</div><div class="line">        actualTop += current.offsetTop;</div><div class="line">        current = current.offsetParent;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> actualTop;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>客户区大小（内容 + 内边距）</p>
-<ul>
-<li><p><strong>clientWidth</strong>：元素内容区宽度加上左右内边距宽度。</p>
-</li>
-<li><p><strong>clientHeight</strong>：元素内容区高度加上上下内边距高度。</p>
-</li>
-</ul>
-</li>
-<li><p>滚动大小</p>
-<ul>
-<li><p><strong>scrollHeight</strong>：在没有滚动条的情况下，元素内容的总高度。</p>
-</li>
-<li><p><strong>scrollWidth</strong>：在没有滚动条的情况下，元素内容的总宽度。</p>
-</li>
-<li><p><strong>scrollLeft</strong>：被隐藏在内容区域左侧的像素数。</p>
-</li>
-<li><p><strong>scrollTop</strong>：被隐藏在内容区域上方的像素数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getBoundingClientRect</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> scrollTop = <span class="built_in">document</span>.documentElement.scrollTop;</div><div class="line">    <span class="keyword">var</span> scrollLeft = <span class="built_in">document</span>.documentElement.scrollLeft;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (element.getBoundingClientRect) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">arguments</span>.callee.offset != <span class="string">"number"</span>) &#123;</div><div class="line">            <span class="keyword">var</span> temp = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</div><div class="line">            temp.style.cssText = <span class="string">"position:absolute;left:0;top:0;"</span></div><div class="line">            <span class="built_in">document</span>.body.appendChild(temp);</div><div class="line">            <span class="built_in">arguments</span>.callee.offset = -temp.getBoundingClientRect().top - scrollTop;</div><div class="line">            temp = <span class="literal">null</span>;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">var</span> rect = element.getBoundingClientRect();</div><div class="line">        <span class="keyword">var</span> offset = <span class="built_in">arguments</span>.callee.offset;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            left: rect.left + offset,</div><div class="line">            right: rect.right + offset,</div><div class="line">            top: rect.top + offset,</div><div class="line">            bottom: rect.bottom + offset</div><div class="line">        &#125;;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">var</span> actualLeft = getElementLeft(element);</div><div class="line">        <span class="keyword">var</span> actualTop = getElementTop(element);</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            left: actualLeft - scrollLeft,</div><div class="line">            right: actualLeft + element.offsetWidth - scrollLeft,</div><div class="line">            top: actualTop - scrollTop,</div><div class="line">            bottom: actualTop + element.offsetHeight - scrollTop</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="四、遍历"><a href="#四、遍历" class="headerlink" title="四、遍历"></a>四、遍历</h1><h3 id="NodeIterator"><a href="#NodeIterator" class="headerlink" title="NodeIterator"></a>NodeIterator</h3><ul>
-<li><p><strong>document.createNodeIterator()</strong>：创建 NodeIterator 实例，接收 4 个参数：</p>
-<ul>
-<li><p><strong>root</strong>：想要作为搜索起点的树中的节点；</p>
-</li>
-<li><p><strong>whatToShow</strong>：表示要访问哪些节点的数字代码；whatToShow 参数是一个位掩码，以常量的形式在 NodeFilter 类型中定义，可以在 HTML 中使用的有：</p>
-<ul>
-<li><p>1、NodeFilter.SHOW_ALL：显示所有类型的节点。</p>
-</li>
-<li><p>2、NodeFilter.SHOW_TEXT：显示文本节点。</p>
-</li>
-<li><p>3、NodeFilter.SHOW_COMMENT：显示注释节点。</p>
-</li>
-<li><p>4、NodeFilter.SHOW_DOCUMENT：显示文档节点。</p>
-</li>
-<li><p>5、NodeFilter.SHOW_DOCUMENT_TYPE：显示文档类型。</p>
-</li>
-<li><p>6、NodeFilter.SHOW_ELEMENT：显示元素节点。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>filter</strong>：是一个 NodeFilter 对象，或者一个表示应该接受还是拒绝某种特定节点的函数；可以通过该参数 filter 来指定自定义的 NodeFilter 对象；每个 NodeFilter 对象只有一个方法，即 acceptNode()，该方法有两个返回值：</p>
-<ul>
-<li><p>NodeFilter.FILTER_ACCEPT：应该访问给定的节点；</p>
-</li>
-<li><p>NodeFilter.FILTER_SKIP：不应该访问给定的节点。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>entityReferenceExpansion</strong>：布尔值，表示是否要扩展实体引用。（HTML 页面不能扩展实体引用）</p>
-</li>
-</ul>
-</li>
-<li><p><strong>nextNode()</strong>：向前前进一步。</p>
-</li>
-<li><p><strong>previousNode()</strong>：向后后退一步。</p>
-</li>
-</ul>
-<h3 id="TreeWalker-是-NodeIterator-的一个更高级的版本。"><a href="#TreeWalker-是-NodeIterator-的一个更高级的版本。" class="headerlink" title="TreeWalker 是 NodeIterator 的一个更高级的版本。"></a>TreeWalker 是 NodeIterator 的一个更高级的版本。</h3><ul>
-<li><p><strong>nextNode()</strong>：向前前进一步。</p>
-</li>
-<li><p><strong>previousNode()</strong>：向后后退一步。</p>
-</li>
-<li><p><strong>parentNode()</strong>：遍历到当前节点的父节点。</p>
-</li>
-<li><p><strong>firstChild(</strong>)：遍历到当前节点的第一个子节点。</p>
-</li>
-<li><p><strong>lastChild()</strong>：遍历到当前节点的最后一个子节点。</p>
-</li>
-<li><p><strong>nextSibling()</strong>：遍历到当前节点的下一个同辈节点。</p>
-</li>
-<li><p><strong>previousSibling()</strong>：遍历到当前节点的上一个同辈节点。</p>
-</li>
-<li><p><strong>currentNode</strong>：便是任何遍历方法在上一次遍历中返回的节点。</p>
-<p>创建 TreeWalk 对象使用 document.createTreeWalk()，接收 4 个参数，与 document.createNodeIterator() 方法类似。</p>
-<ul>
-<li><p>NodeFilter.FILTER_SKIP：跳过相应节点继续前进到子树中的下一个节点。</p>
-</li>
-<li><p>NodeFilter.FILTER_REJECT：跳过相应节点及该节点的整个子树。    </p>
-</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1813,7 +1624,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
