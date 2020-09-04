@@ -406,6 +406,9 @@
 </ul>
 <pre><code>可能你会发现 `_base` 是在定义在 `Vue.options`，而使用的是 `Vue.$options._base`，究竟是怎么回事呢？其实在创建 Vue 实例时调用的方法 `_init` 里，有这么一段逻辑：
 
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vm.$options = mergeOptions(resolveConstructorOptions(vm.constructor),</div><div class="line">options || &#123;&#125;, vm);</div></pre></td></tr></table></figure>
+
+
  将用户传入的 `options` 和 Vue 构造函数的 `options` 进行合并，最后将合并后的 `options` 赋值给 `vm.$options`，因此能访问到。
 
  `baseCtor.extend(Ctor)` 即 `Vue.extend(Ctor)`，构造子类构造函数。

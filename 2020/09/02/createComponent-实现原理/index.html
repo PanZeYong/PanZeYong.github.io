@@ -105,7 +105,7 @@
 12345678910111213">
 <meta property="og:image" content="http://panzeyong.com/images/vue/create_component_ctor.png">
 <meta property="og:image" content="http://panzeyong.com/images/vue/create_component.png">
-<meta property="og:updated_time" content="2020-09-04T15:15:24.704Z">
+<meta property="og:updated_time" content="2020-09-04T15:18:30.168Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="createComponent 实现原理">
 <meta name="twitter:description" content="在《render 实现原理》这一节中，有分析到 createElement 的实现过程，其最终调用的是 _createElement；而在该方法里有一段逻辑对 tag 的判断，如果 tag 类型为 string 时，则进入处理 string 类型的逻辑，前面已经分析过；否则则进入创建组件 Vnode 的逻辑，即要分析 createComponent 的实现过程。
@@ -406,6 +406,9 @@
 </li>
 </ul>
 <pre><code>可能你会发现 `_base` 是在定义在 `Vue.options`，而使用的是 `Vue.$options._base`，究竟是怎么回事呢？其实在创建 Vue 实例时调用的方法 `_init` 里，有这么一段逻辑：
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vm.$options = mergeOptions(resolveConstructorOptions(vm.constructor),</div><div class="line">options || &#123;&#125;, vm);</div></pre></td></tr></table></figure>
+
 
  将用户传入的 `options` 和 Vue 构造函数的 `options` 进行合并，最后将合并后的 `options` 赋值给 `vm.$options`，因此能访问到。
 
