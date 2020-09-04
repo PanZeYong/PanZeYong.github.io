@@ -105,7 +105,7 @@
 12345678910111213">
 <meta property="og:image" content="http://panzeyong.com/images/vue/create_component_ctor.png">
 <meta property="og:image" content="http://panzeyong.com/images/vue/create_component.png">
-<meta property="og:updated_time" content="2020-09-04T15:35:53.556Z">
+<meta property="og:updated_time" content="2020-09-04T15:38:59.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="createComponent 实现原理">
 <meta name="twitter:description" content="在《render 实现原理》这一节中，有分析到 createElement 的实现过程，其最终调用的是 _createElement；而在该方法里有一段逻辑对 tag 的判断，如果 tag 类型为 string 时，则进入处理 string 类型的逻辑，前面已经分析过；否则则进入创建组件 Vnode 的逻辑，即要分析 createComponent 的实现过程。
@@ -404,9 +404,12 @@
 <li><p>第 <code>12</code> ~ <code>17</code> 行：基于 Vue 构造函数<strong>构造子类构造函数</strong>。<code>baseCtor</code> 指向 Vue 构造函数，原因是在初始化 Vue 阶段时，在 <code>src/core/global-api/index.js</code> 文件有这么一段逻辑：</p>
   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// this is used to identify the "base" constructor to extend all plain-object</span></div><div class="line"><span class="comment">// components with in Weex's multi-instance scenarios.</span></div><div class="line">Vue.options._base = Vue</div></pre></td></tr></table></figure>
 <p>可能你会发现 <code>_base</code> 是在定义在 <code>Vue.options</code>，而使用的是 <code>Vue.$options._base</code>，究竟是怎么回事呢？其实在创建 Vue 实例时调用的方法 <code>_init</code> 里，有这么一段逻辑：</p>
-<p>将用户传入的 <code>options</code> 和 Vue 构造函数的 <code>options</code> 进行合并，最后将合并后的 <code>options</code> 赋值给 <code>vm.$options</code>，因此能访问到。</p>
-<p>  <code>baseCtor.extend(Ctor)</code> 即 <code>Vue.extend(Ctor)</code>，构造子类构造函数。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vm.$options = mergeOptions(resolveConstructorOptions(vm.constructor), options || &#123;&#125;, vm);</div></pre></td></tr></table></figure>
 </li>
+</ul>
+<p>  将用户传入的 <code>options</code> 和 Vue 构造函数的 <code>options</code> 进行合并，最后将合并后的 <code>options</code> 赋值给 <code>vm.$options</code>，因此能访问到。</p>
+<pre><code>`baseCtor.extend(Ctor)` 即 `Vue.extend(Ctor)`，构造子类构造函数。
+</code></pre><ul>
 <li><p>第 <code>29</code> ~ <code>45</code> 行：异步组件处理。</p>
 </li>
 <li><p>第 <code>54</code> ~ <code>56</code> 行：把组件 <code>v-model</code> 转换为 <code>props</code>  和 <code>events</code>。</p>
