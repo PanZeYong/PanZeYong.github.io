@@ -1,0 +1,931 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Vue.js 源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="PANJU's Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="沿着上一节 《new Vue 实现原理》 继续分析，在初始化方法 Vue.prototype._init 实现逻辑里最后有一行代码：vm.$mount(vm.$options.el)，Vue 实例挂载的实现，接下来的核心就是来分析该方法的实现逻辑。
+调用 vm.$mount() 方法时，实际上去调用 Vue 原型上 $mount 方法，即 Vue.prototype.$mount()。由于 Vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue 实例挂载实现原理">
+<meta property="og:url" content="http://panzeyong.com/2020/08/23/Vue-实例挂载实现原理/index.html">
+<meta property="og:site_name" content="PANJU's Note">
+<meta property="og:description" content="沿着上一节 《new Vue 实现原理》 继续分析，在初始化方法 Vue.prototype._init 实现逻辑里最后有一行代码：vm.$mount(vm.$options.el)，Vue 实例挂载的实现，接下来的核心就是来分析该方法的实现逻辑。
+调用 vm.$mount() 方法时，实际上去调用 Vue 原型上 $mount 方法，即 Vue.prototype.$mount()。由于 Vue">
+<meta property="og:image" content="http://panzeyong.com/images/vue/vue_mount.png">
+<meta property="og:updated_time" content="2020-09-23T15:28:47.916Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue 实例挂载实现原理">
+<meta name="twitter:description" content="沿着上一节 《new Vue 实现原理》 继续分析，在初始化方法 Vue.prototype._init 实现逻辑里最后有一行代码：vm.$mount(vm.$options.el)，Vue 实例挂载的实现，接下来的核心就是来分析该方法的实现逻辑。
+调用 vm.$mount() 方法时，实际上去调用 Vue 原型上 $mount 方法，即 Vue.prototype.$mount()。由于 Vue">
+<meta name="twitter:image" content="http://panzeyong.com/images/vue/vue_mount.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://panzeyong.com/2020/08/23/Vue-实例挂载实现原理/"/>
+
+
+
+
+
+  <title>Vue 实例挂载实现原理 | PANJU's Note</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PANJU's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">故不积跬步，无以至千里；不积小流，无以成江海。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/08/23/Vue-实例挂载实现原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vue 实例挂载实现原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-23T18:13:07+08:00">
+                2020-08-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/23/Vue-实例挂载实现原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/08/23/Vue-实例挂载实现原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/08/23/Vue-实例挂载实现原理/" class="leancloud_visitors" data-flag-title="Vue 实例挂载实现原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>沿着上一节 <strong>《new Vue 实现原理》</strong> 继续分析，在初始化方法 <code>Vue.prototype._init</code> 实现逻辑里最后有一行代码：<code>vm.$mount(vm.$options.el)</code>，Vue 实例挂载的实现，接下来的核心就是来分析该方法的实现逻辑。</p>
+<p>调用 <code>vm.$mount()</code> 方法时，实际上去调用 Vue 原型上 <code>$mount</code> 方法，即 <code>Vue.prototype.$mount()</code>。由于 Vue 提供两个版本：<code>Runtime Only</code> 和 <code>Runtime + Compiler</code>，使用不同的版本时，该方法的入口文件是不一样的。<code>Runtime Only</code> 版本调用的是在 <code>&#39;./runtime/index&#39;</code> 文件里定义的方法；而 <code>Runtime + Compiler</code> 版本调用的是在 <code>&#39;entry-runtime-with-compiler.js&#39;</code> 文件里定义的方法。而此次分析源码是基于 <code>Runtime + Compiler</code> 版本，因此接下来的核心是分析该文件里定义 <code>Vue.prototype.$mount</code> 的实现逻辑。</p>
+<p>先从源码入手，来看看具体实现逻辑：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line">const mount = Vue.prototype.$mount</div><div class="line"></div><div class="line">Vue.prototype.$mount = function (</div><div class="line">  el?: string | Element,</div><div class="line">  hydrating?: boolean</div><div class="line">): Component &#123;</div><div class="line">  el = el &amp;&amp; query(el)</div><div class="line"></div><div class="line">  /* istanbul ignore if */</div><div class="line">  if (el === document.body || el === document.documentElement) &#123;</div><div class="line">    process.env.NODE_ENV !== 'production' &amp;&amp; warn(</div><div class="line">      `Do not mount Vue to &lt;html&gt; or &lt;body&gt; - mount to normal elements instead.`</div><div class="line">    )</div><div class="line">    return this</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  const options = this.$options</div><div class="line">  // resolve template/el and convert to render function</div><div class="line">  if (!options.render) &#123;</div><div class="line">    let template = options.template</div><div class="line">    if (template) &#123;</div><div class="line">      if (typeof template === 'string') &#123;</div><div class="line">        if (template.charAt(0) === '#') &#123;</div><div class="line">          template = idToTemplate(template)</div><div class="line">          /* istanbul ignore if */</div><div class="line">          if (process.env.NODE_ENV !== 'production' &amp;&amp; !template) &#123;</div><div class="line">            warn(</div><div class="line">              `Template element not found or is empty: $&#123;options.template&#125;`,</div><div class="line">              this</div><div class="line">            )</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125; else if (template.nodeType) &#123;</div><div class="line">        template = template.innerHTML</div><div class="line">      &#125; else &#123;</div><div class="line">        if (process.env.NODE_ENV !== 'production') &#123;</div><div class="line">          warn('invalid template option:' + template, this)</div><div class="line">        &#125;</div><div class="line">        return this</div><div class="line">      &#125;</div><div class="line">    &#125; else if (el) &#123;</div><div class="line">      template = getOuterHTML(el)</div><div class="line">    &#125;</div><div class="line">    if (template) &#123;</div><div class="line">      /* istanbul ignore if */</div><div class="line">      if (process.env.NODE_ENV !== 'production' &amp;&amp; config.performance &amp;&amp; mark) &#123;</div><div class="line">        mark('compile')</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      const &#123; render, staticRenderFns &#125; = compileToFunctions(template, &#123;</div><div class="line">        outputSourceRange: process.env.NODE_ENV !== 'production',</div><div class="line">        shouldDecodeNewlines,</div><div class="line">        shouldDecodeNewlinesForHref,</div><div class="line">        delimiters: options.delimiters,</div><div class="line">        comments: options.comments</div><div class="line">      &#125;, this)</div><div class="line">      options.render = render</div><div class="line">      options.staticRenderFns = staticRenderFns</div><div class="line"></div><div class="line">      /* istanbul ignore if */</div><div class="line">      if (process.env.NODE_ENV !== 'production' &amp;&amp; config.performance &amp;&amp; mark) &#123;</div><div class="line">        mark('compile end')</div><div class="line">        measure(`vue $&#123;this._name&#125; compile`, 'compile', 'compile end')</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  return mount.call(this, el, hydrating)</div><div class="line">&#125;</div><div class="line">``` </div><div class="line"></div><div class="line">在定义 `Vue.prototype.$mount` 之前，先将在 `./runtime/index` 文件里面定义的 `Vue.prototype.$mount` 缓存起来，保存在变量 `mount`，后面会用到。下面对 `Vue.prototype.$mount` 的实现逻辑简单介绍：</div><div class="line"></div><div class="line">- 获取 `el` 元素；</div><div class="line"></div><div class="line">- Vue 挂载元素 `el` 不能为 `document.body` 和 `document.documentElement`，因为挂载元素 `el` 会将其覆盖；如果是的话则会发出警告。</div><div class="line"></div><div class="line">- 判断创建 Vue 实例时传入的参数是否有 `render` 函数，即 `vm.options.render` 是否为 `true`，是的话直接跳过；否则通过实现逻辑将 `templete` 或者 `el` 解析为 `render` 函数（编译环节，后续再分析）。</div><div class="line"></div><div class="line">	- 判断实例化 Vue 时传入的参数 `options` 是否有 `template` 属性；如果有的话，则继续走下面逻辑：</div><div class="line"></div><div class="line">		- 判断 `template` 数据类型是否为 `string`，是的话并且第一个字符为 `#` 时，则调用函数 `idToTemplate(template)` 获取模板，即 `template = idToTemplate(template)`；</div><div class="line"></div><div class="line">		- 判断 `template.nodeType` 是否为 `true`，是的话则调用 `template.innerHTML` 获取模板，即 `template = template.innerHTML`；</div><div class="line"></div><div class="line">		- 如果都不满足的话，则发出警告。</div><div class="line">	</div><div class="line">	- 判断 `el` 是否为 `true`，是的话则调用 `getOuterHTML(el)` 函数获取模板，即 `template = getOuterHTML(el)`。</div><div class="line"></div><div class="line">	- 如果通过以上的操作可以获取到 `template` 时，则通过调用 `compileToFunctions` 函数将 `template` 解析为 `render` 函数，这里涉及到编译操作，后面再分析。</div><div class="line"></div><div class="line">- 最后一步是调用方法 `mount.call(this, el, hydrating)`，即是这里 `const mount = Vue.prototype.$mount` 缓存的方法。也就是说，`Runtime + Compiler` 版本最后还是得调用 `'./runtime/index'` 里的方法。那么接下来看看其源码实现逻辑：</div><div class="line"></div><div class="line">```javascript</div><div class="line">// public mount method</div><div class="line">Vue.prototype.$mount = function(</div><div class="line">    el ? : string | Element,</div><div class="line">    hydrating ? : boolean</div><div class="line">): Component &#123;</div><div class="line">    debugger;</div><div class="line">    el = el &amp;&amp; inBrowser ? query(el) : undefined</div><div class="line">    return mountComponent(this, el, hydrating)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码实现逻辑挺简单的，核心代码就一行：<code>mountComponent(this, el, hydrating)</code>，该方法是在 <code>&#39;core/instance/lifecycle&#39;</code> 定义的，我们来探探究竟。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">mountComponent</span> (<span class="params"></span></span></div><div class="line">  vm: Component,</div><div class="line">  el: ?Element,</div><div class="line">  hydrating?: boolean</div><div class="line">): <span class="title">Component</span> &#123;</div><div class="line">  vm.$el = el</div><div class="line">  <span class="keyword">if</span> (!vm.$options.render) &#123;</div><div class="line">    vm.$options.render = createEmptyVNode</div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">      <span class="comment">/* istanbul ignore if */</span></div><div class="line">      <span class="keyword">if</span> ((vm.$options.template &amp;&amp; vm.$options.template.charAt(<span class="number">0</span>) !== <span class="string">'#'</span>) ||</div><div class="line">        vm.$options.el || el) &#123;</div><div class="line">        warn(</div><div class="line">          <span class="string">'You are using the runtime-only build of Vue where the template '</span> +</div><div class="line">          <span class="string">'compiler is not available. Either pre-compile the templates into '</span> +</div><div class="line">          <span class="string">'render functions, or use the compiler-included build.'</span>,</div><div class="line">          vm</div><div class="line">        )</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        warn(</div><div class="line">          <span class="string">'Failed to mount component: template or render function not defined.'</span>,</div><div class="line">          vm</div><div class="line">        )</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  callHook(vm, <span class="string">'beforeMount'</span>)</div><div class="line"></div><div class="line">  <span class="keyword">let</span> updateComponent</div><div class="line">  <span class="comment">/* istanbul ignore if */</span></div><div class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; config.performance &amp;&amp; mark) &#123;</div><div class="line">    updateComponent = () =&gt; &#123;</div><div class="line">      <span class="keyword">const</span> name = vm._name</div><div class="line">      <span class="keyword">const</span> id = vm._uid</div><div class="line">      <span class="keyword">const</span> startTag = <span class="string">`vue-perf-start:<span class="subst">$&#123;id&#125;</span>`</span></div><div class="line">      <span class="keyword">const</span> endTag = <span class="string">`vue-perf-end:<span class="subst">$&#123;id&#125;</span>`</span></div><div class="line"></div><div class="line">      mark(startTag)</div><div class="line">      <span class="keyword">const</span> vnode = vm._render()</div><div class="line">      mark(endTag)</div><div class="line">      measure(<span class="string">`vue <span class="subst">$&#123;name&#125;</span> render`</span>, startTag, endTag)</div><div class="line"></div><div class="line">      mark(startTag)</div><div class="line">      vm._update(vnode, hydrating)</div><div class="line">      mark(endTag)</div><div class="line">      measure(<span class="string">`vue <span class="subst">$&#123;name&#125;</span> patch`</span>, startTag, endTag)</div><div class="line">    &#125;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    updateComponent = () =&gt; &#123;</div><div class="line">      vm._update(vm._render(), hydrating)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// we set this to vm._watcher inside the watcher's constructor</span></div><div class="line">  <span class="comment">// since the watcher's initial patch may call $forceUpdate (e.g. inside child</span></div><div class="line">  <span class="comment">// component's mounted hook), which relies on vm._watcher being already defined</span></div><div class="line">  <span class="keyword">new</span> Watcher(vm, updateComponent, noop, &#123;</div><div class="line">    before () &#123;</div><div class="line">      <span class="keyword">if</span> (vm._isMounted &amp;&amp; !vm._isDestroyed) &#123;</div><div class="line">        callHook(vm, <span class="string">'beforeUpdate'</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;, <span class="literal">true</span> <span class="comment">/* isRenderWatcher */</span>)</div><div class="line">  hydrating = <span class="literal">false</span></div><div class="line"></div><div class="line">  <span class="comment">// manually mounted instance, call mounted on self</span></div><div class="line">  <span class="comment">// mounted is called for render-created child components in its inserted hook</span></div><div class="line">  <span class="keyword">if</span> (vm.$vnode == <span class="literal">null</span>) &#123;</div><div class="line">    vm._isMounted = <span class="literal">true</span></div><div class="line">    callHook(vm, <span class="string">'mounted'</span>)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> vm</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法的实现逻辑也不是很复杂，下面简单列出主要的实现步骤：</p>
+<ul>
+<li><p>将 <code>el</code> 赋值给 <code>vm.$el</code>：<code>vm.$el = el</code>；</p>
+</li>
+<li><p>判断实例化 Vue 时传入的参数 <code>options</code> 是否 <code>render</code> 函数，通过前面的源码分析可知，此处是有 <code>render</code> 函数的；如果没有的话，则会调用 <code>createEmptyVNode</code> 方法创建一个空的 <code>vnode</code> 并且赋值给 <code>vm.$options.render</code>，即 <code>vm.$options.render = createEmptyVNode</code>；</p>
+</li>
+<li><p>调用 Vue 生命周期函数：<code>beforeMount</code>，即 <code>callHook(vm, &#39;beforeMount&#39;)</code>；</p>
+</li>
+<li><p>定义函数 <code>updateComponent</code>，调用了 <code>vm</code> 实例上两个核心方法：<code>vm._render()</code> 和 <code>vm._update</code>。（后续再分析）</p>
+</li>
+<li><p>创建 <code>render watcher</code> 实例，传入 5 个参数，具体含义如下：</p>
+<ul>
+<li><p><code>vm</code>：Vue 实例；</p>
+</li>
+<li><p><code>updateComponent</code>：前面定义的函数；</p>
+</li>
+<li><p><code>noop</code>：回调函数；</p>
+</li>
+<li><p><code>options</code>：传入一个对象；</p>
+</li>
+<li><p><code>isRenderWatcher</code>：表示是否为 <code>render watcher</code>，此处是为 <code>true</code>。因为 Vue 提供多种 <code>watcher</code>，不同的 <code>watcher</code> 具有不同的职责。</p>
+<p>下面来看看 <code>Watcher</code> 构造函数的具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constructor</span> (</div><div class="line">   vm: Component,</div><div class="line">   expOrFn: string | Function,</div><div class="line">   cb: Function,</div><div class="line">   options?: ?Object,</div><div class="line">   isRenderWatcher?: boolean</div><div class="line"> ) &#123;</div><div class="line">   <span class="keyword">this</span>.vm = vm</div><div class="line">   <span class="keyword">if</span> (isRenderWatcher) &#123;</div><div class="line">     vm._watcher = <span class="keyword">this</span></div><div class="line">   &#125;</div><div class="line">   vm._watchers.push(<span class="keyword">this</span>)</div><div class="line">   <span class="comment">// options</span></div><div class="line">   <span class="keyword">if</span> (options) &#123;</div><div class="line">     <span class="keyword">this</span>.deep = !!options.deep</div><div class="line">     <span class="keyword">this</span>.user = !!options.user</div><div class="line">     <span class="keyword">this</span>.lazy = !!options.lazy</div><div class="line">     <span class="keyword">this</span>.sync = !!options.sync</div><div class="line">     <span class="keyword">this</span>.before = options.before</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="keyword">this</span>.deep = <span class="keyword">this</span>.user = <span class="keyword">this</span>.lazy = <span class="keyword">this</span>.sync = <span class="literal">false</span></div><div class="line">   &#125;</div><div class="line">   <span class="keyword">this</span>.cb = cb</div><div class="line">   <span class="keyword">this</span>.id = ++uid <span class="comment">// uid for  batching</span></div><div class="line">   <span class="keyword">this</span>.active = <span class="literal">true</span></div><div class="line">   <span class="keyword">this</span>.dirty = <span class="keyword">this</span>.lazy <span class="comment">// for lazy watchers</span></div><div class="line">   <span class="keyword">this</span>.deps = []</div><div class="line">   <span class="keyword">this</span>.newDeps = []</div><div class="line">   <span class="keyword">this</span>.depIds = <span class="keyword">new</span> <span class="built_in">Set</span>()</div><div class="line">   <span class="keyword">this</span>.newDepIds = <span class="keyword">new</span> <span class="built_in">Set</span>()</div><div class="line">   <span class="keyword">this</span>.expression = process.env.NODE_ENV !== <span class="string">'production'</span></div><div class="line">     ? expOrFn.toString()</div><div class="line">     : <span class="string">''</span></div><div class="line">   <span class="comment">// parse expression for getter</span></div><div class="line">   <span class="keyword">if</span> (<span class="keyword">typeof</span> expOrFn === <span class="string">'function'</span>) &#123;</div><div class="line">     <span class="keyword">this</span>.getter = expOrFn</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">     <span class="keyword">this</span>.getter = parsePath(expOrFn)</div><div class="line">     <span class="keyword">if</span> (!<span class="keyword">this</span>.getter) &#123;</div><div class="line">       <span class="keyword">this</span>.getter = noop</div><div class="line">       process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</div><div class="line">         <span class="string">`Failed watching path: "<span class="subst">$&#123;expOrFn&#125;</span>" `</span> +</div><div class="line">         <span class="string">'Watcher only accepts simple dot-delimited paths. '</span> +</div><div class="line">         <span class="string">'For full control, use a function instead.'</span>,</div><div class="line">         vm</div><div class="line">       )</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">this</span>.value = <span class="keyword">this</span>.lazy ? <span class="literal">undefined</span> : <span class="keyword">this</span>.get()</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>看下第 `9 ~ 11` 行，由于 `isRenderWatcher` 为 `true`，将 `Watcher` 实例赋值给 `vm._watcher`，即 `vm._watcher = this`；第 `35 ~ 37` 行，由于传入实参 `updateComponent` 数据类型为 `function`，则会执行该逻辑，即 `this.getter = expOrFn`；第 `49` 行，由于 `this.lazy` 为 `false`，则最终会调用 `this.get()` 方法。而该方法的具体实现逻辑如下：
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">get () &#123;</div><div class="line">	pushTarget(<span class="keyword">this</span>)</div><div class="line">	<span class="keyword">let</span> value</div><div class="line">	<span class="keyword">const</span> vm = <span class="keyword">this</span>.vm</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		value = <span class="keyword">this</span>.getter.call(vm, vm)</div><div class="line">	&#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.user) &#123;</div><div class="line">			handleError(e, vm, <span class="string">`getter for watcher "<span class="subst">$&#123;this.expression&#125;</span>"`</span>)</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="keyword">throw</span> e</div><div class="line">	&#125;</div><div class="line">	&#125; <span class="keyword">finally</span> &#123;</div><div class="line">		<span class="comment">// "touch" every property so they are all tracked as</span></div><div class="line">		<span class="comment">// dependencies for deep watching</span></div><div class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.deep) &#123;</div><div class="line">			traverse(value)</div><div class="line">		&#125;</div><div class="line">		popTarget()</div><div class="line">		<span class="keyword">this</span>.cleanupDeps()</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> value</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+
+核心代码在第 `6` 行，即 `value = this.getter.call(vm, vm)`，实际上调用的是之前定义的函数：`updateComponent`。至于该方法的其它逻辑，后面响应式会详细分析。
+</code></pre><blockquote>
+<pre><code>`watcher` 在这里起到两个作用：一个是初始化时候回执行回调函数；另一个是当 `vm` 实例中监测的数据发生变化时，也会执行回调函数。
+</code></pre></blockquote>
+<ul>
+<li>最后判断为根节点，即 <code>vm.$vnode == null</code> 成立时，则设置 <code>vm._isMounted</code> 为 <code>true</code>，表示实例已经挂载完成，并且执行 Vue 生命周期函数：<code>mounted</code>。</li>
+</ul>
+<p>以上从主线分析了 Vue 实例挂载的实现逻辑，至于其它细节，比如编译、响应式等得到后面章节再分析。最后通过一张流程图来概括其主线逻辑：</p>
+<p><img src="/images/vue/vue_mount.png" alt="init 逻辑实现"></p>
+<p>参考链接：</p>
+<p><a href="https://ustbhuangyi.github.io/vue-analysis/v2/data-driven/mounted.html#%E6%80%BB%E7%BB%93" target="_blank" rel="external">Vue 实例挂载的实现</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vue-js-源码解析/" rel="tag"># Vue.js 源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/22/new-Vue-实现原理/" rel="next" title="new Vue 实现原理">
+                <i class="fa fa-chevron-left"></i> new Vue 实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/30/普通节点-patch 过程/" rel="prev" title="普通节点 patch 过程">
+                普通节点 patch 过程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="PANJU" />
+          <p class="site-author-name" itemprop="name">PANJU</p>
+           
+              <p class="site-description motion-element" itemprop="description">笔记——记录工作和学习中的点点滴滴</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/PanZeYong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PANJU</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://panzeyong.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://panzeyong.com/2020/08/23/Vue-实例挂载实现原理/';
+          this.page.identifier = '2020/08/23/Vue-实例挂载实现原理/';
+          this.page.title = 'Vue 实例挂载实现原理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://panzeyong.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("b3EUStGjBwcKOJcOMeQXheDT-gzGzoHsz", "xvVsWacpT435FHV1QCcUpx9I");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

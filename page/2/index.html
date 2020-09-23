@@ -268,6 +268,356 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/08/18/源码构建流程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/18/源码构建流程/" itemprop="url">源码构建流程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-18T21:17:26+08:00">
+                2020-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/18/源码构建流程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/08/18/源码构建流程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/08/18/源码构建流程/" class="leancloud_visitors" data-flag-title="源码构建流程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Vue 源码是基于 <a href="https://github.com/rollup/rollup" target="_blank" rel="external">Rollup</a> 构建的。</p>
+<p>当我们在终端执行命令：<code>npm run build</code> 时，会去加载 <code>package.json</code> 文件，执行字段 <code>script</code> 对应的配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scripts: &#123;</div><div class="line">	<span class="string">"build"</span>: <span class="string">"node scripts/build.js"</span>,</div><div class="line">    <span class="string">"build:ssr"</span>: <span class="string">"npm run build -- web-runtime-cjs,web-server-renderer"</span>,</div><div class="line">    <span class="string">"build:weex"</span>: <span class="string">"npm run build -- weex"</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即执行命令：<code>&quot;build&quot;: &quot;node scripts/build.js&quot;</code>。也就是说，构建时执行的文件是：<code>scripts/build.js</code>。</p>
+<p>##一、 <code>scripts/build.js</code> 逻辑分析</p>
+<h3 id="1、引入依赖及文件夹创建"><a href="#1、引入依赖及文件夹创建" class="headerlink" title="1、引入依赖及文件夹创建"></a>1、引入依赖及文件夹创建</h3><p>引入相关依赖，并且判断文件夹 <code>dist</code> 是否存在；如果不存在的话，则创建该文件夹。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (!fs.existsSync(<span class="string">'dist'</span>)) &#123;</div><div class="line">    fs.mkdirSync(<span class="string">'dist'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2、获取构建不同版本-vue-配置"><a href="#2、获取构建不同版本-vue-配置" class="headerlink" title="2、获取构建不同版本 vue 配置"></a>2、获取构建不同版本 vue 配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> builds = <span class="built_in">require</span>(<span class="string">'./config'</span>).getAllBuilds()</div></pre></td></tr></table></figure>
+<p>备注：下面再来分析如何获取配置</p>
+<h3 id="3、根据命令行参数过滤配置"><a href="#3、根据命令行参数过滤配置" class="headerlink" title="3、根据命令行参数过滤配置"></a>3、根据命令行参数过滤配置</h3><p>获取所有构建配置 <code>builds</code>，根据命令行参数过滤不需要的构建配置。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// filter builds via command line arg（只需要命令行参数的配置）</span></div><div class="line"><span class="keyword">if</span> (process.argv[<span class="number">2</span>]) &#123;</div><div class="line">    <span class="keyword">const</span> filters = process.argv[<span class="number">2</span>].split(<span class="string">','</span>)</div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> filters.some(f =&gt; b.output.file.indexOf(f) &gt; <span class="number">-1</span> || b._name.indexOf(f) &gt; <span class="number">-1</span>)</div><div class="line">    &#125;)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// filter out weex builds by default（默认过滤 weex 版本）</span></div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> b.output.file.indexOf(<span class="string">'weex'</span>) === <span class="number">-1</span></div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4、调用-rollup-rollup-方法构建，并且输出构建产物"><a href="#4、调用-rollup-rollup-方法构建，并且输出构建产物" class="headerlink" title="4、调用 rollup.rollup 方法构建，并且输出构建产物"></a>4、调用 <code>rollup.rollup</code> 方法构建，并且输出构建产物</h3><p>构建流程如下：</p>
+<ul>
+<li><p><code>build</code> 方法：通过计数器 <code>built</code> 循环调用 <code>buildEntry</code> 方法进行构建。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">build</span>(<span class="params">builds</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> built = <span class="number">0</span></div><div class="line">    <span class="keyword">const</span> total = builds.length</div><div class="line">    <span class="keyword">const</span> next = () =&gt; &#123;</div><div class="line">        buildEntry(builds[built]).then(() =&gt; &#123;</div><div class="line">            built++</div><div class="line">            <span class="keyword">if</span> (built &lt; total) &#123;</div><div class="line">                next()</div><div class="line">            &#125;</div><div class="line">        &#125;).catch(logError)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    next()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><code>buildEntry</code> 方法：调用方法 <code>rollup.rollup</code> 打包构建，并且输出构建产物。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">buildEntry</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> output = config.output</div><div class="line">    <span class="keyword">const</span> &#123; file, banner &#125; = output</div><div class="line">    <span class="keyword">const</span> isProd = <span class="regexp">/(min|prod)\.js$/</span>.test(file)</div><div class="line">    <span class="keyword">return</span> rollup.rollup(config)</div><div class="line">        .then(bundle =&gt; bundle.generate(output))</div><div class="line">        .then((&#123; output: [&#123; code &#125;] &#125;) =&gt; &#123;</div><div class="line">            <span class="keyword">if</span> (isProd) &#123;</div><div class="line">                <span class="keyword">const</span> minified = (banner ? banner + <span class="string">'\n'</span> : <span class="string">''</span>) + terser.minify(code, &#123;</div><div class="line">                    toplevel: <span class="literal">true</span>,</div><div class="line">                    output: &#123;</div><div class="line">                        ascii_only: <span class="literal">true</span></div><div class="line">                    &#125;,</div><div class="line">                    compress: &#123;</div><div class="line">                        pure_funcs: [<span class="string">'makeMap'</span>]</div><div class="line">                    &#125;</div><div class="line">                &#125;).code</div><div class="line">                <span class="keyword">return</span> write(file, minified, <span class="literal">true</span>)</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> write(file, code)</div><div class="line">            &#125;</div><div class="line">        &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="二、-scripts-config-js-逻辑分析"><a href="#二、-scripts-config-js-逻辑分析" class="headerlink" title="二、 scripts/config.js 逻辑分析"></a>二、 <code>scripts/config.js</code> 逻辑分析</h2><p><code>config.js</code> 文件的作用是根据 <code>rollup</code> 的规范重新组合配置，得到 <code>Vue</code> 构建的所有版本。</p>
+<h3 id="1、声明构建-Vue-所有版本常量-builds。"><a href="#1、声明构建-Vue-所有版本常量-builds。" class="headerlink" title="1、声明构建 Vue 所有版本常量 builds。"></a>1、声明构建 <code>Vue</code> 所有版本常量 <code>builds</code>。</h3><p>举例说明如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Runtime only (CommonJS). Used by bundlers e.g. Webpack &amp; Browserify</span></div><div class="line"><span class="string">'web-runtime-cjs-dev'</span>: &#123;</div><div class="line">    entry: resolve(<span class="string">'web/entry-runtime.js'</span>),</div><div class="line">    dest: resolve(<span class="string">'dist/vue.runtime.common.dev.js'</span>),</div><div class="line">    format: <span class="string">'cjs'</span>,</div><div class="line">    env: <span class="string">'development'</span>,</div><div class="line">    banner</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><code>entry</code>：表示构建的入口 <code>JS</code> 文件地址。</p>
+<p><code>dest</code>：表示构建后的 <code>JS</code> 文件地址。</p>
+<p><code>format</code>：表示构建出来的文件遵循 <code>CommonJS</code> 格式。</p>
+<p><code>env</code>：指定构建环境。</p>
+<p><code>banner</code>：构建说明。</p>
+<h3 id="2、根据-rollup-规范生成配置（genConfig）"><a href="#2、根据-rollup-规范生成配置（genConfig）" class="headerlink" title="2、根据 rollup 规范生成配置（genConfig）"></a>2、根据 <code>rollup</code> 规范生成配置（genConfig）</h3><h3 id="3、导出配置"><a href="#3、导出配置" class="headerlink" title="3、导出配置"></a>3、导出配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (process.env.TARGET) &#123;</div><div class="line">    <span class="built_in">module</span>.exports = genConfig(process.env.TARGET)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    exports.getBuild = genConfig</div><div class="line">    exports.getAllBuilds = () =&gt; <span class="built_in">Object</span>.keys(builds).map(genConfig)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ul>
+<li><a href="https://ustbhuangyi.github.io/vue-analysis/v2/prepare/build.html" target="_blank" rel="external">Vue.js 源码构建
+</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/03/29/Vue-入口初始化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/29/Vue-入口初始化/" itemprop="url">Vue 入口初始化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-29T21:32:55+08:00">
+                2020-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/29/Vue-入口初始化/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/03/29/Vue-入口初始化/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/03/29/Vue-入口初始化/" class="leancloud_visitors" data-flag-title="Vue 入口初始化">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这节主要介绍 Vue 是如何初始化以及初始化过程中做了哪些事情。通过自己整理出来的流程图来说明其主线：</p>
+<p><img src="/images/vue/vue_init.png" alt=""></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ul>
+<li><a href="https://ustbhuangyi.github.io/vue-analysis/v2/prepare/entrance.html#vue-%E7%9A%84%E5%85%A5%E5%8F%A3" target="_blank" rel="external">从入口开始</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -945,461 +1295,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/03/03/字符串的扩展/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/03/字符串的扩展/" itemprop="url">字符串的扩展</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-03T15:14:34+08:00">
-                2019-03-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/03/字符串的扩展/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/03/03/字符串的扩展/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2019/03/03/字符串的扩展/" class="leancloud_visitors" data-flag-title="字符串的扩展">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="1、字符串的遍历接口"><a href="#1、字符串的遍历接口" class="headerlink" title="1、字符串的遍历接口"></a>1、字符串的遍历接口</h3><p><code>for...of</code> 不仅能遍历字符串，还能识别大于 <code>0xFFFF</code> 的码点，但是传统的 <code>for</code> 循环是无法识别的。</p>
-<h3 id="2、字符串实例方法"><a href="#2、字符串实例方法" class="headerlink" title="2、字符串实例方法"></a>2、字符串实例方法</h3><ul>
-<li><p><code>normalize()</code>：将字符串的不同表示方法统一为同样的形式，称为 Unicode 正规化。(Unicode 提供两种方法：一种是直接提供带重音符号的字符；另一种是提供合成符号（combining character），即原字符与重音符号的合成，两个字符合成一个字符，)</p>
-<p>  <code>normalize</code> 方法提供一个参数来指定 <code>normalize</code> 的方式，共有四个选项：</p>
-<ul>
-<li><p><code>NFC</code>：默认参数，表示 “标准等价合成”，返回合成字符；</p>
-</li>
-<li><p><code>NFD</code>：表示 “标准等价分解”；</p>
-</li>
-<li><p><code>NFKC</code>：表示 “兼容等价合成”，返回合成字符；</p>
-</li>
-<li><p><code>NFKD</code>：表示 “兼容等价分解”。</p>
-</li>
-</ul>
-</li>
-<li><p>对于一个字符串是否包含在另一个字符串中，ES6 提供了三个新方法：</p>
-<ul>
-<li><p><code>includes()</code>：表示是否找到了参数字符串，返回布尔值。</p>
-</li>
-<li><p><code>startsWith()</code>：表示参数字符串是否在原字符串的头部，返回布尔值。</p>
-</li>
-<li><p><code>endsWith()</code>：表示参数字符串是否在原字符串的尾部，返回布尔值。</p>
-<p>  这三个方法都接受两个参数：参数字符串 str 和从原始字符串开始搜索的位置 n。</p>
-</li>
-</ul>
-</li>
-<li><p><code>repeat()</code>：表示将原字符串复制 n 次，返回新的字符串。对于参数，有几种情况需要注意下：</p>
-<ul>
-<li><p>参数是小数时，会被取整；</p>
-</li>
-<li><p>参数是负数或者 Infinity，会报错；</p>
-</li>
-<li><p>参数是 0 ~ 1 之间的小数，则视为 0；</p>
-</li>
-<li><p>参数是 0 ~ -1 之间，也视为 0；</p>
-</li>
-<li><p>参数是 NaN，视为 0；</p>
-</li>
-<li><p>参数是字符串，会先转为数字。</p>
-</li>
-</ul>
-</li>
-<li><p>字符串补全功能的两个方法：</p>
-<ul>
-<li><p><code>padStart()</code>：头部补全。</p>
-</li>
-<li><p><code>padEnd()</code>：尾部补全。</p>
-<p>  这两个方法共接受两个参数：第一个参数是字符串补全生效的最大长度，第二个参    数是用来补全的字符串。对于方法的使用，需要说明的点如下：</p>
-<ul>
-<li><p>如果原字符串的长度，大于或等于最大长度，则补全字符串失效，返回原字符串；</p>
-</li>
-<li><p>如果用来补全的字符串和原字符串，两者的长度超过最大长度，那么则会截出超出位数的补全字符串；</p>
-</li>
-<li><p>如果省略第二个参数，则会用空格来表示。</p>
-<p><code>padStart()</code> 的用途：</p>
-</li>
-<li><p>为数值补全指定位数；</p>
-</li>
-<li><p>提示字符串格式。</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><code>matchAll()</code>：返回一个正则表达式在字符串中的所有匹配。</p>
-<h3 id="3、String-对象提供的方法"><a href="#3、String-对象提供的方法" class="headerlink" title="3、String 对象提供的方法"></a>3、String 对象提供的方法</h3><p><code>String.raw()</code>：充当字符串模板的处理函数，返回一个斜杆都被转义的字符串。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">String</span>.raw<span class="string">`Hi\u000A!`</span>;</div><div class="line"><span class="comment">// 返回 "Hi\\u000A!"</span></div></pre></td></tr></table></figure>
-<p>以上是在学习 <a href="https://es6.ruanyifeng.com/" target="_blank" rel="external">《ECMAScript 6 入门》</a> 一书时整理的学习笔记，方便日后查阅。</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://es6.ruanyifeng.com/#docs/string" target="_blank" rel="external">字符串的扩展</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/02/20/变量的解构赋值/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/02/20/变量的解构赋值/" itemprop="url">变量的解构赋值</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-20T22:41:08+08:00">
-                2019-02-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/02/20/变量的解构赋值/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/02/20/变量的解构赋值/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2019/02/20/变量的解构赋值/" class="leancloud_visitors" data-flag-title="变量的解构赋值">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、理解解构（Destructuring）"><a href="#一、理解解构（Destructuring）" class="headerlink" title="一、理解解构（Destructuring）"></a>一、理解解构（Destructuring）</h1><p>ES6 允许按照一定的模式，从对象和数组提取值，相应地赋值给对应的变量，简单来说，只要等号两边的模式相匹配，变量就会被赋予相应的值，我们把它称为<strong>解构</strong>赋值。</p>
-<h1 id="二、支持变量解构的数据类型"><a href="#二、支持变量解构的数据类型" class="headerlink" title="二、支持变量解构的数据类型"></a>二、支持变量解构的数据类型</h1><h2 id="1、数组的解构赋值"><a href="#1、数组的解构赋值" class="headerlink" title="1、数组的解构赋值"></a>1、数组的解构赋值</h2><h3 id="解构赋值类型"><a href="#解构赋值类型" class="headerlink" title="解构赋值类型"></a>解构赋值类型</h3><ul>
-<li>完全解构：等号左右两边的模式相匹配，变量被赋予相应的值。</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> [x, y] = [<span class="number">1</span>, <span class="number">2</span>]</div></pre></td></tr></table></figure>
-<ul>
-<li>不完全解构：等号左边的模式只匹配等号右边数组的一部分，这种情况解构是成功的。</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> [x, y] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</div></pre></td></tr></table></figure>
-<h3 id="解构满足的条件"><a href="#解构满足的条件" class="headerlink" title="解构满足的条件"></a>解构满足的条件</h3><ul>
-<li><p>等号右边的数据结构具有 Iterator 接口，否则会报错；</p>
-</li>
-<li><p>Set 结构也可以使用数组解构赋值。</p>
-</li>
-</ul>
-<h3 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h3><p>解构赋值允许指定默认值，默认值生效的条件：ES6 内部使用严格相等运算符 <code>===</code> 来判断一个位置是否有值，因此，只有当数组中的成员严格等于 <code>undefined</code>，默认值才会生效。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> [x = <span class="number">1</span>] = [<span class="literal">undefined</span>]    <span class="comment">// x: 1</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> [x = <span class="number">1</span>] = [<span class="literal">null</span>]    <span class="comment">// x: null</span></div></pre></td></tr></table></figure>
-<p>默认值可以是一个<strong>表达式</strong>，但是该表达式是<strong>惰性</strong>求值的，只有当用到</p>
-<p>的时候，才会使用。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">example</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"默认值可是一个表达式"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> [x = example()] = [<span class="number">1</span>];    <span class="comment">// 此时因为变量 x 能取到值 1，使得函数 example 不会被执行。</span></div></pre></td></tr></table></figure>
-<p>默认值可以引用解构赋值的其它变量，前提是这些变量被声明。</p>
-<h2 id="2、对象的解构赋值"><a href="#2、对象的解构赋值" class="headerlink" title="2、对象的解构赋值"></a>2、对象的解构赋值</h2><p>与数组的解构赋值相比，有一点明显不同的是与对象属性的顺序没有关系，变量必须与属性名相同，才能获取相应的值。对象的解构赋值的真正形式如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> &#123;a: b, c: d&#125; = &#123;a: <span class="string">"test"</span>, c: <span class="string">"str"</span>&#125;</div></pre></td></tr></table></figure>
-<p>a，b 是匹配模式，而 b，d 才是变量，被赋值的是后者，而不是前者。对象的解构赋值有简洁的表达形式，如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> &#123;a, c&#125; = &#123;a: <span class="string">"test"</span>, c: <span class="string">"str"</span>&#125;</div></pre></td></tr></table></figure>
-<p>这种表达形式必须满足的条件是变量名与属性名必须相同。</p>
-<p>解构也可以用于嵌套结构的对象</p>
-<p>对象的解构也可以指定默认值，与数组的解构一样，默认值生效的条件是对象的属性值严格等于 <code>undefined</code>。</p>
-<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
-<li>如果解构模式是嵌套的对象，并且子对象所在的父属性不存在，这种情况下会报错。</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 报错</span></div><div class="line"><span class="keyword">let</span> &#123;foo: &#123;bar&#125;&#125; = &#123;baz: <span class="string">'baz'</span>&#125;;</div></pre></td></tr></table></figure>
-<ul>
-<li>如果将一个已经声明的变量用于解构赋值，那么此时就得小心，有可能会报错。</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 报错</span></div><div class="line"><span class="keyword">let</span> x = <span class="number">5</span>;</div><div class="line">&#123;x&#125; = &#123;x: <span class="number">8</span>&#125;</div><div class="line"></div><div class="line"><span class="comment">// 正确写法</span></div><div class="line">(&#123;x&#125; = &#123;x:<span class="number">8</span>&#125;)</div></pre></td></tr></table></figure>
-<p>JavaScript 引擎会将以大括号开头的代码解析成代码块，从而造成语法错误。要避免此错误的发生，则将其放在圆括号里面。</p>
-<h2 id="3、字符串的解构赋值"><a href="#3、字符串的解构赋值" class="headerlink" title="3、字符串的解构赋值"></a>3、字符串的解构赋值</h2><p>字符串解构赋值时，会被转换成一个类似字数组的对象。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> [a, b, c, d, e, f] = [<span class="string">"script"</span>];</div></pre></td></tr></table></figure>
-<h2 id="4、数值和布尔值的解构赋值"><a href="#4、数值和布尔值的解构赋值" class="headerlink" title="4、数值和布尔值的解构赋值"></a>4、数值和布尔值的解构赋值</h2><p>如果等号右边的值不是数组或者对象时，在解构时，会将其先转换为对象。但是有比较特殊的情况是无法转换为对象，即 <code>null</code> 和 <code>undefined</code>，因此对它们解构赋值时是会报错的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> &#123;s: toString &#125; = <span class="number">123</span>;</div><div class="line"></div><div class="line">=&gt;</div><div class="line"></div><div class="line"><span class="keyword">var</span> _ = <span class="number">123</span>,</div><div class="line">    s = _.toString;</div></pre></td></tr></table></figure>
-<h2 id="5、函数参数的解构赋值"><a href="#5、函数参数的解构赋值" class="headerlink" title="5、函数参数的解构赋值"></a>5、函数参数的解构赋值</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 为 x、y 指定默认值</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">move</span>(<span class="params">&#123;x = 0, y = 0&#125; = &#123;&#125;</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> [x, y];</div><div class="line">&#125;</div><div class="line"></div><div class="line">move(&#123;&#125;)    <span class="comment">// [0, 0]</span></div><div class="line"></div><div class="line"><span class="comment">// 为 move 参数指定默认值</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">move</span>(<span class="params">&#123;x, y&#125; = &#123; x: 0, y: 0 &#125;</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> [x, y];</div><div class="line">&#125;</div><div class="line"></div><div class="line">move(&#123;&#125;)    <span class="comment">// [undefined, undefined]</span></div></pre></td></tr></table></figure>
-<h1 id="三、圆括号问题"><a href="#三、圆括号问题" class="headerlink" title="三、圆括号问题"></a>三、圆括号问题</h1><h2 id="1、不能使用圆括号的情况"><a href="#1、不能使用圆括号的情况" class="headerlink" title="1、不能使用圆括号的情况"></a>1、不能使用圆括号的情况</h2><ul>
-<li><p>变量声明语句；</p>
-</li>
-<li><p>函数参数；</p>
-</li>
-<li><p>赋值语句的模式。</p>
-</li>
-</ul>
-<h2 id="2、可以使用圆括号的情况"><a href="#2、可以使用圆括号的情况" class="headerlink" title="2、可以使用圆括号的情况"></a>2、可以使用圆括号的情况</h2><p>赋值语句的非模式部分，可以使用圆括号。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[(a)] = [<span class="number">8</span>]; <span class="comment">// 正确</span></div><div class="line">(&#123; p: (d) &#125; = &#123;&#125;); <span class="comment">// 正确</span></div><div class="line">[(<span class="built_in">parseInt</span>.prop)] = [<span class="number">3</span>]; <span class="comment">// 正确</span></div></pre></td></tr></table></figure>
-<h1 id="四、用途"><a href="#四、用途" class="headerlink" title="四、用途"></a>四、用途</h1><ul>
-<li><p>交换变量；</p>
-</li>
-<li><p>从函数返回多个值；</p>
-</li>
-<li><p>函数参数的定义；</p>
-</li>
-<li><p>提取 JSON 数据；</p>
-</li>
-<li><p>函数参数的默认值；</p>
-</li>
-<li><p>遍历 Map 结构；</p>
-</li>
-<li><p>输入模块的指定方法。</p>
-</li>
-</ul>
-<p>以上是在学习 <a href="https://es6.ruanyifeng.com/" target="_blank" rel="external">《ECMAScript 6 入门》</a> 一书时整理的学习笔记，方便日后查阅。</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="http://es6.ruanyifeng.com/#docs/destructuring" target="_blank" rel="external">变量的解构赋值</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1444,7 +1344,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
