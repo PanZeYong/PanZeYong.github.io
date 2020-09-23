@@ -268,6 +268,247 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/19/Vue 源码目录结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/19/Vue 源码目录结构/" itemprop="url">Vue.js 源码目录结构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-19T22:33:04+08:00">
+                2018-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/12/19/Vue 源码目录结构/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/12/19/Vue 源码目录结构/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/12/19/Vue 源码目录结构/" class="leancloud_visitors" data-flag-title="Vue.js 源码目录结构">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。</p>
+<p>在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。</p>
+<p>注：Vue.js 的版本为 2.6.11</p>
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><ul>
+<li><p><code>.circleci</code>：Vue.js 使用了持续集成工具 CircleCI，要在项目中使用该工具，需要在项目根目录创建文件夹 <code>.circleci</code>，并在其目录下创建文件 <code>config.yml</code> 编写构建脚本。</p>
+<ul>
+<li><code>config.yml</code>：编写 CircleCI 构建脚本。</li>
+</ul>
+</li>
+<li><p><code>.github</code>：项目相关说明文档，比如开发者参与项目的规则、要求之类的。</p>
+<p>  <code>CODE_OF_CONDUCT.md</code>：贡献代码的行为准则。</p>
+<p>  <code>COMMIT_CONVENTION.md</code>：git 提交代码时添加提交信息的约定。</p>
+<p>  <code>CONTRIBUTING.md</code>：参与项目指南。</p>
+<p>  <code>ISSUE_TEMPLATE.md</code>：提交 issue 的模板。</p>
+<p>  <code>PULL_REQUEST_TEMPLATE.md</code>：拉取代码指南。</p>
+</li>
+<li><p><code>benchmarks</code>：性能测试相关文件。</p>
+</li>
+<li><p><code>dist</code>：包含不同分发版本的构建文件。要注意的是，这个目录只有在发布新版本时才会更新，开发分支更新的新特性不会影响到该目录。</p>
+</li>
+<li><p><code>example</code>：官方提供的示例。</p>
+</li>
+<li><p><code>flow</code>：包含使用Flow（静态类型检查工具）声明的类型，供全局使用。</p>
+<ul>
+<li><p><code>compiler.js</code>：编译相关。</p>
+</li>
+<li><p><code>component.js</code>：组件数据结构。</p>
+</li>
+<li><p><code>global-api.js</code>：Global API 结构。</p>
+</li>
+<li><p><code>modules.js</code>：第三方库定义。</p>
+</li>
+<li><p><code>options.js</code>：选项相关。</p>
+</li>
+<li><p><code>ssr.js</code>：服务端渲染相关。</p>
+</li>
+<li><p><code>vnode.js</code>：虚拟 node 相关。</p>
+</li>
+<li><p><code>weex.js</code>：weex 平台相关。</p>
+</li>
+</ul>
+</li>
+<li><p><code>packages</code>：包含服务端渲染和模板编译器两种不同 NPM 包，供不同场景使用。</p>
+<ul>
+<li><p><code>vue-server-render</code>：服务端渲染。</p>
+</li>
+<li><p><code>vue-template-compiler</code>：vue 模板编译器。</p>
+</li>
+<li><p><code>weex-template-compiler</code>：weex 模板编译器。</p>
+</li>
+<li><p><code>weex-vue-framework</code>：weex vue 框架。</p>
+</li>
+</ul>
+</li>
+<li><p><code>scripts</code>：包含构建相关脚本和配置文件，大多数情况下不需要关注该目录。</p>
+<ul>
+<li><p><code>alias.js</code>：所有源代码和测试中使用的模块导入别名。</p>
+</li>
+<li><p><code>config</code>：包含 <code>dist</code> 目录下所有文件的配置信息。</p>
+</li>
+</ul>
+</li>
+<li><p><code>src</code>：vue.js 源代码，代码用 ES6 实现的并采用 JavaScript 静态类型检查工具。</p>
+<ul>
+<li><p><code>compiler</code>：该目录包含 Vue.js 编译的相关代码，包括将模板字符串解析成 AST 语法树的<strong>解析器</strong>、检测用于 vdom 渲染优化的静态树的<strong>优化器</strong>和将 AST 语法树生成渲染函数的<strong>代码生成器</strong>。</p>
+</li>
+<li><p><code>core</code>：Vue.js 核心代码，包含通用、跨平台的代码。主要有观察者、虚拟 dom、vue 实例化、全局 api 和内置组件。</p>
+</li>
+<li><p><code>server</code>：包含与服务端渲染相关的代码。</p>
+</li>
+<li><p><code>platform</code>：Vue.js 是一个跨平台的 MVVM 框架，可以在 web 上运行，也可以配合 weex 在 native 客户端上运行。每个平台都有一个入口，都位于该目录下。</p>
+</li>
+<li><p><code>sfc</code>：包含将 .vue 单文件解析为 JavaScript 对象的代码，用于 <code>vue-template-compiler</code> 包。</p>
+</li>
+<li><p><code>shared</code>：包含通用的工具方法，用于浏览器端的 vue.js 和服务器端的 vue.js。</p>
+</li>
+</ul>
+</li>
+<li><p><code>tests</code>：所有测试代码，单元测试代码是用 <a href="https://jasmine.github.io/2.3/introduction.html" target="_blank" rel="external">Jasmine</a> 实现并与 <a href="http://karma-runner.github.io/0.13/index.html" target="_blank" rel="external">Karma</a> 一起运行。e2e 测试是为 <a href="http://nightwatchjs.org/" target="_blank" rel="external">Nightwatch.js</a> 编写并与之一起运行。</p>
+</li>
+<li><p><code>types</code>：使用 TypeScript 类型注释，并且包含了测试代码。</p>
+</li>
+</ul>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure" target="_blank" rel="external">https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure</a></p>
+<p><a href="https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler" target="_blank" rel="external">https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler</a></p>
+<p><a href="https://segmentfault.com/a/1190000016426470" target="_blank" rel="external">https://segmentfault.com/a/1190000016426470</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/04/JavaScript-静态类型检查工具：Flow/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -949,226 +1190,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/12/18/第五章-初始化与清理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/18/第五章-初始化与清理/" itemprop="url">第五章 初始化与清理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T21:34:19+08:00">
-                2017-12-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java/" itemprop="url" rel="index">
-                    <span itemprop="name">Java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/12/18/第五章-初始化与清理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/18/第五章-初始化与清理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/12/18/第五章-初始化与清理/" class="leancloud_visitors" data-flag-title="第五章 初始化与清理">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、构造器"><a href="#一、构造器" class="headerlink" title="一、构造器"></a>一、构造器</h1><h3 id="1、要点"><a href="#1、要点" class="headerlink" title="1、要点"></a>1、要点</h3><ul>
-<li><p>构造器的名称必须与类名完全相同；</p>
-</li>
-<li><p>构造器是一种特殊类型的方法，没有返回值；</p>
-</li>
-<li><p>构造器可以重载；</p>
-</li>
-<li><p>若无构造器则会默认创建无参构造器；否则不会；</p>
-</li>
-<li><p>构造器有助于减少错误，并使代码更易于阅读。</p>
-</li>
-</ul>
-<h3 id="2、构造器中调用构造器"><a href="#2、构造器中调用构造器" class="headerlink" title="2、构造器中调用构造器"></a>2、构造器中调用构造器</h3><ul>
-<li><p>必须将构造器调用置于最起始处，否则编译器会报错；</p>
-</li>
-<li><p>使用 this 调用构造器时，不能调用多次；</p>
-</li>
-<li><p>除构造器外，编译器禁止在其它任何方法中调用构造器。</p>
-</li>
-</ul>
-<h1 id="二、方法重载"><a href="#二、方法重载" class="headerlink" title="二、方法重载"></a>二、方法重载</h1><ul>
-<li><p>方法名相同</p>
-</li>
-<li><p>必须有独一无二的参数类型列表</p>
-</li>
-<li><p>参数顺序不同也能区分（不推荐）</p>
-</li>
-<li><p>传入的数据类型（实际参数类型）小于方法中声明的形式参数类型，实际数据类型就会被提升；反之，如果传入的数据类型（实际参数类型）大于方法中声明的形式参数类型，实际数据类型就得通过类型转换执行窄化操作，否则编译器会报错。</p>
-</li>
-<li><p>不能通过方法返回值区分</p>
-</li>
-</ul>
-<h1 id="三、关键字"><a href="#三、关键字" class="headerlink" title="三、关键字"></a>三、关键字</h1><h3 id="1、this"><a href="#1、this" class="headerlink" title="1、this"></a>1、this</h3><ul>
-<li><p>对当前对象的引用；</p>
-</li>
-<li><p>只能在方法内部使用</p>
-</li>
-</ul>
-<h3 id="2、static"><a href="#2、static" class="headerlink" title="2、static"></a>2、static</h3><ul>
-<li><p>static 方法里不能使用关键字 this；</p>
-</li>
-<li><p>static 方法内部不能调用非静态方法；</p>
-</li>
-<li><p>非静态方法内部可以调用静态方法；</p>
-</li>
-</ul>
-<h1 id="成员初始化"><a href="#成员初始化" class="headerlink" title="成员初始化"></a>成员初始化</h1><ul>
-<li><p>类的数据成员（即字段）若未初始化，系统则会指定默认值；局部变量若未初始化，编译器则会报错；</p>
-</li>
-<li><p>无法阻止自动初始化的进行，它将在构造器被调用之前发生；</p>
-</li>
-</ul>
-<h3 id="初始化顺序"><a href="#初始化顺序" class="headerlink" title="初始化顺序"></a>初始化顺序</h3><ul>
-<li><p>在类的内部，变量定义的先后顺序决定了初始化的顺序。即使变量定义散布于方法定义之间，它们仍旧会在任何方法（包括构造器）被调用之前得到初始化；（变量优先于构造器和方法初始化）</p>
-</li>
-<li><p>静态变量优先于非静态变量初始化；</p>
-</li>
-<li><p>创建一个类的多个实例时，静态变量只初始化一次，非静态变量每次被初始化；</p>
-</li>
-<li><p>对于静态块，首次创建该类对象或首次访问静态块成员才会被初始化；</p>
-</li>
-</ul>
-<h3 id="数组初始化"><a href="#数组初始化" class="headerlink" title="数组初始化"></a>数组初始化</h3><ul>
-<li>编译器不允许指定数组的大小</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1218,7 +1239,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

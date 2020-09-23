@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2020-09-04T15:41:07.428Z</updated>
+  <updated>2020-09-23T15:12:37.988Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -14,6 +14,69 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>响应式对象一：data</title>
+    <link href="http://panzeyong.com/2020/09/23/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%AF%B9%E8%B1%A1%E4%B8%80%EF%BC%9Adata/"/>
+    <id>http://panzeyong.com/2020/09/23/响应式对象一：data/</id>
+    <published>2020-09-23T15:10:46.000Z</published>
+    <updated>2020-09-23T15:12:37.988Z</updated>
+    
+    <content type="html"><![CDATA[<p>响应式对象，简单来说，就是对象拥有 <code>setter</code> 和 <code>getter</code> 方法。也就是说，给对象属性添加 <code>set</code> 和 <code>get</code>，<code>set</code> 提供 <code>setter</code> 方法，而 <code>get</code> 提供 <code>getter</code> 方法。当访问属性触发 <code>getter</code> 方法；当修改属性时触发 <code>setter</code>。</p>
+<p>Vue 将 <code>data</code>、<code>props</code> 变为响应式对象。这里先分析 Vue 是如何把 <code>data</code> 变成响应式对象的。</p>
+<p>在 Vue 初始化 <code>_init</code> 的过程中，有这么一个方法：<code>initState</code> 被执行，其实现逻辑如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initState</span> (<span class="params">vm: Component</span>) </span>&#123;</div><div class="line">  vm._watchers = []</div><div class="line">  <span class="keyword">const</span> opts = vm.$options</div><div class="line">  <span class="keyword">if</span> (opts.props) initProps(vm, opts.props)</div><div class="line">  <span class="keyword">if</span> (opts.methods) initMethods(vm, opts.methods)</div><div class="line">  <span class="keyword">if</span> (opts.data) &#123;</div><div class="line">    initData(vm)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    observe(vm._data = &#123;&#125;, <span class="literal">true</span> <span class="comment">/* asRootData */</span>)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (opts.computed) initComputed(vm, opts.computed)</div><div class="line">  <span class="keyword">if</span> (opts.watch &amp;&amp; opts.watch !== nativeWatch) &#123;</div><div class="line">    initWatch(vm, opts.watch)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法的作用是对 <code>props</code>、<code>methods</code>、<code>data</code>、<code>computed</code> 和 <code>watch</code> 做了一系列初始化操作。而将 <code>data</code> 变成响应式对象的实现逻辑就在 <code>initData</code> 方法里，具体来看下其实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initData</span> (<span class="params">vm: Component</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> data = vm.$options.data</div><div class="line">  data = vm._data = <span class="keyword">typeof</span> data === <span class="string">'function'</span></div><div class="line">    ? getData(data, vm)</div><div class="line">    : data || &#123;&#125;</div><div class="line">  <span class="keyword">if</span> (!isPlainObject(data)) &#123;</div><div class="line">    data = &#123;&#125;</div><div class="line">    process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</div><div class="line">      <span class="string">'data functions should return an object:\n'</span> +</div><div class="line">      <span class="string">'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function'</span>,</div><div class="line">      vm</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// proxy data on instance</span></div><div class="line">  <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(data)</div><div class="line">  <span class="keyword">const</span> props = vm.$options.props</div><div class="line">  <span class="keyword">const</span> methods = vm.$options.methods</div><div class="line">  <span class="keyword">let</span> i = keys.length</div><div class="line">  <span class="keyword">while</span> (i--) &#123;</div><div class="line">    <span class="keyword">const</span> key = keys[i]</div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (methods &amp;&amp; hasOwn(methods, key)) &#123;</div><div class="line">        warn(</div><div class="line">          <span class="string">`Method "<span class="subst">$&#123;key&#125;</span>" has already been defined as a data property.`</span>,</div><div class="line">          vm</div><div class="line">        )</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (props &amp;&amp; hasOwn(props, key)) &#123;</div><div class="line">      process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</div><div class="line">        <span class="string">`The data property "<span class="subst">$&#123;key&#125;</span>" is already declared as a prop. `</span> +</div><div class="line">        <span class="string">`Use prop default value instead.`</span>,</div><div class="line">        vm</div><div class="line">      )</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!isReserved(key)) &#123;</div><div class="line">      proxy(vm, <span class="string">`_data`</span>, key)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// observe data</span></div><div class="line">  observe(data, <span class="literal">true</span> <span class="comment">/* asRootData */</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 <code>3</code> ~ <code>5</code> 行判断 <code>data</code> 数据类型是否为 <code>function</code>，满足的话则调用方法 <code>getData(data, vm)</code>，执行其逻辑返回对象 <code>data</code>；否则的话则返回 <code>data</code>。将其返回结果赋值给 <code>data</code> 和 <code>vm._data</code>。</p>
+<p>需要注意的是组件里 <code>data</code> 是一个函数，好处是每个 Vue 组件是一个 Vue 实例，通过函数返回的 <code>data</code> 对象保证其独立性，组件之间互不影响。</p>
+<p>第 <code>6</code> ~ <code>13</code> 行判断 <code>data</code> 数据类型是为对象，不是对象的话则开发环境下抛出警告。</p>
+<p>第 <code>19</code> ~ <code>38</code> 行遍历 <code>data</code> 属性，检验其键名是否与 <code>methods</code> 或者 <code>props</code> 对象包含的键名相同。如果存在相同的话，则在开发环境下抛出警告。除此之外，将 <code>data</code> 对象属性代理到 Vue 实例上，即调用方法 <code>proxy(vm,</code>_data<code>, key)</code>。那么来看下是如何实现代理的？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">proxy</span> (<span class="params">target: Object, sourceKey: string, key: string</span>) </span>&#123;</div><div class="line">  sharedPropertyDefinition.get = <span class="function"><span class="keyword">function</span> <span class="title">proxyGetter</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>[sourceKey][key]</div><div class="line">  &#125;</div><div class="line">  sharedPropertyDefinition.set = <span class="function"><span class="keyword">function</span> <span class="title">proxySetter</span> (<span class="params">val</span>) </span>&#123;</div><div class="line">    <span class="keyword">this</span>[sourceKey][key] = val</div><div class="line">  &#125;</div><div class="line">  <span class="built_in">Object</span>.defineProperty(target, key, sharedPropertyDefinition)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实现逻辑很简单，先在对象 <code>sharedPropertyDefinition</code> 定义 <code>set</code> 和 <code>get</code>，然后 <code>sharedPropertyDefinition</code> 作为 <code>key</code> 属性描述符，调用方法 <code>Object.defineProperty</code> 在 Vue 实例上定义属性 <code>key</code> 以及其属性描述符。通过一个简单的例子来分析下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Vue(&#123;</div><div class="line">	mounted() &#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.message);</div><div class="line">	&#125;,</div><div class="line">	</div><div class="line">	data () &#123;</div><div class="line">		<span class="keyword">return</span> &#123;</div><div class="line">			message: <span class="string">'Hello World'</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>不知会不会有这样的疑问：为什么 <code>this.message</code> 就能访问到呢？这是因为 Vue 将 <code>data</code> 属性代理到 Vue 实例上，而此时 <code>this</code> 指向 Vue 实例，所以能访问到；而实际上真正访问到其值是通过 <code>this._data.message</code> 获取的。<code>_data</code> 是 Vue 私有属性，一般不让外部访问，通过代理到 Vue 实例来访问其值。</p>
+<p>回到 <code>initData</code> 方法，<code>observe(data, true /* asRootData */)</code> 是将 <code>data</code> 变成响应式对象的核心方法。那么来看下其具体实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Attempt to create an observer instance for a value,</div><div class="line"> * returns the new observer if successfully observed,</div><div class="line"> * or the existing observer if the value already has one.</div><div class="line"> */</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">observe</span> (<span class="params">value: any, asRootData: ?boolean</span>): <span class="title">Observer</span> | <span class="title">void</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!isObject(value) || value <span class="keyword">instanceof</span> VNode) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">let</span> ob: Observer | <span class="keyword">void</span></div><div class="line">  <span class="keyword">if</span> (hasOwn(value, <span class="string">'__ob__'</span>) &amp;&amp; value.__ob__ <span class="keyword">instanceof</span> Observer) &#123;</div><div class="line">    ob = value.__ob__</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (</div><div class="line">    shouldObserve &amp;&amp;</div><div class="line">    !isServerRendering() &amp;&amp;</div><div class="line">    (<span class="built_in">Array</span>.isArray(value) || isPlainObject(value)) &amp;&amp;</div><div class="line">    <span class="built_in">Object</span>.isExtensible(value) &amp;&amp;</div><div class="line">    !value._isVue</div><div class="line">  ) &#123;</div><div class="line">    ob = <span class="keyword">new</span> Observer(value)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (asRootData &amp;&amp; ob) &#123;</div><div class="line">    ob.vmCount++</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> ob</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 <code>7</code> ~ <code>9</code> 行对 <code>value</code> 进行校验，如果其数据类型不是对象或者是 <code>VNode</code> 实例，则返回。</p>
+<p><code>data</code> 在转换为响应式对象的过程中，添加属性 <code>__ob__</code>，指向 Observer 实例。因此第 <code>11</code> ~ <code>21</code> 行首先判断 <code>data</code> 是否有属性 <code>__ob__</code>，满足的话则将其赋值给 <code>ob</code>，并且返回 <code>ob</code>；否则创建 Observer 实例，并将其返回。</p>
+<p>那么是如何创建 Observer 实例的呢？具体实现逻辑如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constructor</span> (value: any) &#123;</div><div class="line">  <span class="keyword">this</span>.value = value</div><div class="line">  <span class="keyword">this</span>.dep = <span class="keyword">new</span> Dep()</div><div class="line">  <span class="keyword">this</span>.vmCount = <span class="number">0</span></div><div class="line">  def(value, <span class="string">'__ob__'</span>, <span class="keyword">this</span>)</div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</div><div class="line">    <span class="keyword">if</span> (hasProto) &#123;</div><div class="line">      protoAugment(value, arrayMethods)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      copyAugment(value, arrayMethods, arrayKeys)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.observeArray(value)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">this</span>.walk(value)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先对三个变量进行初始化：<code>value</code>、<code>dep</code>、<code>vmCount</code>；然后在 <code>data</code> 定义属性 <code>__ob__</code>，指向 Observer 实例；接着判断 <code>value</code> 数据类型是否为数组，是的话则进入第 <code>7</code> ~ <code>12</code>；否则执行第 <code>14</code> 行。</p>
+<p>先来看下第 <code>14</code> 行，即 <code>walk</code> 的具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Walk through all properties and convert them into</div><div class="line"> * getter/setters. This method should only be called when</div><div class="line"> * value type is Object.</div><div class="line"> */</div><div class="line">walk (obj: <span class="built_in">Object</span>) &#123;</div><div class="line">  <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(obj)</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keys.length; i++) &#123;</div><div class="line">    defineReactive(obj, keys[i])</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实现逻辑很简单，即遍历 <code>obj</code>，然后调用方法 <code>defineReactive</code>。那么 <code>defineReactive</code> 方法又是什么呢？其作用是在对象上定义响应式属性。来看下具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Define a reactive property on an Object.</div><div class="line"> */</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span> (<span class="params"></span></span></div><div class="line">  obj: Object,</div><div class="line">  key: string,</div><div class="line">  val: any,</div><div class="line">  customSetter?: ?Function,</div><div class="line">  shallow?: boolean</div><div class="line">) &#123;</div><div class="line">  <span class="keyword">const</span> dep = <span class="keyword">new</span> Dep()</div><div class="line"></div><div class="line">  <span class="keyword">const</span> property = <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, key)</div><div class="line">  <span class="keyword">if</span> (property &amp;&amp; property.configurable === <span class="literal">false</span>) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// cater for pre-defined getter/setters</span></div><div class="line">  <span class="keyword">const</span> getter = property &amp;&amp; property.get</div><div class="line">  <span class="keyword">const</span> setter = property &amp;&amp; property.set</div><div class="line">  <span class="keyword">if</span> ((!getter || setter) &amp;&amp; <span class="built_in">arguments</span>.length === <span class="number">2</span>) &#123;</div><div class="line">    val = obj[key]</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">let</span> childOb = !shallow &amp;&amp; observe(val)</div><div class="line">  <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</div><div class="line">    enumerable: <span class="literal">true</span>,</div><div class="line">    configurable: <span class="literal">true</span>,</div><div class="line">    get: <span class="function"><span class="keyword">function</span> <span class="title">reactiveGetter</span> (<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</div><div class="line">      <span class="keyword">if</span> (Dep.target) &#123;</div><div class="line">        dep.depend()</div><div class="line">        <span class="keyword">if</span> (childOb) &#123;</div><div class="line">          childOb.dep.depend()</div><div class="line">          <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</div><div class="line">            dependArray(value)</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> value</div><div class="line">    &#125;,</div><div class="line">    set: <span class="function"><span class="keyword">function</span> <span class="title">reactiveSetter</span> (<span class="params">newVal</span>) </span>&#123;</div><div class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</div><div class="line">      <span class="comment">/* eslint-disable no-self-compare */</span></div><div class="line">      <span class="keyword">if</span> (newVal === value || (newVal !== newVal &amp;&amp; value !== value)) &#123;</div><div class="line">        <span class="keyword">return</span></div><div class="line">      &#125;</div><div class="line">      <span class="comment">/* eslint-enable no-self-compare */</span></div><div class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; customSetter) &#123;</div><div class="line">        customSetter()</div><div class="line">      &#125;</div><div class="line">      <span class="comment">// #7981: for accessor properties without setter</span></div><div class="line">      <span class="keyword">if</span> (getter &amp;&amp; !setter) <span class="keyword">return</span></div><div class="line">      <span class="keyword">if</span> (setter) &#123;</div><div class="line">        setter.call(obj, newVal)</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        val = newVal</div><div class="line">      &#125;</div><div class="line">      childOb = !shallow &amp;&amp; observe(newVal)</div><div class="line">      dep.notify()</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 <code>11</code> 行创建 <code>dep</code> 实例，用于后续依赖收集。</p>
+<p>第 <code>13</code> ~ <code>16</code> 行获取 <code>key</code> 的属性描述符，并且判断该属性是否可配置。</p>
+<p>第 <code>21</code> ~ <code>23</code> 行在满足条件的情况下，获取 <code>key</code> 对应的值。</p>
+<p>第 <code>25</code> 行作用是属性 <code>key</code> 对应的值是对象或者数组，则会递归遍历其属性，将它们设置为响应式属性。</p>
+<p>第 <code>26</code> ~ <code>62</code> 行是将属性设置成响应式属性的核心逻辑，即调用方法 <code>Object.defineProperty</code> 在属性上设置 <code>set</code> 和 <code>get</code>，使其变成响应式属性，进而使拥有该属性的对象变成响应式对象。</p>
+<p>当访问属性值时，则会触发 <code>reactiveGetter</code> 方法，该方法会做一些依赖收集的工作；而当为属性赋值时，则会触发 <code>reactiveSetter</code> 方法，该方法会做派发更新的工作，即通知监听它的观察者需要做更新操作。至于如何做依赖收集和派发更新，后续章节再做分析。</p>
+<p>核心方法 <code>defineReactive</code> 分析完了，再回到 <code>Observer</code> 实例的创建，来看下 <code>data</code> 是数组时，又是怎么实现的呢？</p>
+<p>第 <code>7</code> ~ <code>11</code> 行实际上在 <code>value</code> 定义数组方法。核心逻辑在第 <code>12</code> 行，看下其具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">/**</span></div><div class="line">   * Observe a list of Array items.</div><div class="line">   */</div><div class="line">  observeArray (items: <span class="built_in">Array</span>&lt;any&gt;) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = items.length; i &lt; l; i++) &#123;</div><div class="line">      observe(items[i])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>遍历数组每个元素，调用方法 <code>observe</code> 将其转换为响应式。</p>
+<p>至此，<code>data</code> 对象如何转换成响应式对象已分析完了。下面通过一张图来概述其整体流程：</p>
+<p><img src="/images/vue/reactive_data.png" alt=""></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ul>
+<li><a href="https://ustbhuangyi.github.io/vue-analysis/v2/reactive/reactive-object.html#object-defineproperty" target="_blank" rel="external">响应式对象
+</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;响应式对象，简单来说，就是对象拥有 &lt;code&gt;setter&lt;/code&gt; 和 &lt;code&gt;getter&lt;/code&gt; 方法。也就是说，给对象属性添加 &lt;code&gt;set&lt;/code&gt; 和 &lt;code&gt;get&lt;/code&gt;，&lt;code&gt;set&lt;/code&gt; 提供 &lt;code
+    
+    </summary>
+    
+      <category term="Vue" scheme="http://panzeyong.com/categories/Vue/"/>
+    
+    
+      <category term="Vue.js 源码解析" scheme="http://panzeyong.com/tags/Vue-js-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    
+  </entry>
   
   <entry>
     <title>createComponent 实现原理</title>
@@ -1671,256 +1734,6 @@
     <summary type="html">
     
       &lt;h1 id=&quot;一、概述&quot;&gt;&lt;a href=&quot;#一、概述&quot; class=&quot;headerlink&quot; title=&quot;一、概述&quot;&gt;&lt;/a&gt;一、概述&lt;/h1&gt;&lt;p&gt;Activity 应用组件，是 Android 程序与用户交互的窗口。通常来说，Activity 呈现给用户的是充满整个窗口
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>第十三章 事件</title>
-    <link href="http://panzeyong.com/2017/11/04/%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-%E4%BA%8B%E4%BB%B6/"/>
-    <id>http://panzeyong.com/2017/11/04/第十三章-事件/</id>
-    <published>2017-11-04T02:40:35.000Z</published>
-    <updated>2017-12-05T11:47:11.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、事件流"><a href="#一、事件流" class="headerlink" title="一、事件流"></a>一、事件流</h1><p>事件流描述的是在页面上点击元素时，从页面中接收事件的顺序。对于事件流的概念有两种说发，一种是事件冒泡流（IE 团队），一种是事件捕获流（Netscape Communicator 团队）。</p>
-<h3 id="1、事件冒泡"><a href="#1、事件冒泡" class="headerlink" title="1、事件冒泡"></a>1、事件冒泡</h3><p>IE 的 事件流叫做事件冒泡，即事件开始时由最具体的元素（元素中嵌套层次最深的那个节点）接收，然后逐级向上传播到较为不具体的节点（文档）。简单来说就是从下往上进行传播。以下面的 HTML 页面为例：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Event Bubbling Example<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"myDiv"</span>&gt;</span>Click me<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>点击元素 &lt;div&gt; 后事件冒泡的过程如下图：</p>
-<p><img src="/images/javascript/event/event_bubble.png" alt=""></p>
-<p>注：IE5.5 及更早版本中的事件冒泡会跳过 &lt;html&gt; 元素（从 &t;body&gt;直接跳转到 document）。IE9、Firefox、Chrome 和 Safari 则将事件一直冒泡到 window 对象。</p>
-<h3 id="2、事件捕获"><a href="#2、事件捕获" class="headerlink" title="2、事件捕获"></a>2、事件捕获</h3><p>Netscape Communicator 的事件流叫做事件捕获，思想是不太具体的节点应该更早地接收到事件，而最具体的节点应该是最后接收到事件。仍以前面 HTML 页面为例子，点击元素 &lt;div&gt; 后事件捕获的过程如下图：</p>
-<p><img src="/images/javascript/event/event_catch.png" alt=""></p>
-<h3 id="3、DOM-事件流"><a href="#3、DOM-事件流" class="headerlink" title="3、DOM 事件流"></a>3、DOM 事件流</h3><p>“DOM2 级事件” 规定的事件流包括三个阶段：</p>
-<ul>
-<li><p>事件捕获阶段</p>
-</li>
-<li><p>处于目标阶段；</p>
-</li>
-<li><p>事件冒泡阶段。</p>
-</li>
-</ul>
-<p>仍以上面 HTML 页面为例子，单击 &lt;div&gt; 元素事件触发顺序如下图：</p>
-<p><img src="/images/javascript/event/event_stream.png" alt=""></p>
-<h1 id="二、事件处理程序"><a href="#二、事件处理程序" class="headerlink" title="二、事件处理程序"></a>二、事件处理程序</h1><p>响应某个事件的函数就叫做事件处理程序（或事件侦听器）。</p>
-<h3 id="1、HTML-事件处理程序"><a href="#1、HTML-事件处理程序" class="headerlink" title="1、HTML 事件处理程序"></a>1、HTML 事件处理程序</h3><p>某个元素支持的每种事件，都可以使用一个与相应事件处理程序同名的 HTML 特性来指定。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;input type=<span class="string">"button"</span> value=<span class="string">"Click me"</span> onclick=<span class="string">"alert('Clicked')"</span> /&gt;</div></pre></td></tr></table></figure>
-<p>使用这种方式缺点：</p>
-<ul>
-<li><p>时差问题。用户可能会在 HTML 元素一出现在页面上就触发相应的事件，但当时的事件处理程序有可能尚不具备执行条件；</p>
-</li>
-<li><p>这样扩展事件处理程序的作用域链在不同浏览器中会导致不同结果；</p>
-</li>
-<li><p>HTML 与 JavaScript 代码紧密耦合。</p>
-</li>
-</ul>
-<h3 id="2、DOM0-级事件处理程序"><a href="#2、DOM0-级事件处理程序" class="headerlink" title="2、DOM0 级事件处理程序"></a>2、DOM0 级事件处理程序</h3><p>通过 JavaScript 指定事件处理程序的传统方式，就是将一个函数赋值给一个事件处理程序属性。以这种方式添加的事件处理程序会在事件流的冒泡阶段被处理。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> click = <span class="built_in">document</span>.getElementById(<span class="string">"click"</span>);</div><div class="line">    click.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        alert(<span class="keyword">this</span>.id);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用这种方式的优点：</p>
-<ul>
-<li><p>简单；</p>
-</li>
-<li><p>具有跨浏览器的优势。</p>
-</li>
-</ul>
-<h3 id="3、DOM2-级事件处理程序"><a href="#3、DOM2-级事件处理程序" class="headerlink" title="3、DOM2 级事件处理程序"></a>3、DOM2 级事件处理程序</h3><p>用于处理指定和删除事件处理程序的操作：<strong>addEventListener()</strong> 和 <strong>removeEventListener()</strong>。这两个方法都接受 3 个参数：要处理的事件名、作为事件处理程序的函数和一个布尔值。最后一个参数如果是 true，表示在捕获阶段调用事件处理程序；如果是 false，表示在冒泡阶段调用事件处理程序。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> click = <span class="built_in">document</span>.getElementById(<span class="string">"click"</span>);</div><div class="line"><span class="keyword">var</span> handler = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    alert(<span class="keyword">this</span>.id);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">click.addEventListener(<span class="string">"click"</span>, handler, <span class="literal">false</span>);</div><div class="line"></div><div class="line">click.removeEventListener(<span class="string">"click"</span>, handler, <span class="literal">false</span>);</div></pre></td></tr></table></figure>
-<h3 id="4、IE-事件处理程序"><a href="#4、IE-事件处理程序" class="headerlink" title="4、IE 事件处理程序"></a>4、IE 事件处理程序</h3><p>IE 实现了与 DOM 中类似的两个方法：<strong>attachEvent()</strong> 和 <strong>detachEvent()</strong>。这两个方法接受相同的两个参数：事件处理程序名称和事件处理程序函数，事件被添加到冒泡阶段。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> click = <span class="built_in">document</span>.getElementById(<span class="string">"click"</span>);</div><div class="line"><span class="keyword">var</span> handler = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    alert(<span class="keyword">this</span>.id);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">click.addachEvent(<span class="string">"onclick"</span>, handler);</div></pre></td></tr></table></figure>
-<p>这两个方法的使用与 DOM0 级方法使用的区别在于事件处理程序的作用域：</p>
-<ul>
-<li><p>在使用 DOM0 级方法的情况下，事件处理程序会在其所属元素的作用域内运行；</p>
-</li>
-<li><p>在使用 <strong>attachEvent()</strong> 方法的情况下，事件处理程序会在全局作用域中运行，此时 this 等于 window。</p>
-</li>
-</ul>
-<h3 id="5、跨浏览器的事件处理程序"><a href="#5、跨浏览器的事件处理程序" class="headerlink" title="5、跨浏览器的事件处理程序"></a>5、跨浏览器的事件处理程序</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> EventUtil = &#123;</div><div class="line">    addHandler: <span class="function"><span class="keyword">function</span>(<span class="params">element, type, handler</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (element.addEventListener) &#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="string">"addEventListener"</span>);</div><div class="line">            element.addEventListener(type, handler, <span class="literal">false</span>);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.addachEvent) &#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="string">"addachEvent"</span>);</div><div class="line">            element.addachEvent(<span class="string">"on"</span> + type, handler);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            element[<span class="string">"on"</span> + type] + handler;</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">	removeHandler: <span class="function"><span class="keyword">function</span>(<span class="params">element, type, handler</span>) </span>&#123;</div><div class="line">		<span class="keyword">if</span> (element.removeEventListener) &#123;</div><div class="line">			element.removeEventListener(type, handler, <span class="literal">false</span>);</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.detachEvent) &#123;</div><div class="line">			element.detachEvent(<span class="string">"on"</span> + type, handler);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			element[<span class="string">"on"</span> + type] = <span class="literal">null</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h1 id="三、事件对象"><a href="#三、事件对象" class="headerlink" title="三、事件对象"></a>三、事件对象</h1><p>在触发 DOM 上的某个事件时，会产生一个事件对象 event，这个对象中包含着所有与事件有关的信息。包括导致事件的元素、事件的类型以及其他特定事件相关信息。</p>
-<h3 id="1、DOM-中的事件对象"><a href="#1、DOM-中的事件对象" class="headerlink" title="1、DOM 中的事件对象"></a>1、DOM 中的事件对象</h3><p>DOM 事件对象 event 包含着相关的属性和方法，如下表格：</p>
-<table><tr style="text-align: center"><td>属性/方法</td><td>类型</td><td>读/写</td><td>说明</td></tr><tr style="text-align: center"><td>bubbles</td><td>Boolean</td><td>只读</td><td>表示事件是否冒泡</td></tr><tr style="text-align: center"><td>cancelable</td><td>Boolean</td><td>只读</td><td>表明是否可以取消事件的默认行为</td></tr><tr style="text-align: center"><td>currentTarget</td><td>Element</td><td>只读</td><td>其事件处理程序当前正在处理事件的那个元素</td></tr><tr style="text-align: center"><td>defaultPrevented</td><td>Boolean</td><td>只读</td><td>为 true 表示已经调用了 preventDefault() （DOM3 级事件中新增）</td></tr><tr style="text-align: center"><td>detail</td><td>Integer</td><td>只读</td><td>与事件相关的细节信息</td></tr><tr style="text-align: center"><td>eventPhase</td><td>Integer</td><td>只读</td><td>调用事件处理程序的阶段：1 表示捕获阶段，2 表示 “处于目标”， 3 表示冒泡阶段</td></tr><tr style="text-align: center"><td>preventDefault()</td><td>Function</td><td>只读</td><td>取消事件的默认行为。如果是 cancelable 是 true，则可以使用这个方法</td></tr><tr style="text-align: center"><td>stopImmediate<br>Propagation()</td><td>Function</td><td>只读</td><td>取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用（DOM3 级事件中新增）</td></tr><tr style="text-align: center"><td>stopPropagation()</td><td>Function</td><td>只读/td&gt;</td><td>取消事件的进一步捕获或冒泡。如果 bubbles 为 true，则可以使用这个方法</td></tr><tr style="text-align: center"><td>target</td><td>Element</td><td>只读</td><td>事件的目标</td></tr><tr style="text-align: center"><td>trusted</td><td>Boolean</td><td>只读</td><td>为 true 表示事件时浏览器生产的。为 false 表示事件时由开发人员通过 JavaScript 创建的（DOM3 级事件新增）</td></tr><tr style="text-align: center"><td>type</td><td>String</td><td>只读</td><td>被触发的事件的类型</td></tr><tr style="text-align: center"><td>view</td><td>AbstractView</td><td>只读</td><td>与事件关联的抽象视图。等同于发送事件的 window 对象</td> </tr></table>
-
-<h3 id="2、IE-中的事件对象"><a href="#2、IE-中的事件对象" class="headerlink" title="2、IE 中的事件对象"></a>2、IE 中的事件对象</h3><p>IE 的 event 对象同样也包含着与创建它的事件相关属性和方法，如下表：</p>
-<table><tr><td>属性/方法</td><td>类型</td><td>读/写</td><td>说明</td></tr><tr><td>cancelBubble</td><td>Boolean</td><td>读/写</td><td>默认值为 false，但将其设置为 true 就可以取消事件冒泡（与 DOM 中的 stopPropagation() 方法的作用相同）</td></tr><tr><td>returnValue</td><td>Boolean</td><td>读/写</td><td>默认值为 true，当将其设置为 false 就可以取消事件的默认行为（与 DOM 中的 preventDefault() 方法的作用相同）</td></tr><tr><td>srcElement</td><td>Element</td><td>只读</td><td>事件的目标（与 DOM 中的 target 属性相同）</td></tr><tr><td>type</td><td>String</td><td>只读</td><td>被触发的事件类型</td></tr></table>
-
-<h3 id="3、跨浏览器的事件对象"><a href="#3、跨浏览器的事件对象" class="headerlink" title="3、跨浏览器的事件对象"></a>3、跨浏览器的事件对象</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> EventUtil = &#123;</div><div class="line">    getEvent: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> event ? event : <span class="built_in">window</span>.event;</div><div class="line">    &#125;,</div><div class="line">    </div><div class="line">    getTarget: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> event.target || event.srcElement;</div><div class="line">    &#125;,</div><div class="line">    </div><div class="line">    priventDefault: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (event.priventDefault) &#123;</div><div class="line">            event.priventDefault();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            event.returnValue = <span class="literal">false</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    </div><div class="line">    stopPropagation: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (event.stopPropagation) &#123;</div><div class="line">            event.stopPropagation();</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            event.cancelBubble = <span class="literal">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h1 id="四、事件类型"><a href="#四、事件类型" class="headerlink" title="四、事件类型"></a>四、事件类型</h1><p>DOM3 级事件规定了以下几类事件：</p>
-<ul>
-<li><p>UI（User Interface，用户界面）事件，当用户与页面上的元素交互时触发；</p>
-</li>
-<li><p>焦点事件，当元素获得或失去焦点时触发；</p>
-</li>
-<li><p>鼠标事件，当用户通过鼠标在页面上执行操作时触发；</p>
-</li>
-<li><p>滚轮事件，当使用鼠标滚轮（或类似设备）时触发；</p>
-</li>
-<li><p>文本事件，当在文档中输入文本时触发；</p>
-</li>
-<li><p>键盘事件，当用户通过键盘在页面上执行操作时触发；</p>
-</li>
-<li><p>合成事件，当为 IME（Input Method Editor，输入法编辑器）输入字符时触发；</p>
-</li>
-<li><p>变动（mutation）事件，当底层 DOM 结构发生变化时触发。</p>
-</li>
-</ul>
-<h3 id="1、UI-事件"><a href="#1、UI-事件" class="headerlink" title="1、UI 事件"></a>1、UI 事件</h3><ul>
-<li><p><strong>load</strong>：当页面完全加载后在 window 上触发，当所有框架都加载完毕时在框架集上触发，当图像加载完毕时在 &lt;img&gt; 元素上面触发，或者当嵌入内容加载完毕时在 &lt;object&gt; 元素上面触发。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(<span class="built_in">window</span>, <span class="string">"load"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line"> alert(<span class="string">"Loaded!"</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>unload</strong>：当页面完全卸载后在 window 上面触发，当所有框架都卸载后在框架集上面触发，或者当嵌入的内容卸载完毕后在 &lt;object&gt; 元素上面发。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(<span class="built_in">window</span>, <span class="string">"unload"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line"> alert(<span class="string">"Unloaded"</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>abort</strong>：在用户停止下载过程时，如果嵌入的内容没有加载完，则在 &lt;object&gt; 元素上面触发。</p>
-</li>
-<li><p><strong>error</strong>：当发生 JavaScript 错误时在 window 上面触发，当无法加载图像时在 &lt;img&gt; 元素上面触发，当无法加载嵌入内容时在 &lt;object&gt; 元素上面触发，或者当有一或多个框架无法加载时在框架集上面触发。</p>
-</li>
-<li><p><strong>select</strong>：当用户选择文本框（&lt;input&gt; 或 &lt;texterea&gt;）中的一或多个字符时触发。</p>
-</li>
-<li><p><strong>resize</strong>：当窗口或框架的大小变化时在 window 或框架上面触发。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(<span class="built_in">window</span>, <span class="string">"resize"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line"> alert(<span class="string">"Resized"</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p><strong>scroll</strong>：当用户滚动带滚动条的元素中的内容时，在该元素上面触发。&lt;body&gt; 元素中包含所加载页面的滚动条。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(<span class="built_in">window</span>, <span class="string">"scroll"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line"> <span class="keyword">if</span> (<span class="built_in">document</span>.compatMode == <span class="string">"CSS1Compat"</span>) &#123;</div><div class="line">  alert(<span class="built_in">document</span>.documentElement.scrollTop);</div><div class="line"> &#125; <span class="keyword">else</span> &#123;</div><div class="line">  alert(<span class="built_in">document</span>.body.scrollTop);</div><div class="line"> &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="2、焦点事件"><a href="#2、焦点事件" class="headerlink" title="2、焦点事件"></a>2、焦点事件</h3><p>焦点事件会在页面元素获得或失去焦点时触发。利用这些事件并与 document.hasFeature() 方法及 document.activeElement 属性配合，可以知晓用户在页面上的行踪。有以下 6 个焦点事件：</p>
-<ul>
-<li><p><strong>blur</strong>：在元素失去焦点时触发。这个事件<strong>不会冒泡</strong>；所有浏览器都支持它。</p>
-</li>
-<li><p><strong>DOMFocusIn</strong>：在元素获得焦点时触发。这个事件与 HTML 事件 focus 等价，但它<strong>冒泡</strong>。只有 <strong>Opera支持这个事件</strong>。DOM3 级事件废弃了 DOMFocusIn，选择了 focusin。</p>
-</li>
-<li><p><strong>DOMFocusOut</strong>：在元素失去焦点时触发。这个事件是 HTML 事件 blur 的通用版。只有 <strong>Opera支持这个事件</strong>。DOM3 级事件废弃了 DOMFocusOut，选择了 focusout。</p>
-</li>
-<li><p><strong>focus</strong>：在元素获得焦点时触发。这个事件不会冒泡；所有浏览器都支持它。</p>
-</li>
-<li><p><strong>focusin</strong>：在元素获得焦点时触发。这个事件与 HTML 事件 focus 等价，但它<strong>冒泡</strong>。</p>
-</li>
-<li><p><strong>focusout</strong>：在元素失去焦点时触发。这个事件时 HTML 事件 blur 的通用版本。</p>
-</li>
-</ul>
-<p>当焦点从页面中的一个元素移动到另一个元素，会依次触发下列事件：</p>
-<ul>
-<li><p>focusout 在失去焦点的元素上触发；</p>
-</li>
-<li><p>focusin 在获得焦点的元素上触发；</p>
-</li>
-<li><p>blur 在失去焦点的元素上触发；</p>
-</li>
-<li><p>DOMFocusOut 在失去焦点的元素上触发；</p>
-</li>
-<li><p>focus 子啊获得焦点的元素上触发；</p>
-</li>
-<li><p>DOMFocusIn 在获得焦点的元素上触发。</p>
-</li>
-</ul>
-<h3 id="3、鼠标与滚轮事件"><a href="#3、鼠标与滚轮事件" class="headerlink" title="3、鼠标与滚轮事件"></a>3、鼠标与滚轮事件</h3><p>DOM3 级事件中定义了 9 个鼠标事件，如下：</p>
-<ul>
-<li><p><strong>click</strong>：在用户单击主鼠标按钮（一般是左边的按钮）或者按下回车键时触发。</p>
-</li>
-<li><p><strong>dblclick</strong>：在用户双击主鼠标按钮（一般是左边的按钮）时触发。</p>
-</li>
-<li><p><strong>mousedown</strong>：在用户按下了任意鼠标按钮时触发。不能通过键盘触发这个事件。</p>
-</li>
-<li><p><strong>mouseenter</strong>：在鼠标光标从元素外部首次移动到元素范围之内时触发。这个事件<strong>不冒泡</strong>，而且在光标移动到后代元素上不会触发。</p>
-</li>
-<li><p><strong>mouseleave</strong>：在位于元素上方的鼠标光标移动到元素范围之外时触发。这个事件不冒泡，而且在光标移动到后代元素上不会触发。</p>
-</li>
-<li><p><strong>mousemove</strong>：当鼠标指针在元素内部移动时重复第触发。不能通过键盘触发这个事件。</p>
-</li>
-<li><p><strong>mouseout</strong>：在鼠标指针位于一个元素上方，然后用户将其移入另一个元素时触发。又移入的另一个元素可能位于前一个元素的外部，也可能是这个元素的子元素。不能通过键盘触发这个事件。</p>
-</li>
-<li><p><strong>mouseover</strong>：在鼠标指针位于一个元素外部，然后用户将其首次移入另一个元素边界之内时触发。不能通过键盘触发这个事件。</p>
-</li>
-<li><p><strong>mouseup</strong>：在用户释放鼠标按钮时触发。不能通过键盘触发这个事件。</p>
-</li>
-</ul>
-<p>事件触发顺序：</p>
-<ul>
-<li><p>mousedown</p>
-</li>
-<li><p>mouseup</p>
-</li>
-<li><p>click</p>
-</li>
-<li><p>mousedown</p>
-</li>
-<li><p>mouseup</p>
-</li>
-<li><p>click</p>
-</li>
-<li><p>dblclick</p>
-</li>
-</ul>
-<p>相关细节如下：</p>
-<ul>
-<li><p><strong>客户区坐标位置</strong>：事件发生时鼠标指针子啊视口中的水平和垂直坐标。这些值中不包括页面滚动的距离，因此这个位置并不表示鼠标在页面上的位置。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(btn, <span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line"> event = EventUtil.getEvent(event);</div><div class="line"> alert(<span class="string">"Client coordinates: "</span> + event.clientX + <span class="string">","</span> + event.clientY);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p><strong>页面坐标位置</strong>：表示鼠标光标在页面中的位置，因此坐标是从页面本身而非视口的左边和顶边计算的。在页面没有滚动的情况下，pageX 和 pageY 的值与 clientX 和 clientY 的值相等。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(btn, <span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    event = EventUtil.getEvent(event);</div><div class="line">    alert(<span class="string">"Page coordinates: "</span> + event.pageX + <span class="string">","</span> + event.pageY);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>屏幕坐标位置</strong>：鼠标事件发生时鼠标指针相对于整个屏幕的坐标信息。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(btn, <span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    event = EventUtil.getEvent(event);</div><div class="line">    alert(<span class="string">"Screen coordinates: "</span> + event.screenX + <span class="string">","</span> + event.screenY);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>修改键</strong>：DOM 规定了 4 个属性，表示这些修改键的状态：shiftKey、ctrlKey、altKey 和 metaKey。这些属性中包含的都是布尔值，如果相应的键被按下了，则值为 true，否则值为 false。</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">EventUtil.addHandler(btn, <span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    event = EventUtil.getEvent(event);</div><div class="line">    <span class="keyword">var</span> keys = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (event.shiftKey) &#123;</div><div class="line">        keys.push(<span class="string">"shift"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (event.ctrlKey) &#123;</div><div class="line">        keys.push(<span class="string">"ctrl"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (event.altKey) &#123;</div><div class="line">        keys.push(<span class="string">"alt"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (event.metaKey) &#123;</div><div class="line">        keys.push(<span class="string">"meta"</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    alert(<span class="string">"Keys: "</span> + keys.join(<span class="string">","</span>));</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>相关元素</strong>：DOM 通过 event 对象的 relatedTarget 属性提供了相关元素信息。这个属性只对 mouseover 和 mouseout 事件才包含值；对于其它事件，这个属性的值是 null。IE8 及之前版本不支持 relatedTarget 属性，但是提供了保存着同样信息的不同属性。在 mouseover 事件触发时，IE 的 fromElement 属性中保存了相关元素；在 mouseout 事件触发时，IE 的 toElement 属性中保存着相关元素。那么跨浏览器取得相关元素的方法实现如下：</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> EventUtil = &#123;</div><div class="line">    getRelatedTarget: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (event.relatedTarget) &#123;</div><div class="line">            <span class="keyword">return</span> event.relatedTarget;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.toElement) &#123;</div><div class="line">            <span class="keyword">return</span> event.toElement;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event.fromElement) &#123;</div><div class="line">            <span class="keyword">return</span> event.fromElement;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p><strong>鼠标按钮</strong>：对于 mousedown 和 mosueup 事件来说，则在其 event 对象存在一个 button 属性，表示按下或释放的按钮。DOM 的 button 属性可能有如下 3 个值：</p>
-<ul>
-<li><p>0 表示主鼠标按钮；（鼠标左键）</p>
-</li>
-<li><p>1 表示中间的鼠标按钮（鼠标滚轮按钮）；</p>
-</li>
-<li><p>2 表示次鼠标按钮。（鼠标右键）</p>
-</li>
-</ul>
-<p>IE8 及之前版本也提供了 button 属性，但这个属性的值与 DOM 的 button 属性有很大差异。</p>
-<ul>
-<li><p>0：表示没有按下按钮。</p>
-</li>
-<li><p>1：表示按下了主鼠标按钮。</p>
-</li>
-<li><p>2：表示按下了次鼠标按钮。</p>
-</li>
-<li><p>3：表示同时按下主、次鼠标按钮。</p>
-</li>
-<li><p>4：表示按下了中间的鼠标按钮。</p>
-</li>
-<li><p>5：表示同时按下了主鼠标按钮和中间的鼠标按钮。</p>
-</li>
-<li><p>6：表示同时按下了次鼠标按钮和中间的鼠标按钮。</p>
-</li>
-<li><p>7：表示同时按下了三个鼠标按钮。</p>
-<p> 跨浏览器鼠标按钮属性实现方法：</p>
- <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> EventUtil = &#123;</div><div class="line">    getButton: <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="built_in">document</span>.implementation.hasFeature(<span class="string">"MouseEvents"</span>, <span class="string">"2.0"</span>)) &#123;</div><div class="line">            <span class="keyword">return</span> event.button;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">switch</span>(event.button) &#123;</div><div class="line">                <span class="keyword">case</span> <span class="number">0</span>:</div><div class="line">                <span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">                <span class="keyword">case</span> <span class="number">3</span>:</div><div class="line">                <span class="keyword">case</span> <span class="number">5</span>:</div><div class="line">                <span class="keyword">case</span> <span class="number">7</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">                </div><div class="line">                <span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">                <span class="keyword">case</span> <span class="number">6</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="number">2</span>;</div><div class="line">                </div><div class="line">                <span class="keyword">case</span> <span class="number">4</span>:</div><div class="line">                    <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p><strong>更多的事件信息</strong>：”DOM2级事件” 规范在 event 对象中还提供了 detail 属性，用于给出有关事件的更多信息。对于鼠标事件来说，detail 中包含了一个数值，表示在给定位置上发生了多少次单击。</p>
-</li>
-<li><p><strong>鼠标滚轮事件</strong></p>
-</li>
-<li><p><strong>触摸设备</strong></p>
-</li>
-<li><p><strong>无障碍性问题</strong></p>
-</li>
-</ul>
-<h3 id="4、键盘与文本事件"><a href="#4、键盘与文本事件" class="headerlink" title="4、键盘与文本事件"></a>4、键盘与文本事件</h3>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、事件流&quot;&gt;&lt;a href=&quot;#一、事件流&quot; class=&quot;headerlink&quot; title=&quot;一、事件流&quot;&gt;&lt;/a&gt;一、事件流&lt;/h1&gt;&lt;p&gt;事件流描述的是在页面上点击元素时，从页面中接收事件的顺序。对于事件流的概念有两种说发，一种是事件冒泡流（IE 团队）
     
     </summary>
     

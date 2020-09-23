@@ -1,0 +1,947 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Vue.js 源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="PANJU's Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="响应式对象，简单来说，就是对象拥有 setter 和 getter 方法。也就是说，给对象属性添加 set 和 get，set 提供 setter 方法，而 get 提供 getter 方法。当访问属性触发 getter 方法；当修改属性时触发 setter。
+Vue 将 data、props 变为响应式对象。这里先分析 Vue 是如何把 data 变成响应式对象的。
+在 Vue 初始化 _ini">
+<meta property="og:type" content="article">
+<meta property="og:title" content="响应式对象一：data">
+<meta property="og:url" content="http://panzeyong.com/2020/09/23/响应式对象一：data/index.html">
+<meta property="og:site_name" content="PANJU's Note">
+<meta property="og:description" content="响应式对象，简单来说，就是对象拥有 setter 和 getter 方法。也就是说，给对象属性添加 set 和 get，set 提供 setter 方法，而 get 提供 getter 方法。当访问属性触发 getter 方法；当修改属性时触发 setter。
+Vue 将 data、props 变为响应式对象。这里先分析 Vue 是如何把 data 变成响应式对象的。
+在 Vue 初始化 _ini">
+<meta property="og:image" content="http://panzeyong.com/images/vue/reactive_data.png">
+<meta property="og:updated_time" content="2020-09-23T15:12:37.988Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="响应式对象一：data">
+<meta name="twitter:description" content="响应式对象，简单来说，就是对象拥有 setter 和 getter 方法。也就是说，给对象属性添加 set 和 get，set 提供 setter 方法，而 get 提供 getter 方法。当访问属性触发 getter 方法；当修改属性时触发 setter。
+Vue 将 data、props 变为响应式对象。这里先分析 Vue 是如何把 data 变成响应式对象的。
+在 Vue 初始化 _ini">
+<meta name="twitter:image" content="http://panzeyong.com/images/vue/reactive_data.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://panzeyong.com/2020/09/23/响应式对象一：data/"/>
+
+
+
+
+
+  <title>响应式对象一：data | PANJU's Note</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PANJU's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">故不积跬步，无以至千里；不积小流，无以成江海。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/09/23/响应式对象一：data/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">响应式对象一：data</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-23T23:10:46+08:00">
+                2020-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/23/响应式对象一：data/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/09/23/响应式对象一：data/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/09/23/响应式对象一：data/" class="leancloud_visitors" data-flag-title="响应式对象一：data">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>响应式对象，简单来说，就是对象拥有 <code>setter</code> 和 <code>getter</code> 方法。也就是说，给对象属性添加 <code>set</code> 和 <code>get</code>，<code>set</code> 提供 <code>setter</code> 方法，而 <code>get</code> 提供 <code>getter</code> 方法。当访问属性触发 <code>getter</code> 方法；当修改属性时触发 <code>setter</code>。</p>
+<p>Vue 将 <code>data</code>、<code>props</code> 变为响应式对象。这里先分析 Vue 是如何把 <code>data</code> 变成响应式对象的。</p>
+<p>在 Vue 初始化 <code>_init</code> 的过程中，有这么一个方法：<code>initState</code> 被执行，其实现逻辑如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initState</span> (<span class="params">vm: Component</span>) </span>&#123;</div><div class="line">  vm._watchers = []</div><div class="line">  <span class="keyword">const</span> opts = vm.$options</div><div class="line">  <span class="keyword">if</span> (opts.props) initProps(vm, opts.props)</div><div class="line">  <span class="keyword">if</span> (opts.methods) initMethods(vm, opts.methods)</div><div class="line">  <span class="keyword">if</span> (opts.data) &#123;</div><div class="line">    initData(vm)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    observe(vm._data = &#123;&#125;, <span class="literal">true</span> <span class="comment">/* asRootData */</span>)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (opts.computed) initComputed(vm, opts.computed)</div><div class="line">  <span class="keyword">if</span> (opts.watch &amp;&amp; opts.watch !== nativeWatch) &#123;</div><div class="line">    initWatch(vm, opts.watch)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法的作用是对 <code>props</code>、<code>methods</code>、<code>data</code>、<code>computed</code> 和 <code>watch</code> 做了一系列初始化操作。而将 <code>data</code> 变成响应式对象的实现逻辑就在 <code>initData</code> 方法里，具体来看下其实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initData</span> (<span class="params">vm: Component</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> data = vm.$options.data</div><div class="line">  data = vm._data = <span class="keyword">typeof</span> data === <span class="string">'function'</span></div><div class="line">    ? getData(data, vm)</div><div class="line">    : data || &#123;&#125;</div><div class="line">  <span class="keyword">if</span> (!isPlainObject(data)) &#123;</div><div class="line">    data = &#123;&#125;</div><div class="line">    process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</div><div class="line">      <span class="string">'data functions should return an object:\n'</span> +</div><div class="line">      <span class="string">'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function'</span>,</div><div class="line">      vm</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// proxy data on instance</span></div><div class="line">  <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(data)</div><div class="line">  <span class="keyword">const</span> props = vm.$options.props</div><div class="line">  <span class="keyword">const</span> methods = vm.$options.methods</div><div class="line">  <span class="keyword">let</span> i = keys.length</div><div class="line">  <span class="keyword">while</span> (i--) &#123;</div><div class="line">    <span class="keyword">const</span> key = keys[i]</div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (methods &amp;&amp; hasOwn(methods, key)) &#123;</div><div class="line">        warn(</div><div class="line">          <span class="string">`Method "<span class="subst">$&#123;key&#125;</span>" has already been defined as a data property.`</span>,</div><div class="line">          vm</div><div class="line">        )</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (props &amp;&amp; hasOwn(props, key)) &#123;</div><div class="line">      process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</div><div class="line">        <span class="string">`The data property "<span class="subst">$&#123;key&#125;</span>" is already declared as a prop. `</span> +</div><div class="line">        <span class="string">`Use prop default value instead.`</span>,</div><div class="line">        vm</div><div class="line">      )</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!isReserved(key)) &#123;</div><div class="line">      proxy(vm, <span class="string">`_data`</span>, key)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// observe data</span></div><div class="line">  observe(data, <span class="literal">true</span> <span class="comment">/* asRootData */</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 <code>3</code> ~ <code>5</code> 行判断 <code>data</code> 数据类型是否为 <code>function</code>，满足的话则调用方法 <code>getData(data, vm)</code>，执行其逻辑返回对象 <code>data</code>；否则的话则返回 <code>data</code>。将其返回结果赋值给 <code>data</code> 和 <code>vm._data</code>。</p>
+<p>需要注意的是组件里 <code>data</code> 是一个函数，好处是每个 Vue 组件是一个 Vue 实例，通过函数返回的 <code>data</code> 对象保证其独立性，组件之间互不影响。</p>
+<p>第 <code>6</code> ~ <code>13</code> 行判断 <code>data</code> 数据类型是为对象，不是对象的话则开发环境下抛出警告。</p>
+<p>第 <code>19</code> ~ <code>38</code> 行遍历 <code>data</code> 属性，检验其键名是否与 <code>methods</code> 或者 <code>props</code> 对象包含的键名相同。如果存在相同的话，则在开发环境下抛出警告。除此之外，将 <code>data</code> 对象属性代理到 Vue 实例上，即调用方法 <code>proxy(vm,</code>_data<code>, key)</code>。那么来看下是如何实现代理的？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">proxy</span> (<span class="params">target: Object, sourceKey: string, key: string</span>) </span>&#123;</div><div class="line">  sharedPropertyDefinition.get = <span class="function"><span class="keyword">function</span> <span class="title">proxyGetter</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>[sourceKey][key]</div><div class="line">  &#125;</div><div class="line">  sharedPropertyDefinition.set = <span class="function"><span class="keyword">function</span> <span class="title">proxySetter</span> (<span class="params">val</span>) </span>&#123;</div><div class="line">    <span class="keyword">this</span>[sourceKey][key] = val</div><div class="line">  &#125;</div><div class="line">  <span class="built_in">Object</span>.defineProperty(target, key, sharedPropertyDefinition)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实现逻辑很简单，先在对象 <code>sharedPropertyDefinition</code> 定义 <code>set</code> 和 <code>get</code>，然后 <code>sharedPropertyDefinition</code> 作为 <code>key</code> 属性描述符，调用方法 <code>Object.defineProperty</code> 在 Vue 实例上定义属性 <code>key</code> 以及其属性描述符。通过一个简单的例子来分析下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Vue(&#123;</div><div class="line">	mounted() &#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="keyword">this</span>.message);</div><div class="line">	&#125;,</div><div class="line">	</div><div class="line">	data () &#123;</div><div class="line">		<span class="keyword">return</span> &#123;</div><div class="line">			message: <span class="string">'Hello World'</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>不知会不会有这样的疑问：为什么 <code>this.message</code> 就能访问到呢？这是因为 Vue 将 <code>data</code> 属性代理到 Vue 实例上，而此时 <code>this</code> 指向 Vue 实例，所以能访问到；而实际上真正访问到其值是通过 <code>this._data.message</code> 获取的。<code>_data</code> 是 Vue 私有属性，一般不让外部访问，通过代理到 Vue 实例来访问其值。</p>
+<p>回到 <code>initData</code> 方法，<code>observe(data, true /* asRootData */)</code> 是将 <code>data</code> 变成响应式对象的核心方法。那么来看下其具体实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Attempt to create an observer instance for a value,</div><div class="line"> * returns the new observer if successfully observed,</div><div class="line"> * or the existing observer if the value already has one.</div><div class="line"> */</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">observe</span> (<span class="params">value: any, asRootData: ?boolean</span>): <span class="title">Observer</span> | <span class="title">void</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (!isObject(value) || value <span class="keyword">instanceof</span> VNode) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">let</span> ob: Observer | <span class="keyword">void</span></div><div class="line">  <span class="keyword">if</span> (hasOwn(value, <span class="string">'__ob__'</span>) &amp;&amp; value.__ob__ <span class="keyword">instanceof</span> Observer) &#123;</div><div class="line">    ob = value.__ob__</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (</div><div class="line">    shouldObserve &amp;&amp;</div><div class="line">    !isServerRendering() &amp;&amp;</div><div class="line">    (<span class="built_in">Array</span>.isArray(value) || isPlainObject(value)) &amp;&amp;</div><div class="line">    <span class="built_in">Object</span>.isExtensible(value) &amp;&amp;</div><div class="line">    !value._isVue</div><div class="line">  ) &#123;</div><div class="line">    ob = <span class="keyword">new</span> Observer(value)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (asRootData &amp;&amp; ob) &#123;</div><div class="line">    ob.vmCount++</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> ob</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 <code>7</code> ~ <code>9</code> 行对 <code>value</code> 进行校验，如果其数据类型不是对象或者是 <code>VNode</code> 实例，则返回。</p>
+<p><code>data</code> 在转换为响应式对象的过程中，添加属性 <code>__ob__</code>，指向 Observer 实例。因此第 <code>11</code> ~ <code>21</code> 行首先判断 <code>data</code> 是否有属性 <code>__ob__</code>，满足的话则将其赋值给 <code>ob</code>，并且返回 <code>ob</code>；否则创建 Observer 实例，并将其返回。</p>
+<p>那么是如何创建 Observer 实例的呢？具体实现逻辑如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">constructor</span> (value: any) &#123;</div><div class="line">  <span class="keyword">this</span>.value = value</div><div class="line">  <span class="keyword">this</span>.dep = <span class="keyword">new</span> Dep()</div><div class="line">  <span class="keyword">this</span>.vmCount = <span class="number">0</span></div><div class="line">  def(value, <span class="string">'__ob__'</span>, <span class="keyword">this</span>)</div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</div><div class="line">    <span class="keyword">if</span> (hasProto) &#123;</div><div class="line">      protoAugment(value, arrayMethods)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      copyAugment(value, arrayMethods, arrayKeys)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.observeArray(value)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">this</span>.walk(value)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先对三个变量进行初始化：<code>value</code>、<code>dep</code>、<code>vmCount</code>；然后在 <code>data</code> 定义属性 <code>__ob__</code>，指向 Observer 实例；接着判断 <code>value</code> 数据类型是否为数组，是的话则进入第 <code>7</code> ~ <code>12</code>；否则执行第 <code>14</code> 行。</p>
+<p>先来看下第 <code>14</code> 行，即 <code>walk</code> 的具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Walk through all properties and convert them into</div><div class="line"> * getter/setters. This method should only be called when</div><div class="line"> * value type is Object.</div><div class="line"> */</div><div class="line">walk (obj: <span class="built_in">Object</span>) &#123;</div><div class="line">  <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(obj)</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keys.length; i++) &#123;</div><div class="line">    defineReactive(obj, keys[i])</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实现逻辑很简单，即遍历 <code>obj</code>，然后调用方法 <code>defineReactive</code>。那么 <code>defineReactive</code> 方法又是什么呢？其作用是在对象上定义响应式属性。来看下具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Define a reactive property on an Object.</div><div class="line"> */</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">defineReactive</span> (<span class="params"></span></span></div><div class="line">  obj: Object,</div><div class="line">  key: string,</div><div class="line">  val: any,</div><div class="line">  customSetter?: ?Function,</div><div class="line">  shallow?: boolean</div><div class="line">) &#123;</div><div class="line">  <span class="keyword">const</span> dep = <span class="keyword">new</span> Dep()</div><div class="line"></div><div class="line">  <span class="keyword">const</span> property = <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, key)</div><div class="line">  <span class="keyword">if</span> (property &amp;&amp; property.configurable === <span class="literal">false</span>) &#123;</div><div class="line">    <span class="keyword">return</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// cater for pre-defined getter/setters</span></div><div class="line">  <span class="keyword">const</span> getter = property &amp;&amp; property.get</div><div class="line">  <span class="keyword">const</span> setter = property &amp;&amp; property.set</div><div class="line">  <span class="keyword">if</span> ((!getter || setter) &amp;&amp; <span class="built_in">arguments</span>.length === <span class="number">2</span>) &#123;</div><div class="line">    val = obj[key]</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">let</span> childOb = !shallow &amp;&amp; observe(val)</div><div class="line">  <span class="built_in">Object</span>.defineProperty(obj, key, &#123;</div><div class="line">    enumerable: <span class="literal">true</span>,</div><div class="line">    configurable: <span class="literal">true</span>,</div><div class="line">    get: <span class="function"><span class="keyword">function</span> <span class="title">reactiveGetter</span> (<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</div><div class="line">      <span class="keyword">if</span> (Dep.target) &#123;</div><div class="line">        dep.depend()</div><div class="line">        <span class="keyword">if</span> (childOb) &#123;</div><div class="line">          childOb.dep.depend()</div><div class="line">          <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</div><div class="line">            dependArray(value)</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> value</div><div class="line">    &#125;,</div><div class="line">    set: <span class="function"><span class="keyword">function</span> <span class="title">reactiveSetter</span> (<span class="params">newVal</span>) </span>&#123;</div><div class="line">      <span class="keyword">const</span> value = getter ? getter.call(obj) : val</div><div class="line">      <span class="comment">/* eslint-disable no-self-compare */</span></div><div class="line">      <span class="keyword">if</span> (newVal === value || (newVal !== newVal &amp;&amp; value !== value)) &#123;</div><div class="line">        <span class="keyword">return</span></div><div class="line">      &#125;</div><div class="line">      <span class="comment">/* eslint-enable no-self-compare */</span></div><div class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; customSetter) &#123;</div><div class="line">        customSetter()</div><div class="line">      &#125;</div><div class="line">      <span class="comment">// #7981: for accessor properties without setter</span></div><div class="line">      <span class="keyword">if</span> (getter &amp;&amp; !setter) <span class="keyword">return</span></div><div class="line">      <span class="keyword">if</span> (setter) &#123;</div><div class="line">        setter.call(obj, newVal)</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        val = newVal</div><div class="line">      &#125;</div><div class="line">      childOb = !shallow &amp;&amp; observe(newVal)</div><div class="line">      dep.notify()</div><div class="line">    &#125;</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第 <code>11</code> 行创建 <code>dep</code> 实例，用于后续依赖收集。</p>
+<p>第 <code>13</code> ~ <code>16</code> 行获取 <code>key</code> 的属性描述符，并且判断该属性是否可配置。</p>
+<p>第 <code>21</code> ~ <code>23</code> 行在满足条件的情况下，获取 <code>key</code> 对应的值。</p>
+<p>第 <code>25</code> 行作用是属性 <code>key</code> 对应的值是对象或者数组，则会递归遍历其属性，将它们设置为响应式属性。</p>
+<p>第 <code>26</code> ~ <code>62</code> 行是将属性设置成响应式属性的核心逻辑，即调用方法 <code>Object.defineProperty</code> 在属性上设置 <code>set</code> 和 <code>get</code>，使其变成响应式属性，进而使拥有该属性的对象变成响应式对象。</p>
+<p>当访问属性值时，则会触发 <code>reactiveGetter</code> 方法，该方法会做一些依赖收集的工作；而当为属性赋值时，则会触发 <code>reactiveSetter</code> 方法，该方法会做派发更新的工作，即通知监听它的观察者需要做更新操作。至于如何做依赖收集和派发更新，后续章节再做分析。</p>
+<p>核心方法 <code>defineReactive</code> 分析完了，再回到 <code>Observer</code> 实例的创建，来看下 <code>data</code> 是数组时，又是怎么实现的呢？</p>
+<p>第 <code>7</code> ~ <code>11</code> 行实际上在 <code>value</code> 定义数组方法。核心逻辑在第 <code>12</code> 行，看下其具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  <span class="comment">/**</span></div><div class="line">   * Observe a list of Array items.</div><div class="line">   */</div><div class="line">  observeArray (items: <span class="built_in">Array</span>&lt;any&gt;) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = items.length; i &lt; l; i++) &#123;</div><div class="line">      observe(items[i])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>遍历数组每个元素，调用方法 <code>observe</code> 将其转换为响应式。</p>
+<p>至此，<code>data</code> 对象如何转换成响应式对象已分析完了。下面通过一张图来概述其整体流程：</p>
+<p><img src="/images/vue/reactive_data.png" alt=""></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ul>
+<li><a href="https://ustbhuangyi.github.io/vue-analysis/v2/reactive/reactive-object.html#object-defineproperty" target="_blank" rel="external">响应式对象
+</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vue-js-源码解析/" rel="tag"># Vue.js 源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/02/createComponent-实现原理/" rel="next" title="createComponent 实现原理">
+                <i class="fa fa-chevron-left"></i> createComponent 实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="PANJU" />
+          <p class="site-author-name" itemprop="name">PANJU</p>
+           
+              <p class="site-description motion-element" itemprop="description">笔记——记录工作和学习中的点点滴滴</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/PanZeYong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考链接"><span class="nav-number">1.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PANJU</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://panzeyong.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://panzeyong.com/2020/09/23/响应式对象一：data/';
+          this.page.identifier = '2020/09/23/响应式对象一：data/';
+          this.page.title = '响应式对象一：data';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://panzeyong.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("b3EUStGjBwcKOJcOMeQXheDT-gzGzoHsz", "xvVsWacpT435FHV1QCcUpx9I");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

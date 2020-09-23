@@ -268,6 +268,248 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/05/01/AsnycTask-用法及源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/01/AsnycTask-用法及源码解析/" itemprop="url">AsnycTask 用法及源码解析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-01T17:49:39+08:00">
+                2017-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/01/AsnycTask-用法及源码解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/05/01/AsnycTask-用法及源码解析/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/05/01/AsnycTask-用法及源码解析/" class="leancloud_visitors" data-flag-title="AsnycTask 用法及源码解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>AsyncTask 是一种轻量级异步任务类，可以在线程池执行后台任务，获取到的结果传递给主线程并且在主线程中更新 UI。AsyncTask 比较适合执行短时间任务，对于长时间任务推荐使用 Executor，ThreadPoolExecutor 和 FutureTask。</p>
+<p>AsyncTask 是一个抽象类，提供三个泛型参数，分别是 Params，Progress 和 Result；以及 4 个步骤：onPreExecute，doInBackground，onProgressUpdate 和 onPostExecute。</p>
+<h4 id="AsyncTask-三个泛型参数"><a href="#AsyncTask-三个泛型参数" class="headerlink" title="AsyncTask 三个泛型参数"></a>AsyncTask 三个泛型参数</h4><ul>
+<li><p>Params：发送给执行任务的参数类型。</p>
+</li>
+<li><p>Progress：执行后台任务进度的类型。</p>
+</li>
+<li><p>Result：执行完后台任务返回的结果类型。</p>
+</li>
+</ul>
+<h4 id="AsyncTask-四个核心方法"><a href="#AsyncTask-四个核心方法" class="headerlink" title="AsyncTask 四个核心方法"></a>AsyncTask 四个核心方法</h4><ul>
+<li><p><strong>onPreExecute(</strong>)：在任务执行之前调用，主线程执行；主要做一些初始化工作，比如在用户界面展示进度条。</p>
+</li>
+<li><p><strong>doInBackground(Params…)</strong>：onPreExecute() 执行完成后被调用，在线程池执行；所有的异步操作都在这个方法执行，执行结果被返回时，onPostExecute(Result) 会被调用。如果在该方法中调用 publishProgress(Progress…)，那么方法 onProgressUpdate(Progress…) 也会被调用，主要用于更新后台任务进度。</p>
+</li>
+<li><p><strong>onProgressUpdate(Progress…)</strong>：publishProgress(Progress…) 执行完之后被调用，在主线程执行；主要在用户界面显示后台任务执行进度。</p>
+</li>
+<li><p><strong>onPostExecute(Result)</strong>：doInBackground(Params…) 执行完之后调用，在主线程执行；参数 Result 是 doInBackground(Params…) 的返回值。</p>
+</li>
+</ul>
+<p>一个异步任务可以通过调用 cancel(boolean) 随时取消，此时 isCancelled() 被调用，这就导致 doInBackground(Params…) 执行完后 onPostExecute(Result) 不会被调用。</p>
+<p>在使用 AsyncTask 的过程中，要注意以下几点：</p>
+<ul>
+<li><p>AsyncTask 类必须在 UI 线程加载，Android 4.1 已经自动绑定了。</p>
+</li>
+<li><p>AsyncTask 实例必须在 UI 线程创建。</p>
+</li>
+<li><p>execute(Params…) 必须在 UI 线程调用。</p>
+</li>
+<li><p>不要手动调用 onPreExecute()、onPostExecute(Result)、doInBackground(Params…)、onProgressUpdate(Progress…)。</p>
+</li>
+<li><p>一个 AsyncTask 对象只能被执行一次；否则会抛异常。</p>
+</li>
+</ul>
+<p>以上是 AsnycTask 基本知识点，掌握知识点后就要学会如何使用它。那么接下来就来学习 AsyncTask 用法。</p>
+<h4 id="AsyncTask-用法"><a href="#AsyncTask-用法" class="headerlink" title="AsyncTask 用法"></a>AsyncTask 用法</h4><p>AsyncTask 是抽象类，不能直接实例化，必须创建新类并继承它，抽象方法 doInBackground(Params…) 是一定要重写的，其它三个方法根据自己的需求确定。以下通过 URL 获取数据为例子来讲解 AsyncTask 的用法。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncTaskExample</span> <span class="keyword">extends</span> <span class="title">AsyncTask</span>&lt;<span class="title">String</span>, <span class="title">Integer</span>, <span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPreExecute</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>.onPreExecute();</div><div class="line">		mLoad.setVisibility(View.VISIBLE);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> String <span class="title">doInBackground</span><span class="params">(String... params)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> getUrlResponse(params[<span class="number">0</span>]);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(String s)</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>.onPostExecute(s);</div><div class="line">     	mLoad.setVisibility(View.GONE);</div><div class="line">     	mText.setText(s);</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从代码中可以很清晰地看出，第 5 行是显示加载进度条，表示正在获取数据；第 10 行是核心代码，异步操作，网络请求数据并将结果返回；第 16 - 17 行代码主要操作是隐藏进度条，表示数据加载完毕，并将获取到的结果显示出来。这里主要给出核心代码，至于其它代码也就调用而已。</p>
+<p>那么该如何调用呢？很简单，一行代码就搞定</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> AsyncTaskExample().execute(url);</div></pre></td></tr></table></figure>
+<h4 id="AsyncTask-源码解析"><a href="#AsyncTask-源码解析" class="headerlink" title="AsyncTask 源码解析"></a>AsyncTask 源码解析</h4><p>知其然必知其所以然。对于新知识点，学会使用之后，就应该探究其原理。由于个人倾向于通过画图来理解知识点的流程，因此先简单地给出 AsyncTask 任务执行的流程图，再根据流程图和源码进行讲解。流程图如下：</p>
+<p><img src="/images/asynctask/asynctask.png" alt=""></p>
+<p>对于源码的理解，一般是以最终调用的方法为入口，一步一步地理解整个流程。那么对于 AsyncTask 该从哪里入手呢？当然是从方法 execute(Params… params) 入手了，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> AsyncTask&lt;Params, Progress, Result&gt; <span class="title">execute</span><span class="params">(Params... params)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> executeOnExecutor(sDefaultExecutor, params);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对于 AsyncTask 不同版本，execute(Params… params) 方法的执行方式是不一样的。Android 1.6 以前，AsyncTask 是单线程串行执行任务的；Android 1.6，AsyncTask 是线程池多线程并行执行任务；但是到 Android 3.0，AsyncTask 又改为单线程串行执行任务的。该方法的逻辑很简单，直接调用方法 executeOnExecutor(Executor exec, Params… params)，将我们传入的参数 params 和 sDefaultExecutor 传到该方法里，并将的返回值返回。那么来看下该方法的具体实现，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> AsyncTask&lt;Params, Progress, Result&gt; <span class="title">executeOnExecutor</span><span class="params">(Executor exec, Params... params)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (mStatus != Status.PENDING) &#123;</div><div class="line">		<span class="keyword">switch</span> (mStatus) &#123;</div><div class="line">			<span class="keyword">case</span> RUNNING:</div><div class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Cannot execute task:"</span> +  <span class="string">" the task is already running."</span>);</div><div class="line">			<span class="keyword">case</span> FINISHED:</div><div class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Cannot execute task:"</span> +  <span class="string">" the task has already been executed "</span> +  <span class="string">"(a task can be executed only once)"</span>);</div><div class="line">		&#125;</div><div class="line">   	&#125;</div><div class="line">   	</div><div class="line">   	mStatus = Status.RUNNING;</div><div class="line">     onPreExecute();</div><div class="line">     mWorker.mParams = params;</div><div class="line">     exec.execute(mFuture);</div><div class="line">     <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>executeOnExecutor(Executor exec, Params… params) 方法是在线程池 THREAD_POOL_EXECUTOR 执行，允许多任务并发执行，但是不推荐采用多任务并发执行；在主线程执行。该方法实现的主要功能是：</p>
+<ul>
+<li><p>检查任务状态，并记录任务当前状态；</p>
+</li>
+<li><p>调用 onPreExecute() 方法，根据我们自己的需求可以重写该方法；</p>
+</li>
+<li><p>将我们传入的参数 params 赋值给 WorkRunnable 中字段 mParams(稍后解释)；</p>
+</li>
+<li><p>调用 SerialExecutor 中方法 execute(Runnable r) 执行任务。</p>
+</li>
+</ul>
+<p>mWorker 是 WorkerRunnable<params, result=""> 实例，而 WorkerRunnable 是抽象类，实现 Callable 接口，并且该接口有一个回调方法 call()；同时抽象类有一个字段 Params []，第 13 行代码就是把我们传进来的参数 params 赋值给它的。mWorker 是在创建 AsyncTask 实例时被初始化的，即 AsyncTask 构造方法里，并重写回调方法 call()，那么接下来看回调方法 call() 的具体实现。</params,></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">mWorker = <span class="keyword">new</span> WorkerRunnable&lt;Params, Result&gt;() &#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> Result <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		mTaskInvoked.set(<span class="keyword">true</span>);</div><div class="line">		Result result = <span class="keyword">null</span>;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);</div><div class="line">			<span class="comment">//noinspection unchecked</span></div><div class="line">            result = doInBackground(mParams);</div><div class="line">            Binder.flushPendingCommands();</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable tr) &#123;</div><div class="line">            mCancelled.set(<span class="keyword">true</span>);</div><div class="line">            <span class="keyword">throw</span> tr;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            postResult(result);</div><div class="line">        &#125;</div><div class="line">           	<span class="keyword">return</span> result;</div><div class="line">      	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>该回调方法实现的主要功能：</p>
+<ul>
+<li><p>将 mTaskInvoked 设置为 true，表示任务已经被调用过；</p>
+</li>
+<li><p>设置线程优先级为后台线程；</p>
+</li>
+<li><p>调用 doInBackground(mParams) 方法，异步执行，后台执行的逻辑都写在这个方法里面，一定要被重写；如果任务执行抛出异常时，取消任务；</p>
+</li>
+<li><p>调用 postResult(result) 方法；</p>
+</li>
+</ul>
+<p>postResult(result) 的具体实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Result <span class="title">postResult</span><span class="params">(Result result)</span> </span>&#123;</div><div class="line">	<span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">	Message message = getHandler().obtainMessage(MESSAGE_POST_RESULT,</div><div class="line">	<span class="keyword">new</span> AsyncTaskResult&lt;Result&gt;(<span class="keyword">this</span>, result));</div><div class="line">	message.sendToTarget();</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从代码里可以看出，将执行结果通过 sHandler 发送 MESSAGE_POST_RESULT 的消息，然后 handleMessage() 方法收到消息后进行相应的处理。sHandler 是 InternalHandler 实例，主要作用是将任务执行的环境从线程切换到主线程中，从 InternalHandler 的具体实现就可以看出了。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InternalHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">InternalHandler</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>(Looper.getMainLooper());</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"unchecked"</span>, <span class="string">"RawUseOfParameterizedType"</span>&#125;)</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">		AsyncTaskResult&lt;?&gt; result = (AsyncTaskResult&lt;?&gt;) msg.obj;</div><div class="line">		<span class="keyword">switch</span> (msg.what) &#123;</div><div class="line">			<span class="keyword">case</span> MESSAGE_POST_RESULT:</div><div class="line">				result.mTask.finish(result.mData[<span class="number">0</span>]);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">				</div><div class="line">			<span class="keyword">case</span> MESSAGE_POST_PROGRESS:</div><div class="line">             	result.mTask.onProgressUpdate(result.mData);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从构造函数 InternalHandler() 就可以看出了，获取主线程 Looper，而 Handler 必须与 Looper 进行绑定，因此可以断定是在主线程里。<code>handleMessage()</code> 函数对两种消息进行处理：MESSAGE_POST_RESULT 和 MESSAGE_POST_PROGRESS；而我们刚刚发送的消息是 MESSAGE_POST_RESULT，那就先来看该消息收到后会做什么处理吧？很显然，调用 finish(Result result)，具体实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">finish</span><span class="params">(Result result)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (isCancelled()) &#123;</div><div class="line">		onCancelled(result);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		onPostExecute(result);</div><div class="line">	&#125;</div><div class="line">	mStatus = Status.FINISHED;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果任务被取消了，直接调用 onCancelled(result) 方法，onPostExecute(result) 方法不会被调用；否则就调用 onPostExecute(result) 方法，该方法需要被重写，在主线程执行，根据返回的结果进行相应的处理；最后修改任务的状态。那么对于消息 MESSAGE_POST_PROGRESS 是从哪里发出来的呢？还记得在前面的知识点讲解中有提到过如果在 doInBackground(mParams) 方法中调用 publishProgress(Progress…) 方法时，方法 onProgressUpdate(Progress…) 也会被调用，用于后台任务进度更新。没错，消息 MESSAGE_POST_PROGRESS 就是用来处理进度更新的。先看下 publishProgress(Progress…) 具体实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">publishProgress</span><span class="params">(Progress... values)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (!isCancelled()) &#123;</div><div class="line">		getHandler().obtainMessage(MESSAGE_POST_PROGRESS,</div><div class="line">		<span class="keyword">new</span> AsyncTaskResult&lt;Progress&gt;(<span class="keyword">this</span>, values)).sendToTarget();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很显然，如果任务没有被取消的话，就会发送消息 MESSAGE_POST_PROGRESS，那么来看下收到该消息后的处理逻辑，即调用 onProgressUpdate(Progress… values) 方法，该方法需要我们根据自己的需求进行重写。</p>
+<p>再回到 executeOnExecutor(Executor exec, Params… params) 方法，第 14 行代码开始执行任务，在理解如何执行任务之前，先来理解参数 mFuture 和 sDefaultExecutor 的含义。</p>
+<p>mFuture 是 FutureTask<result> 实例，在 AsyncTask 构造方法中初始化。将 mWorker 作为参数传入 FutureTask 构造函数，个人认为传入该参数的作用是由于 FutureTask 中 run() 方法会被调用，而在该方法里会通过传入参数 mWorker 调用 call() 方法，进而使任务得到执行。FutureTask 是一个并发执行任务类，可以执行任务、取消任务、查询结果、获取结果；提交到线程池执行。实现的接口有 Future、Runnable。</result></p>
+<p>对于传入的参数 sDefaultExecutor，究竟是什么啥玩意呢？让我们来探个究竟吧。sDefaultExecutor 是 SerialExecutor 的实例，而 SerialExecutor 实际上是一个串行的线程池，主要的功能是一个进程中所有的 AsyncTask 任务都在这个串行的线程池中排队执行。看到这里，是不是还不知道任务真正在哪里被开始执行？其实以上都只是铺垫，下面才真正拉开序幕。真正开始执行任务的逻辑是在 SerialExecutor 中 execute(Runnable r) 方法里，具体实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SerialExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</div><div class="line">	<span class="keyword">final</span> ArrayDeque&lt;Runnable&gt; mTasks = <span class="keyword">new</span> ArrayDeque&lt;Runnable&gt;();</div><div class="line">	Runnable mActive;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(<span class="keyword">final</span> Runnable r)</span> </span>&#123;</div><div class="line">		mTasks.offer(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					r.run();</div><div class="line">				&#125; <span class="keyword">finally</span> &#123;</div><div class="line">					scheduleNext();</div><div class="line">              	&#125;</div><div class="line">             &#125;</div><div class="line">         &#125;);</div><div class="line">            </div><div class="line">         <span class="keyword">if</span> (mActive == <span class="keyword">null</span>) &#123;</div><div class="line">         	scheduleNext();</div><div class="line">         &#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">scheduleNext</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> ((mActive = mTasks.poll()) != <span class="keyword">null</span>) &#123;</div><div class="line">			THREAD_POOL_EXECUTOR.execute(mActive);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先将 AsyncTask 通过线程池 SerialExecutor 添加到队列里（从这里可以看出 SerialExecutor 的作用），然后重写 run() 方法，并判断 mActive 是否为 null，即当前是否有任务在执行，如果有任务执行的话就等待该任务执行完后再执行其他任务，否则就执行任务，即调用 scheduleNext() 方法，该方法的主要功能是从队列 mTasks 获取任务，任务不为空的话就直接提交到线程池 THREAD_POOL_EXECUTOR 里执行（任务真正开始执行），即启动任务，根据个人的理解，任务被启动后，会调用第 6 行代码，即 run() 方法，进而调用 FutureTask 中 run() 方法，从而会调用 WorkerRunnable 中 call() 方法，因此任务被执行，我们重写的方法也会被调用。结合以上流程图应该能更清晰地理解 AsyncTask 执行流程。</p>
+<p>以上是自己在学习 《Android 开发艺术探索》 这本书第十一章关于 AsyncTask 这个主题的学习笔记，由于自己能力有限，有错误的地方欢迎指出。</p>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://developer.android.com/reference/android/os/AsyncTask.html" target="_blank" rel="external">https://developer.android.com/reference/android/os/AsyncTask.html</a></p>
+<p>《Android 开发艺术探索》》中 第 11 章 Android 的线程和线程池</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/04/17/Python-学习笔记：字符串/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -892,7 +1134,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

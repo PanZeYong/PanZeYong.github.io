@@ -268,6 +268,248 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/07/09/Canvas-用法一-————-绘制图形/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/09/Canvas-用法一-————-绘制图形/" itemprop="url">Canvas 用法一：绘制图形</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-09T12:19:11+08:00">
+                2017-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/09/Canvas-用法一-————-绘制图形/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/07/09/Canvas-用法一-————-绘制图形/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/07/09/Canvas-用法一-————-绘制图形/" class="leancloud_visitors" data-flag-title="Canvas 用法一：绘制图形">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、Canvas-简介"><a href="#一、Canvas-简介" class="headerlink" title="一、Canvas 简介"></a>一、Canvas 简介</h2><p>Canvas 翻译过来为<strong>画布</strong>意思。这好比我们在学画画时，首先要有一块画板，然后使用各种彩色笔在画板上绘制各种各样的图形，最终会呈现给我们一幅优美的画。在这里，Canvas 就相当于画板，我们可以使用画笔在 Canvas 绘制各种各样的图形，最终画出我们想要的图形。</p>
+<p>Canvas 是 Android 2D 绘制图形的继承，提供丰富的 API 接口，功能非常强大。根据官方文档的介绍，要绘制某些东西需要 4 中基本组件：</p>
+<ul>
+<li><p>持有像素的位图（Bitmap）；</p>
+</li>
+<li><p>画布（Canvas）；</p>
+</li>
+<li><p>绘图元素（Rect）；</p>
+</li>
+<li><p>画笔（Paint）。</p>
+</li>
+</ul>
+<h2 id="二、Canvas-API-简介"><a href="#二、Canvas-API-简介" class="headerlink" title="二、Canvas API 简介"></a>二、Canvas API 简介</h2><table><tr><th width="20%">操作类型</th><th width="40%">相关 API</th><th width="40%">API 解释</th></tr><tr align="center"><td rowspan="4">绘制颜色</td><td>drawARGB(int a, int r, int g, int b)</td><td>使用 ARGB 填充整块画布</td></tr><tr align="center"><td>drawColor(int color)</td><td>使用颜色填充整块画布</td></tr><tr align="center"><td>drawColor(int color, PorterDuff.Mode mode)</td><td>使用颜色和 PorterDuff.Mode 填充整块画布</td></tr><tr align="center"><td>drawRGB(int r, int g, int b)</td><td>使用 RGB 填充整块画布</td></tr><tr align="center"><td rowspan="3">绘制点</td><td>drawPoint(float x, float y, Paint paint)</td><td>绘制单个点</td></tr><tr align="center"><td>drawPoints(float[] pts, Paint paint)</td><td>绘制一组点</td></tr><tr align="center"><td>drawPoints(float[] pts, int offset, int count, Paint paint)</td><td>绘制一系列点</td></tr><tr align="center"><td rowspan="3">绘制直线</td><td>drawLine(float startX, float startY, float stopX, float stopY, Paint paint)</td><td>使用画笔绘制直线</td></tr><tr align="center"><td>drawLines(float[] pts, Paint paint)</td><td>使用画笔绘制一组直线</td></tr><tr align="center"><td>drawLines(float[] pts, int offset, int count, Paint paint)</td><td>使用画笔绘制一系列直线</td></tr><tr align="center"><td rowspan="3">绘制矩形</td><td>drawRect(float left, float top, float right, float bottom, Paint paint)</td><br><td rowspan="3">使用画笔绘制矩形</td></tr><tr align="center"><td>drawRect(Rect r, Paint paint)</td></tr><tr align="center"><td>    drawRect(RectF rect, Paint paint)</td></tr><tr align="center"><td rowspan="2">绘制圆角矩形</td><td>drawRoundRect(RectF rect, float rx, float ry, Paint paint)</td><td rowspan="2">使用画笔绘制圆角矩形</td></tr><tr align="center"><td>drawRoundRect(float left, float top, float right, float bottom, float rx, float ry, Paint paint)（Android 5.0 及以上才有）</td></tr><tr align="center"><td rowspan="2">绘制椭圆</td><td>drawOval(float left, float top, float right, float bottom, Paint paint)（Android 5.0 及以上才有）</td><td rowspan="2">使用画笔绘制椭圆</td></tr><tr align="center"><td>drawOval(RectF oval, Paint paint)</td></tr><tr align="center"><td>绘制圆</td><td>drawCircle(float cx, float cy, float radius, Paint paint)</td><td>使用画笔绘制圆</td></tr><tr align="center"><td rowspan="2">绘制圆弧</td><td>drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</td><td rowspan="2">使用画笔绘制圆弧</td></tr><tr align="center"><td>drawArc(float left, float top, float right, float bottom, float startAngle, float sweepAngle, boolean useCenter, Paint paint)（Android 5.0 及以上才有）</td></tr></table>
+
+<blockquote>
+<p>以上只是部分 API 介绍，随着自己进一步学习，会继续完善。</p>
+</blockquote>
+<h2 id="三、Canvas-用法"><a href="#三、Canvas-用法" class="headerlink" title="三、Canvas 用法"></a>三、Canvas 用法</h2><p>以上介绍部分 Canvas API，那么接下来的任务是学习如何使用相关 API。</p>
+<h3 id="1、绘制颜色"><a href="#1、绘制颜色" class="headerlink" title="1、绘制颜色"></a>1、绘制颜色</h3><p>Canvas API 提供 4 个方法用于绘制颜色，即用某种颜色填充整块画布。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">canvas.drawARGB(<span class="number">225</span>, <span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>);</div><div class="line"></div><div class="line">canvas.drawColor(Color.GREEN);</div><div class="line"></div><div class="line">canvas.drawRGB(<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>);</div><div class="line"></div><div class="line">canvas.drawColor(Color.GREEN, PorterDuff.Mode.LIGHTEN);</div></pre></td></tr></table></figure>
+<p>需要注意的是绘制颜色第 4 种方法（即第 7 行代码）中第二个参数 PorterDuff.Mode，具体请参考<a href="https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html" target="_blank" rel="external">官网</a>。（ps：这知识点还不是很了解，有时间再研究。）</p>
+<p><img src="/images/canvas/canvas_color.png" alt=""></p>
+<p>对于以下各种图形的绘制，都需要画笔，那么就先来创建画笔。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomView</span> <span class="title">extend</span> <span class="title">View</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> Paint mPaint;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomView</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomView</span><span class="params">(Context context, @Nullable AttributeSet attrs)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs);</div><div class="line"></div><div class="line">        mPaint = <span class="keyword">new</span> Paint();</div><div class="line">        mPaint.setColor(Color.GREEN);        <span class="comment">// 设置画笔颜色</span></div><div class="line">        mPaint.setStrokeWidth(<span class="number">2</span>);            <span class="comment">// 设置画笔宽度</span></div><div class="line">        mPaint.setStyle(Paint.Style.STROKE); <span class="comment">// 设置画笔风格（描边）</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2、绘制点"><a href="#2、绘制点" class="headerlink" title="2、绘制点"></a>2、绘制点</h3><p>Canvas API 提供 3 个方法用于绘制单个点、一组点以及一系列点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 由于点形状比较小，不容易看清，所以将画笔宽度设置大点</span></div><div class="line">mPaint.setStrokeWidth(<span class="number">10</span>);</div><div class="line"></div><div class="line"><span class="comment">// 绘制单个点，画笔颜色为 Color.GREEN</span></div><div class="line">canvas.drawPoint(<span class="number">300</span>, <span class="number">300</span>, mPaint);</div><div class="line"></div><div class="line"><span class="comment">//绘制一组点，画笔颜色为 Color.RED</span></div><div class="line"> mPaint.setColor(Color.RED);</div><div class="line"> canvas.drawPoints(<span class="keyword">new</span> <span class="keyword">float</span>[] &#123;<span class="number">400</span>, <span class="number">400</span>, <span class="number">300</span>, <span class="number">500</span>, <span class="number">500</span>, <span class="number">500</span>&#125;, mPaint);</div></pre></td></tr></table></figure>
+<p>有没有发现点的形状是正方形，这是因为 Paint 默认 Paint.Cap 属性是 Paint.Cap.SQUARE。如果要修改该属性，可以调用 Paint 方法 <strong>setStrokeCap(Paint.Cap cap)</strong> 修改。</p>
+<p><img src="/images/canvas/canvas_point.png" alt=""></p>
+<h3 id="3、绘制直线"><a href="#3、绘制直线" class="headerlink" title="3、绘制直线"></a>3、绘制直线</h3><p>Canvas 提供 3 个方法用于绘制单条直线、一组直线和一系列直线。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">mPaint.setStrokeWidth(<span class="number">2</span>);</div><div class="line"></div><div class="line"><span class="comment">// 绘制单条直线，画笔颜色为 Color.GREEN</span></div><div class="line">mPaint.setColor(Color.GREEN);</div><div class="line">canvas.drawPoint(<span class="number">300</span>, <span class="number">300</span>, mPaint);</div><div class="line"></div><div class="line"><span class="comment">// 绘制一组直线，画笔颜色为 Color.RED</span></div><div class="line">mPaint.setColor(Color.RED);</div><div class="line">canvas.drawLines(<span class="keyword">new</span> <span class="keyword">float</span>[] &#123;<span class="number">400</span>, <span class="number">400</span>, <span class="number">300</span>, <span class="number">500</span>, <span class="number">300</span>, <span class="number">500</span>, <span class="number">500</span>, <span class="number">500</span>, <span class="number">500</span>, <span class="number">500</span>, <span class="number">400</span>, <span class="number">400</span>&#125;, mPaint);</div><div class="line"></div><div class="line"><span class="comment">// 绘制一系列直线，画笔颜色为 Color.MAGENTA</span></div><div class="line">mPaint.setColor(Color.MAGENTA);</div><div class="line">canvas.drawLines(<span class="keyword">new</span> <span class="keyword">float</span>[] &#123;<span class="number">400</span>, <span class="number">250</span>, <span class="number">300</span>, <span class="number">350</span>, <span class="number">300</span>, <span class="number">350</span>, <span class="number">500</span>, <span class="number">350</span>, <span class="number">500</span>, <span class="number">350</span>, <span class="number">400</span>, <span class="number">250</span>&#125;, <span class="number">0</span>, <span class="number">12</span>, mPaint);</div></pre></td></tr></table></figure>
+<p>看下绘制直线第三种方法，即第 13 行代码，方法原型为：<strong>drawLines(float[] pts, int offset, int count, Paint paint)</strong></p>
+<ul>
+<li><p>pts：绘制直线所需要的点；</p>
+</li>
+<li><p>offset：跳过点个数，这些点不参与绘制；</p>
+</li>
+<li><p>count：实际参与绘制个数；</p>
+</li>
+<li><p>paint：画笔。</p>
+</li>
+</ul>
+<p>该方法相对比较灵活，可以通过参数 offset、count 设置来决定绘制哪些线段。</p>
+<p><img src="/images/canvas/canvas_line.png" alt=""></p>
+<h3 id="4、绘制矩形"><a href="#4、绘制矩形" class="headerlink" title="4、绘制矩形"></a>4、绘制矩形</h3><p>Canvas API 提供 3 个方法用于绘制矩形。绘制矩形一般只需要两个点就可以绘制，即左上角和右下角这两个点坐标即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Rect rect = <span class="keyword">new</span> Rect(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span> + <span class="number">500</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span> + <span class="number">500</span>);</div><div class="line"></div><div class="line">RectF rectF = <span class="keyword">new</span> RectF(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span> + <span class="number">200</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span> + <span class="number">200</span>);</div><div class="line"></div><div class="line">mPaint.setColor(Color.GREEN);</div><div class="line">canvas.drawRect(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getWidth() / <span class="number">8</span> * <span class="number">3</span>, mPaint);</div><div class="line"></div><div class="line">mPaint.setColor(Color.MAGENTA);</div><div class="line">canvas.drawRect(rectF, mPaint);</div><div class="line"></div><div class="line">mPaint.setColor(Color.RED);</div><div class="line">canvas.drawRect(rect, mPaint);</div></pre></td></tr></table></figure>
+<p><img src="/images/canvas/canvas_rect.png" alt=""></p>
+<h3 id="5、绘制圆角矩形"><a href="#5、绘制圆角矩形" class="headerlink" title="5、绘制圆角矩形"></a>5、绘制圆角矩形</h3><p>Canvas API 提供 2 种方法用于绘制圆角矩形，其中有一种方法是 Android 5.0 以上才提供，见以上 API 介绍。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 第一种绘制圆角矩形方法</span></div><div class="line">mPaint.setStrokeWidth(<span class="number">5</span>);</div><div class="line">RectF rect = <span class="keyword">new</span> RectF(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>);</div><div class="line">canvas.drawRoundRect(rect, <span class="number">50</span>, <span class="number">50</span>, mPaint);</div><div class="line"></div><div class="line"><span class="comment">// 第二种绘制圆角矩形方法</span></div><div class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</div><div class="line">	canvas.drawRoundRect(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>, <span class="number">50</span>, <span class="number">50</span>, mPaint);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/images/canvas/canvas_round_rect.png" alt=""></p>
+<h3 id="6、绘制椭圆"><a href="#6、绘制椭圆" class="headerlink" title="6、绘制椭圆"></a>6、绘制椭圆</h3><p>Canvas API 提供 2 种方法用于绘制椭圆，其中有一种方法是 Android 5.0 以上才提供，见以上 API 介绍。其实椭圆是被包裹在矩形内，话句话说，是矩形的内切图形。绘制椭圆也很容易，只需传入矩形 RectF 和绘制图形 Paint 就可以。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 第一种绘制椭圆方法</span></div><div class="line">RectF rect = <span class="keyword">new</span> RectF(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>);</div><div class="line"></div><div class="line">canvas.drawLine(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">4</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">4</span>, mPaint);</div><div class="line">canvas.drawLine(getWidth() / <span class="number">2</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">2</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>, mPaint);</div><div class="line">canvas.drawRect(rect, mPaint);</div><div class="line">canvas.drawOval(rect, mPaint);</div><div class="line"></div><div class="line"><span class="comment">// 第二种绘制椭圆方法</span></div><div class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</div><div class="line">	canvas.drawOval(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>, mPaint);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上多绘制出矩形和两条直线，主要是为了方便看清。</p>
+<p><img src="/images/canvas/canvas_oval.png" alt=""></p>
+<h3 id="7、绘制圆形"><a href="#7、绘制圆形" class="headerlink" title="7、绘制圆形"></a>7、绘制圆形</h3><p>Canvas API 提供 1 种方法用于绘制圆形。绘制圆形只需要知道圆心和半径。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">canvas.drawCircle(getWidth() / <span class="number">2</span>, getHeight() / <span class="number">2</span>, <span class="number">200</span>, mPaint);</div><div class="line">mPaint.setStrokeWidth(<span class="number">5</span>);</div><div class="line">mPaint.setStrokeCap(Paint.Cap.ROUND);</div><div class="line">canvas.drawPoint(getWidth() / <span class="number">2</span>, getHeight() / <span class="number">2</span>, mPaint);</div></pre></td></tr></table></figure>
+<p>这里我把圆心也给画出来了，画笔的宽度设置为 5，容易看清。</p>
+<p><img src="/images/canvas/canvas_circle.png" alt=""></p>
+<h3 id="8、绘制圆弧"><a href="#8、绘制圆弧" class="headerlink" title="8、绘制圆弧"></a>8、绘制圆弧</h3><p>Canvas API 提供 2 种方法用于绘制圆弧，其中有一种方法是 Android 5.0 以上才提供，见以上 API 介绍。有必要来解释下这两种方法各个参数的含义，以<strong>drawArc(RectF oval, float startAngle, float sweepAngle, boolean useCenter, Paint paint)</strong> 为例子：</p>
+<ul>
+<li><p>oval：矩形；</p>
+</li>
+<li><p>startAngle：起始角度；</p>
+</li>
+<li><p>sweepAngle：绘制圆弧的角度，即扫描过的角度；</p>
+</li>
+<li><p>useCenter：true 或者 false，至于区别通过例子来说明。</p>
+</li>
+<li><p>paint：画笔。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// userCenter 为 true</span></div><div class="line">RectF rectF = <span class="keyword">new</span> RectF(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>);</div><div class="line">canvas.drawRect(rectF, mPaint);</div><div class="line">mPaint.setStyle(Paint.Style.FILL);</div><div class="line">canvas.drawArc(rectF, <span class="number">0</span>, <span class="number">90</span>, <span class="keyword">true</span>, mPaint);</div><div class="line"></div><div class="line">canvas.translate(getWidth() / <span class="number">16</span>, getHeight() / <span class="number">3</span>);</div><div class="line"></div><div class="line"><span class="comment">// userCenter 为 false    </span></div><div class="line">mPaint.setStyle(Paint.Style.STROKE);</div><div class="line">RectF rect = <span class="keyword">new</span> RectF(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>);</div><div class="line">canvas.drawRect(rect, mPaint);</div><div class="line">mPaint.setStyle(Paint.Style.FILL);</div><div class="line">canvas.drawArc(rect, <span class="number">0</span>, <span class="number">90</span>, <span class="keyword">false</span>, mPaint);</div><div class="line"></div><div class="line"><span class="comment">// 第二种方法</span></div><div class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.LOLLIPOP) &#123;</div><div class="line">	canvas.drawArc(getWidth() / <span class="number">8</span>, getHeight() / <span class="number">8</span>, getWidth() / <span class="number">8</span> * <span class="number">7</span>, getHeight() / <span class="number">8</span> * <span class="number">3</span>, <span class="number">0</span>, <span class="number">90</span>, <span class="keyword">false</span>, mPaint);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一个图形是 userCenter 为 true 的效果图；第二个图形则是 userCenter 为 false 的效果图。</p>
+<p><img src="/images/canvas/canvas_arc.png" alt=""></p>
+<h2 id="四、小示例"><a href="#四、小示例" class="headerlink" title="四、小示例"></a>四、小示例</h2><p>学习了 Canvas 绘制图形的基本用法后，通过一个具体的例子来综合运用绘制图形方法。这个具体的例子是画圆饼，相信大家应该经常看到这种图形。这个例子是参考这篇博客：<a href="http://www.gcssloop.com/customview/Canvas_BasicGraphics" target="_blank" rel="external">安卓自定义View进阶-Canvas之绘制图形</a>，先看看自己实现的效果图吧。</p>
+<p><img src="/images/canvas/canvas_round_cake.png" alt=""></p>
+<p>简单分析下：画这类图最主要的元素是数据，即总共有多少个模块，每个模块的值具体是多少，每个模块在总数中所占的比例以及用某种颜色表示某个模块。因此，这个可以将其封装为数据类，即 Bean。数据有了之后，接下来就根据我们学过的知识点进行绘制，来看下具体代码吧：</p>
+<p>用户数据类 Bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Bean</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> color;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">float</span> percentage;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">float</span> angle;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">float</span> value;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getColor</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> color;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setColor</span><span class="params">(<span class="keyword">int</span> color)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.color = color;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getPercentage</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> percentage;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPercentage</span><span class="params">(<span class="keyword">float</span> percentage)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.percentage = percentage;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getAngle</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> angle;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAngle</span><span class="params">(<span class="keyword">float</span> angle)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.angle = angle;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getValue</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> value;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(<span class="keyword">float</span> value)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.value = value;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>自定义 View 绘制圆饼 RoundCakeView</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RoundCakeView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String TAG = RoundCakeView.class.getCanonicalName();</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Paint mPaint;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> List&lt;Bean&gt; mList;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">float</span> mStartAngle;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mWidth;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mHeight;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RoundCakeView</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RoundCakeView</span><span class="params">(Context context, @Nullable AttributeSet attrs)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs);</div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RoundCakeView</span><span class="params">(Context context, @Nullable AttributeSet attrs,</span></span></div><div class="line">                         <span class="keyword">int</span> defStyleAttr) &#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</div><div class="line">        mPaint = <span class="keyword">new</span> Paint(Paint.ANTI_ALIAS_FLAG);</div><div class="line">        mPaint.setStyle(Paint.Style.STROKE);</div><div class="line">        mPaint.setColor(Color.GREEN);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onSizeChanged</span><span class="params">(<span class="keyword">int</span> w, <span class="keyword">int</span> h, <span class="keyword">int</span> oldw, <span class="keyword">int</span> oldh)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onSizeChanged(w, h, oldw, oldh);</div><div class="line"></div><div class="line">        <span class="keyword">this</span>.mWidth = w;</div><div class="line">        <span class="keyword">this</span>.mHeight = h;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onDraw(canvas);</div><div class="line"></div><div class="line">        Log.d(TAG, <span class="string">"onDraw()"</span>);</div><div class="line"></div><div class="line">        <span class="keyword">int</span> x = mWidth / <span class="number">2</span>;</div><div class="line">        <span class="keyword">int</span> y = mHeight / <span class="number">2</span>;</div><div class="line">        <span class="keyword">int</span> r = <span class="number">200</span>;</div><div class="line"></div><div class="line">        RectF rectF = <span class="keyword">new</span> RectF(x - r, y - r, x + r, y + r);</div><div class="line"></div><div class="line">        <span class="keyword">float</span> currentAngle = mStartAngle;</div><div class="line"></div><div class="line">        <span class="comment">// draw circle point</span></div><div class="line">        mPaint.setStrokeCap(Paint.Cap.ROUND);</div><div class="line">        mPaint.setStrokeWidth(<span class="number">5</span>);</div><div class="line">        canvas.drawPoint(x, y, mPaint);</div><div class="line"></div><div class="line">        <span class="comment">// draw circle</span></div><div class="line">        mPaint.setStrokeWidth(<span class="number">0</span>);</div><div class="line">        mPaint.setColor(Color.RED);</div><div class="line">        canvas.drawCircle(x, y, r, mPaint);</div><div class="line"></div><div class="line">        mPaint.setStyle(Paint.Style.FILL);</div><div class="line"></div><div class="line">        <span class="comment">// draw arc</span></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mList.size(); i++) &#123;</div><div class="line">            Bean bean = mList.get(i);</div><div class="line">            mPaint.setColor(bean.getColor());</div><div class="line">            canvas.drawArc(rectF, currentAngle, bean.getAngle(), <span class="keyword">true</span>, mPaint);</div><div class="line">            currentAngle += bean.getAngle();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setList</span><span class="params">(List&lt;Bean&gt; list)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.mList = list;</div><div class="line">        invalidate();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStartAngle</span><span class="params">(<span class="keyword">float</span> angle)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.mStartAngle = angle;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>那么接下来就是显示出效果了，先看下布局文件</p>
+<p>activity_main.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">android.support.constraint.ConstraintLayout</span></span></div><div class="line">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></div><div class="line">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></div><div class="line">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></div><div class="line">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    <span class="attr">tools:context</span>=<span class="string">"com.pan.canvasdemo.MainActivity"</span>&gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">com.pan.canvasdemo.RoundCakeView</span></span></div><div class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/rcv"</span></div><div class="line">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></div><div class="line">        <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="string">"parent"</span></div><div class="line">        <span class="attr">app:layout_constraintLeft_toLeftOf</span>=<span class="string">"parent"</span></div><div class="line">        <span class="attr">app:layout_constraintRight_toRightOf</span>=<span class="string">"parent"</span></div><div class="line">        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="string">"parent"</span>/&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">android.support.constraint.ConstraintLayout</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>MainActivity.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String TAG = MainActivity.class.getCanonicalName();</div><div class="line"></div><div class="line">    <span class="keyword">private</span> RoundCakeView mView;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> [] mColors = &#123;Color.RED, Color.GREEN, Color.BLUE, Color.DKGRAY, Color.MAGENTA&#125;;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> [] mValues = &#123;<span class="number">23</span>, <span class="number">98</span>, <span class="number">122</span>, <span class="number">78</span>, <span class="number">225</span>&#125;;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> List&lt;Bean&gt; mList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">float</span> mSum;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">        init();</div><div class="line">        initData();</div><div class="line"></div><div class="line">        mView.setStartAngle(<span class="number">0</span>);</div><div class="line">        mView.setList(mList);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</div><div class="line">        mView = (RoundCakeView) findViewById(R.id.rcv);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initData</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mValues.length; i++) &#123;</div><div class="line">            mSum += mValues[i];</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">            Bean bean = <span class="keyword">new</span> Bean();</div><div class="line">            bean.setColor(mColors[i]);</div><div class="line">            bean.setValue(mValues[i]);</div><div class="line">            bean.setPercentage(bean.getValue() / mSum);</div><div class="line">            bean.setAngle(bean.getPercentage() * <span class="number">360</span>);</div><div class="line">            bean.setName(i + <span class="string">""</span>);</div><div class="line">            mList.add(bean);</div><div class="line"></div><div class="line">            Log.d(TAG, <span class="string">"Value : "</span> + bean.getValue());</div><div class="line">            Log.d(TAG, <span class="string">"Percentage : "</span> + bean.getPercentage());</div><div class="line">            Log.d(TAG, <span class="string">"Angle : "</span> + bean.getAngle());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以下就是画圆饼的具体实现，逻辑不是很难懂，加上部分注释应该很容易理解。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="http://www.gcssloop.com/customview/Canvas_BasicGraphics" target="_blank" rel="external">安卓自定义View进阶-Canvas之绘制图形</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/06/26/第六章-面向对象的程序设计/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1481,248 +1723,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/05/01/AsnycTask-用法及源码解析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/01/AsnycTask-用法及源码解析/" itemprop="url">AsnycTask 用法及源码解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-01T17:49:39+08:00">
-                2017-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/05/01/AsnycTask-用法及源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/05/01/AsnycTask-用法及源码解析/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/05/01/AsnycTask-用法及源码解析/" class="leancloud_visitors" data-flag-title="AsnycTask 用法及源码解析">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>AsyncTask 是一种轻量级异步任务类，可以在线程池执行后台任务，获取到的结果传递给主线程并且在主线程中更新 UI。AsyncTask 比较适合执行短时间任务，对于长时间任务推荐使用 Executor，ThreadPoolExecutor 和 FutureTask。</p>
-<p>AsyncTask 是一个抽象类，提供三个泛型参数，分别是 Params，Progress 和 Result；以及 4 个步骤：onPreExecute，doInBackground，onProgressUpdate 和 onPostExecute。</p>
-<h4 id="AsyncTask-三个泛型参数"><a href="#AsyncTask-三个泛型参数" class="headerlink" title="AsyncTask 三个泛型参数"></a>AsyncTask 三个泛型参数</h4><ul>
-<li><p>Params：发送给执行任务的参数类型。</p>
-</li>
-<li><p>Progress：执行后台任务进度的类型。</p>
-</li>
-<li><p>Result：执行完后台任务返回的结果类型。</p>
-</li>
-</ul>
-<h4 id="AsyncTask-四个核心方法"><a href="#AsyncTask-四个核心方法" class="headerlink" title="AsyncTask 四个核心方法"></a>AsyncTask 四个核心方法</h4><ul>
-<li><p><strong>onPreExecute(</strong>)：在任务执行之前调用，主线程执行；主要做一些初始化工作，比如在用户界面展示进度条。</p>
-</li>
-<li><p><strong>doInBackground(Params…)</strong>：onPreExecute() 执行完成后被调用，在线程池执行；所有的异步操作都在这个方法执行，执行结果被返回时，onPostExecute(Result) 会被调用。如果在该方法中调用 publishProgress(Progress…)，那么方法 onProgressUpdate(Progress…) 也会被调用，主要用于更新后台任务进度。</p>
-</li>
-<li><p><strong>onProgressUpdate(Progress…)</strong>：publishProgress(Progress…) 执行完之后被调用，在主线程执行；主要在用户界面显示后台任务执行进度。</p>
-</li>
-<li><p><strong>onPostExecute(Result)</strong>：doInBackground(Params…) 执行完之后调用，在主线程执行；参数 Result 是 doInBackground(Params…) 的返回值。</p>
-</li>
-</ul>
-<p>一个异步任务可以通过调用 cancel(boolean) 随时取消，此时 isCancelled() 被调用，这就导致 doInBackground(Params…) 执行完后 onPostExecute(Result) 不会被调用。</p>
-<p>在使用 AsyncTask 的过程中，要注意以下几点：</p>
-<ul>
-<li><p>AsyncTask 类必须在 UI 线程加载，Android 4.1 已经自动绑定了。</p>
-</li>
-<li><p>AsyncTask 实例必须在 UI 线程创建。</p>
-</li>
-<li><p>execute(Params…) 必须在 UI 线程调用。</p>
-</li>
-<li><p>不要手动调用 onPreExecute()、onPostExecute(Result)、doInBackground(Params…)、onProgressUpdate(Progress…)。</p>
-</li>
-<li><p>一个 AsyncTask 对象只能被执行一次；否则会抛异常。</p>
-</li>
-</ul>
-<p>以上是 AsnycTask 基本知识点，掌握知识点后就要学会如何使用它。那么接下来就来学习 AsyncTask 用法。</p>
-<h4 id="AsyncTask-用法"><a href="#AsyncTask-用法" class="headerlink" title="AsyncTask 用法"></a>AsyncTask 用法</h4><p>AsyncTask 是抽象类，不能直接实例化，必须创建新类并继承它，抽象方法 doInBackground(Params…) 是一定要重写的，其它三个方法根据自己的需求确定。以下通过 URL 获取数据为例子来讲解 AsyncTask 的用法。代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncTaskExample</span> <span class="keyword">extends</span> <span class="title">AsyncTask</span>&lt;<span class="title">String</span>, <span class="title">Integer</span>, <span class="title">String</span>&gt; </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPreExecute</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>.onPreExecute();</div><div class="line">		mLoad.setVisibility(View.VISIBLE);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> String <span class="title">doInBackground</span><span class="params">(String... params)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> getUrlResponse(params[<span class="number">0</span>]);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(String s)</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>.onPostExecute(s);</div><div class="line">     	mLoad.setVisibility(View.GONE);</div><div class="line">     	mText.setText(s);</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从代码中可以很清晰地看出，第 5 行是显示加载进度条，表示正在获取数据；第 10 行是核心代码，异步操作，网络请求数据并将结果返回；第 16 - 17 行代码主要操作是隐藏进度条，表示数据加载完毕，并将获取到的结果显示出来。这里主要给出核心代码，至于其它代码也就调用而已。</p>
-<p>那么该如何调用呢？很简单，一行代码就搞定</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> AsyncTaskExample().execute(url);</div></pre></td></tr></table></figure>
-<h4 id="AsyncTask-源码解析"><a href="#AsyncTask-源码解析" class="headerlink" title="AsyncTask 源码解析"></a>AsyncTask 源码解析</h4><p>知其然必知其所以然。对于新知识点，学会使用之后，就应该探究其原理。由于个人倾向于通过画图来理解知识点的流程，因此先简单地给出 AsyncTask 任务执行的流程图，再根据流程图和源码进行讲解。流程图如下：</p>
-<p><img src="/images/asynctask/asynctask.png" alt=""></p>
-<p>对于源码的理解，一般是以最终调用的方法为入口，一步一步地理解整个流程。那么对于 AsyncTask 该从哪里入手呢？当然是从方法 execute(Params… params) 入手了，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> AsyncTask&lt;Params, Progress, Result&gt; <span class="title">execute</span><span class="params">(Params... params)</span> </span>&#123;</div><div class="line">	<span class="keyword">return</span> executeOnExecutor(sDefaultExecutor, params);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>对于 AsyncTask 不同版本，execute(Params… params) 方法的执行方式是不一样的。Android 1.6 以前，AsyncTask 是单线程串行执行任务的；Android 1.6，AsyncTask 是线程池多线程并行执行任务；但是到 Android 3.0，AsyncTask 又改为单线程串行执行任务的。该方法的逻辑很简单，直接调用方法 executeOnExecutor(Executor exec, Params… params)，将我们传入的参数 params 和 sDefaultExecutor 传到该方法里，并将的返回值返回。那么来看下该方法的具体实现，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> AsyncTask&lt;Params, Progress, Result&gt; <span class="title">executeOnExecutor</span><span class="params">(Executor exec, Params... params)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (mStatus != Status.PENDING) &#123;</div><div class="line">		<span class="keyword">switch</span> (mStatus) &#123;</div><div class="line">			<span class="keyword">case</span> RUNNING:</div><div class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Cannot execute task:"</span> +  <span class="string">" the task is already running."</span>);</div><div class="line">			<span class="keyword">case</span> FINISHED:</div><div class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Cannot execute task:"</span> +  <span class="string">" the task has already been executed "</span> +  <span class="string">"(a task can be executed only once)"</span>);</div><div class="line">		&#125;</div><div class="line">   	&#125;</div><div class="line">   	</div><div class="line">   	mStatus = Status.RUNNING;</div><div class="line">     onPreExecute();</div><div class="line">     mWorker.mParams = params;</div><div class="line">     exec.execute(mFuture);</div><div class="line">     <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>executeOnExecutor(Executor exec, Params… params) 方法是在线程池 THREAD_POOL_EXECUTOR 执行，允许多任务并发执行，但是不推荐采用多任务并发执行；在主线程执行。该方法实现的主要功能是：</p>
-<ul>
-<li><p>检查任务状态，并记录任务当前状态；</p>
-</li>
-<li><p>调用 onPreExecute() 方法，根据我们自己的需求可以重写该方法；</p>
-</li>
-<li><p>将我们传入的参数 params 赋值给 WorkRunnable 中字段 mParams(稍后解释)；</p>
-</li>
-<li><p>调用 SerialExecutor 中方法 execute(Runnable r) 执行任务。</p>
-</li>
-</ul>
-<p>mWorker 是 WorkerRunnable<params, result=""> 实例，而 WorkerRunnable 是抽象类，实现 Callable 接口，并且该接口有一个回调方法 call()；同时抽象类有一个字段 Params []，第 13 行代码就是把我们传进来的参数 params 赋值给它的。mWorker 是在创建 AsyncTask 实例时被初始化的，即 AsyncTask 构造方法里，并重写回调方法 call()，那么接下来看回调方法 call() 的具体实现。</params,></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">mWorker = <span class="keyword">new</span> WorkerRunnable&lt;Params, Result&gt;() &#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> Result <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		mTaskInvoked.set(<span class="keyword">true</span>);</div><div class="line">		Result result = <span class="keyword">null</span>;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);</div><div class="line">			<span class="comment">//noinspection unchecked</span></div><div class="line">            result = doInBackground(mParams);</div><div class="line">            Binder.flushPendingCommands();</div><div class="line">        &#125; <span class="keyword">catch</span> (Throwable tr) &#123;</div><div class="line">            mCancelled.set(<span class="keyword">true</span>);</div><div class="line">            <span class="keyword">throw</span> tr;</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            postResult(result);</div><div class="line">        &#125;</div><div class="line">           	<span class="keyword">return</span> result;</div><div class="line">      	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>该回调方法实现的主要功能：</p>
-<ul>
-<li><p>将 mTaskInvoked 设置为 true，表示任务已经被调用过；</p>
-</li>
-<li><p>设置线程优先级为后台线程；</p>
-</li>
-<li><p>调用 doInBackground(mParams) 方法，异步执行，后台执行的逻辑都写在这个方法里面，一定要被重写；如果任务执行抛出异常时，取消任务；</p>
-</li>
-<li><p>调用 postResult(result) 方法；</p>
-</li>
-</ul>
-<p>postResult(result) 的具体实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Result <span class="title">postResult</span><span class="params">(Result result)</span> </span>&#123;</div><div class="line">	<span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">	Message message = getHandler().obtainMessage(MESSAGE_POST_RESULT,</div><div class="line">	<span class="keyword">new</span> AsyncTaskResult&lt;Result&gt;(<span class="keyword">this</span>, result));</div><div class="line">	message.sendToTarget();</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从代码里可以看出，将执行结果通过 sHandler 发送 MESSAGE_POST_RESULT 的消息，然后 handleMessage() 方法收到消息后进行相应的处理。sHandler 是 InternalHandler 实例，主要作用是将任务执行的环境从线程切换到主线程中，从 InternalHandler 的具体实现就可以看出了。代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InternalHandler</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">InternalHandler</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>(Looper.getMainLooper());</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"unchecked"</span>, <span class="string">"RawUseOfParameterizedType"</span>&#125;)</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">		AsyncTaskResult&lt;?&gt; result = (AsyncTaskResult&lt;?&gt;) msg.obj;</div><div class="line">		<span class="keyword">switch</span> (msg.what) &#123;</div><div class="line">			<span class="keyword">case</span> MESSAGE_POST_RESULT:</div><div class="line">				result.mTask.finish(result.mData[<span class="number">0</span>]);</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">				</div><div class="line">			<span class="keyword">case</span> MESSAGE_POST_PROGRESS:</div><div class="line">             	result.mTask.onProgressUpdate(result.mData);</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从构造函数 InternalHandler() 就可以看出了，获取主线程 Looper，而 Handler 必须与 Looper 进行绑定，因此可以断定是在主线程里。<code>handleMessage()</code> 函数对两种消息进行处理：MESSAGE_POST_RESULT 和 MESSAGE_POST_PROGRESS；而我们刚刚发送的消息是 MESSAGE_POST_RESULT，那就先来看该消息收到后会做什么处理吧？很显然，调用 finish(Result result)，具体实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">finish</span><span class="params">(Result result)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (isCancelled()) &#123;</div><div class="line">		onCancelled(result);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		onPostExecute(result);</div><div class="line">	&#125;</div><div class="line">	mStatus = Status.FINISHED;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果任务被取消了，直接调用 onCancelled(result) 方法，onPostExecute(result) 方法不会被调用；否则就调用 onPostExecute(result) 方法，该方法需要被重写，在主线程执行，根据返回的结果进行相应的处理；最后修改任务的状态。那么对于消息 MESSAGE_POST_PROGRESS 是从哪里发出来的呢？还记得在前面的知识点讲解中有提到过如果在 doInBackground(mParams) 方法中调用 publishProgress(Progress…) 方法时，方法 onProgressUpdate(Progress…) 也会被调用，用于后台任务进度更新。没错，消息 MESSAGE_POST_PROGRESS 就是用来处理进度更新的。先看下 publishProgress(Progress…) 具体实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">publishProgress</span><span class="params">(Progress... values)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (!isCancelled()) &#123;</div><div class="line">		getHandler().obtainMessage(MESSAGE_POST_PROGRESS,</div><div class="line">		<span class="keyword">new</span> AsyncTaskResult&lt;Progress&gt;(<span class="keyword">this</span>, values)).sendToTarget();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>很显然，如果任务没有被取消的话，就会发送消息 MESSAGE_POST_PROGRESS，那么来看下收到该消息后的处理逻辑，即调用 onProgressUpdate(Progress… values) 方法，该方法需要我们根据自己的需求进行重写。</p>
-<p>再回到 executeOnExecutor(Executor exec, Params… params) 方法，第 14 行代码开始执行任务，在理解如何执行任务之前，先来理解参数 mFuture 和 sDefaultExecutor 的含义。</p>
-<p>mFuture 是 FutureTask<result> 实例，在 AsyncTask 构造方法中初始化。将 mWorker 作为参数传入 FutureTask 构造函数，个人认为传入该参数的作用是由于 FutureTask 中 run() 方法会被调用，而在该方法里会通过传入参数 mWorker 调用 call() 方法，进而使任务得到执行。FutureTask 是一个并发执行任务类，可以执行任务、取消任务、查询结果、获取结果；提交到线程池执行。实现的接口有 Future、Runnable。</result></p>
-<p>对于传入的参数 sDefaultExecutor，究竟是什么啥玩意呢？让我们来探个究竟吧。sDefaultExecutor 是 SerialExecutor 的实例，而 SerialExecutor 实际上是一个串行的线程池，主要的功能是一个进程中所有的 AsyncTask 任务都在这个串行的线程池中排队执行。看到这里，是不是还不知道任务真正在哪里被开始执行？其实以上都只是铺垫，下面才真正拉开序幕。真正开始执行任务的逻辑是在 SerialExecutor 中 execute(Runnable r) 方法里，具体实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SerialExecutor</span> <span class="keyword">implements</span> <span class="title">Executor</span> </span>&#123;</div><div class="line">	<span class="keyword">final</span> ArrayDeque&lt;Runnable&gt; mTasks = <span class="keyword">new</span> ArrayDeque&lt;Runnable&gt;();</div><div class="line">	Runnable mActive;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(<span class="keyword">final</span> Runnable r)</span> </span>&#123;</div><div class="line">		mTasks.offer(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">				<span class="keyword">try</span> &#123;</div><div class="line">					r.run();</div><div class="line">				&#125; <span class="keyword">finally</span> &#123;</div><div class="line">					scheduleNext();</div><div class="line">              	&#125;</div><div class="line">             &#125;</div><div class="line">         &#125;);</div><div class="line">            </div><div class="line">         <span class="keyword">if</span> (mActive == <span class="keyword">null</span>) &#123;</div><div class="line">         	scheduleNext();</div><div class="line">         &#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">scheduleNext</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> ((mActive = mTasks.poll()) != <span class="keyword">null</span>) &#123;</div><div class="line">			THREAD_POOL_EXECUTOR.execute(mActive);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>首先将 AsyncTask 通过线程池 SerialExecutor 添加到队列里（从这里可以看出 SerialExecutor 的作用），然后重写 run() 方法，并判断 mActive 是否为 null，即当前是否有任务在执行，如果有任务执行的话就等待该任务执行完后再执行其他任务，否则就执行任务，即调用 scheduleNext() 方法，该方法的主要功能是从队列 mTasks 获取任务，任务不为空的话就直接提交到线程池 THREAD_POOL_EXECUTOR 里执行（任务真正开始执行），即启动任务，根据个人的理解，任务被启动后，会调用第 6 行代码，即 run() 方法，进而调用 FutureTask 中 run() 方法，从而会调用 WorkerRunnable 中 call() 方法，因此任务被执行，我们重写的方法也会被调用。结合以上流程图应该能更清晰地理解 AsyncTask 执行流程。</p>
-<p>以上是自己在学习 《Android 开发艺术探索》 这本书第十一章关于 AsyncTask 这个主题的学习笔记，由于自己能力有限，有错误的地方欢迎指出。</p>
-<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="https://developer.android.com/reference/android/os/AsyncTask.html" target="_blank" rel="external">https://developer.android.com/reference/android/os/AsyncTask.html</a></p>
-<p>《Android 开发艺术探索》》中 第 11 章 Android 的线程和线程池</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1772,7 +1772,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
