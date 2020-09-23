@@ -981,6 +981,192 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/08/18/源码构建流程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/18/源码构建流程/" itemprop="url">源码构建流程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-18T21:17:26+08:00">
+                2020-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/18/源码构建流程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/08/18/源码构建流程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/08/18/源码构建流程/" class="leancloud_visitors" data-flag-title="源码构建流程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Vue 源码是基于 <a href="https://github.com/rollup/rollup" target="_blank" rel="external">Rollup</a> 构建的。</p>
+<p>当我们在终端执行命令：<code>npm run build</code> 时，会去加载 <code>package.json</code> 文件，执行字段 <code>script</code> 对应的配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scripts: &#123;</div><div class="line">	<span class="string">"build"</span>: <span class="string">"node scripts/build.js"</span>,</div><div class="line">    <span class="string">"build:ssr"</span>: <span class="string">"npm run build -- web-runtime-cjs,web-server-renderer"</span>,</div><div class="line">    <span class="string">"build:weex"</span>: <span class="string">"npm run build -- weex"</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即执行命令：<code>&quot;build&quot;: &quot;node scripts/build.js&quot;</code>。也就是说，构建时执行的文件是：<code>scripts/build.js</code>。</p>
+<p>##一、 <code>scripts/build.js</code> 逻辑分析</p>
+<h3 id="1、引入依赖及文件夹创建"><a href="#1、引入依赖及文件夹创建" class="headerlink" title="1、引入依赖及文件夹创建"></a>1、引入依赖及文件夹创建</h3><p>引入相关依赖，并且判断文件夹 <code>dist</code> 是否存在；如果不存在的话，则创建该文件夹。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (!fs.existsSync(<span class="string">'dist'</span>)) &#123;</div><div class="line">    fs.mkdirSync(<span class="string">'dist'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2、获取构建不同版本-vue-配置"><a href="#2、获取构建不同版本-vue-配置" class="headerlink" title="2、获取构建不同版本 vue 配置"></a>2、获取构建不同版本 vue 配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> builds = <span class="built_in">require</span>(<span class="string">'./config'</span>).getAllBuilds()</div></pre></td></tr></table></figure>
+<p>备注：下面再来分析如何获取配置</p>
+<h3 id="3、根据命令行参数过滤配置"><a href="#3、根据命令行参数过滤配置" class="headerlink" title="3、根据命令行参数过滤配置"></a>3、根据命令行参数过滤配置</h3><p>获取所有构建配置 <code>builds</code>，根据命令行参数过滤不需要的构建配置。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// filter builds via command line arg（只需要命令行参数的配置）</span></div><div class="line"><span class="keyword">if</span> (process.argv[<span class="number">2</span>]) &#123;</div><div class="line">    <span class="keyword">const</span> filters = process.argv[<span class="number">2</span>].split(<span class="string">','</span>)</div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> filters.some(f =&gt; b.output.file.indexOf(f) &gt; <span class="number">-1</span> || b._name.indexOf(f) &gt; <span class="number">-1</span>)</div><div class="line">    &#125;)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// filter out weex builds by default（默认过滤 weex 版本）</span></div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> b.output.file.indexOf(<span class="string">'weex'</span>) === <span class="number">-1</span></div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4、调用-rollup-rollup-方法构建，并且输出构建产物"><a href="#4、调用-rollup-rollup-方法构建，并且输出构建产物" class="headerlink" title="4、调用 rollup.rollup 方法构建，并且输出构建产物"></a>4、调用 <code>rollup.rollup</code> 方法构建，并且输出构建产物</h3><p>构建流程如下：</p>
+<ul>
+<li><p><code>build</code> 方法：通过计数器 <code>built</code> 循环调用 <code>buildEntry</code> 方法进行构建。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">build</span>(<span class="params">builds</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> built = <span class="number">0</span></div><div class="line">    <span class="keyword">const</span> total = builds.length</div><div class="line">    <span class="keyword">const</span> next = () =&gt; &#123;</div><div class="line">        buildEntry(builds[built]).then(() =&gt; &#123;</div><div class="line">            built++</div><div class="line">            <span class="keyword">if</span> (built &lt; total) &#123;</div><div class="line">                next()</div><div class="line">            &#125;</div><div class="line">        &#125;).catch(logError)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    next()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><code>buildEntry</code> 方法：调用方法 <code>rollup.rollup</code> 打包构建，并且输出构建产物。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">buildEntry</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> output = config.output</div><div class="line">    <span class="keyword">const</span> &#123; file, banner &#125; = output</div><div class="line">    <span class="keyword">const</span> isProd = <span class="regexp">/(min|prod)\.js$/</span>.test(file)</div><div class="line">    <span class="keyword">return</span> rollup.rollup(config)</div><div class="line">        .then(bundle =&gt; bundle.generate(output))</div><div class="line">        .then((&#123; output: [&#123; code &#125;] &#125;) =&gt; &#123;</div><div class="line">            <span class="keyword">if</span> (isProd) &#123;</div><div class="line">                <span class="keyword">const</span> minified = (banner ? banner + <span class="string">'\n'</span> : <span class="string">''</span>) + terser.minify(code, &#123;</div><div class="line">                    toplevel: <span class="literal">true</span>,</div><div class="line">                    output: &#123;</div><div class="line">                        ascii_only: <span class="literal">true</span></div><div class="line">                    &#125;,</div><div class="line">                    compress: &#123;</div><div class="line">                        pure_funcs: [<span class="string">'makeMap'</span>]</div><div class="line">                    &#125;</div><div class="line">                &#125;).code</div><div class="line">                <span class="keyword">return</span> write(file, minified, <span class="literal">true</span>)</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> write(file, code)</div><div class="line">            &#125;</div><div class="line">        &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="二、-scripts-config-js-逻辑分析"><a href="#二、-scripts-config-js-逻辑分析" class="headerlink" title="二、 scripts/config.js 逻辑分析"></a>二、 <code>scripts/config.js</code> 逻辑分析</h2><p><code>config.js</code> 文件的作用是根据 <code>rollup</code> 的规范重新组合配置，得到 <code>Vue</code> 构建的所有版本。</p>
+<h3 id="1、声明构建-Vue-所有版本常量-builds。"><a href="#1、声明构建-Vue-所有版本常量-builds。" class="headerlink" title="1、声明构建 Vue 所有版本常量 builds。"></a>1、声明构建 <code>Vue</code> 所有版本常量 <code>builds</code>。</h3><p>举例说明如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Runtime only (CommonJS). Used by bundlers e.g. Webpack &amp; Browserify</span></div><div class="line"><span class="string">'web-runtime-cjs-dev'</span>: &#123;</div><div class="line">    entry: resolve(<span class="string">'web/entry-runtime.js'</span>),</div><div class="line">    dest: resolve(<span class="string">'dist/vue.runtime.common.dev.js'</span>),</div><div class="line">    format: <span class="string">'cjs'</span>,</div><div class="line">    env: <span class="string">'development'</span>,</div><div class="line">    banner</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><code>entry</code>：表示构建的入口 <code>JS</code> 文件地址。</p>
+<p><code>dest</code>：表示构建后的 <code>JS</code> 文件地址。</p>
+<p><code>format</code>：表示构建出来的文件遵循 <code>CommonJS</code> 格式。</p>
+<p><code>env</code>：指定构建环境。</p>
+<p><code>banner</code>：构建说明。</p>
+<h3 id="2、根据-rollup-规范生成配置（genConfig）"><a href="#2、根据-rollup-规范生成配置（genConfig）" class="headerlink" title="2、根据 rollup 规范生成配置（genConfig）"></a>2、根据 <code>rollup</code> 规范生成配置（genConfig）</h3><h3 id="3、导出配置"><a href="#3、导出配置" class="headerlink" title="3、导出配置"></a>3、导出配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (process.env.TARGET) &#123;</div><div class="line">    <span class="built_in">module</span>.exports = genConfig(process.env.TARGET)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    exports.getBuild = genConfig</div><div class="line">    exports.getAllBuilds = () =&gt; <span class="built_in">Object</span>.keys(builds).map(genConfig)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/03/29/Vue-入口初始化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1132,192 +1318,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/11/19/Javascript-之原型及原型链/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/11/19/Javascript-之原型及原型链/" itemprop="url">Javascript 之原型及原型链</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-19T07:53:16+08:00">
-                2019-11-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/11/19/Javascript-之原型及原型链/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2019/11/19/Javascript-之原型及原型链/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2019/11/19/Javascript-之原型及原型链/" class="leancloud_visitors" data-flag-title="Javascript 之原型及原型链">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Javascript 函数有一个 <code>prototype</code> 属性，该属性是一个指针，指向一个对象，该对象包含特定类型的所有实例共享的属性和方法，称为实例对象的<strong>原型对象</strong>。</p>
-<p>简单来说，在 JavaScript 中创建一个新函数，就会自动获取 <code>prototype</code> 属性，通过 <code>new</code> 命令创建实例对象，实例对象会获取 <code>prototype</code> 属性所指向的原型对象的属性和方法。打个比方，在 Java 中有类和继承的概念，<code>prototype</code> 所指向的原型对象就好比 Java 中的基类，而新函数好比是 Java 中的新类，继承基类中的属性和方法，那么创建实例后，除了能访问到本身的属性和方法外，还能访问到基类中的属性和方法。</p>
-<h1 id="构造函数与原型对象之间的关系"><a href="#构造函数与原型对象之间的关系" class="headerlink" title="构造函数与原型对象之间的关系"></a>构造函数与原型对象之间的关系</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person();</div><div class="line">person.age = <span class="number">12</span>;</div><div class="line"><span class="built_in">console</span>.log(person.age);    <span class="comment">// 12</span></div></pre></td></tr></table></figure>
-<p>以上例子，Person 是一个构造函数，通过 <code>new</code> 命令实例化对象。通过构造函数实例化对象的方式，如果多个实例对象都拥有属性 <code>age</code> 时，则需要在每个实例对象本身设置该属性，这样的操作显得有点冗余。那么有没有一种方式可以把属性 <code>age</code> 设置为公有，实例化对象时就自动拥有公共的属性呢，而对于实例对象本身只需要添加自己需要的属性即可。答案是有的。</p>
-<p>这里就需要引出 <code>prototype</code> 属性，那么 <code>prototype</code> 属性是什么呢？除了<strong>bind 函数</strong>、<strong>箭头函数</strong>以及 <strong>Function.prototype</strong> 外，每个函数都有一个属性 <strong>prototype</strong>，该属性是一个指针，指向一个对象，该对象是函数的<strong>原型对象</strong>，原型对象包含了公共的属性和方法，实例化的所有对象都共享原型对象的属性和方法。<em>需要注意的是 <em>*<code>prototype</code> 属性是函数才拥有的。</em></em> </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Person.prototype.age = <span class="number">12</span>;</div><div class="line">Person.prototype.name = <span class="string">"Jack"</span>;</div><div class="line"></div><div class="line">Person.prototype.say = () =&gt; &#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"Hello World !"</span>);</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person1 = <span class="keyword">new</span> Person();</div><div class="line"><span class="keyword">let</span> person2 = <span class="keyword">new</span> Person();</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(person1.age);    <span class="comment">// 12</span></div><div class="line"><span class="built_in">console</span>.log(person1.name);   <span class="comment">// Jack</span></div><div class="line"><span class="built_in">console</span>.log(person2.age);    <span class="comment">// 12</span></div><div class="line"><span class="built_in">console</span>.log(person2.name);   <span class="comment">// Jack</span></div><div class="line"><span class="built_in">console</span>.log(person1.say());  <span class="comment">// Hello World</span></div><div class="line"><span class="built_in">console</span>.log(person2.say());  <span class="comment">// Hello World</span></div><div class="line"></div><div class="line">person1.job = <span class="string">"test"</span>;</div><div class="line"><span class="built_in">console</span>.log(person1.job);    <span class="comment">// test</span></div><div class="line"><span class="built_in">console</span>.log(person2.job);    <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-<p>从以上例子可以得知，通过 <code>prototype</code> 属性添加 <code>age</code> 和 <code>name</code> 属性，然后实例化两个对象，分别打印出两个属性是有值的，说明实例对象拥有了原型对象的属性和方法。</p>
-<p>现在我们已经知道构造函数与原型对象的单向关系，即构造函数通过 <code>prototype</code> 属性指向原型对象。那么原型对象能反过来通过某种方式指向原先的构造函数吗？答案是可以的，这时就需要 <code>constructor</code> 派上场了。</p>
-<p>每个原型对象都会有一个 <code>constructor</code> 属性，而 <code>constructor</code> 属性包含一个指向 <code>prototype</code> 属性所在函数的指针。以上面例子为例，即</p>
-<p><code>Person.prototype.constructor === Person</code>（<code>true</code>）。</p>
-<p>至此，我们理清了构造函数与原型对象之间的关系，关系图如下：</p>
-<p><img src="/images/javascript/prototype/constructor_prototype_object_relation.png" alt=""></p>
-<h1 id="实例对象与原型对象之间的关系"><a href="#实例对象与原型对象之间的关系" class="headerlink" title="实例对象与原型对象之间的关系"></a>实例对象与原型对象之间的关系</h1><p>当读取实例对象属性时，首先会在实例对象本身查找该属性是否存在，不存在的话，就会往实例对象与之关联的原型对象查找，再查找不到时，直向原型的原型查找，查找到最上层为止。</p>
-<p>例子如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span> (<span class="params"></span>) </span>&#123;&#125;</div><div class="line"></div><div class="line">Person.prototype.name = <span class="string">"Jack"</span>;</div><div class="line">Person.prototype.desc = <span class="string">"desc"</span>;</div><div class="line"></div><div class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> Person();</div><div class="line"><span class="built_in">console</span>.log(person.name);    <span class="comment">// Jack</span></div></pre></td></tr></table></figure>
-<p>可见，实例对象 <code>person</code> 本身没有属性 <code>name</code>，但是还能查找到该属性，这是通过原型对象找到的。那么实例对象是通过什么方式与原型对象关联呢？其实实例对象有一个属性 <code>__proto__</code>，指向原型对象，即 </p>
-<p><code>person.__proto__ === Person.prototype</code>（<code>true</code>）。</p>
-<p><img src="/images/javascript/prototype/proto_to_prototype.png" alt=""></p>
-<h1 id="原型对象的原型对象"><a href="#原型对象的原型对象" class="headerlink" title="原型对象的原型对象"></a>原型对象的原型对象</h1><p>从上面我们已经理清了构造函数与原型对象、实例对象与原型对象之间的关系，那么我们会不会产生一个疑惑：原型对象的原型对象是什么，即 <code>Person.prototype</code> 的原型对象是什么？</p>
-<p>JavaScript 中的所有对象都来自 <code>Object</code>，并且所有对象都从 <code>Object.prototype</code> 继承属性和方法，尽管它们可能被覆盖。因此可以推出：</p>
-<p><code>Person.prototype.__proto__ === Object.prototype</code>（<strong>true</strong>）。</p>
-<p><img src="/images/javascript/prototype/object_prototype.png" alt=""></p>
-<p>图中画虚线的表示通过 <code>__prototype__</code> 形成原型链；至此，已经把原型对象及原型链的知识讲完。最后放一张网上对原型的理解画得比较全面的关系图，如下：</p>
-<p><img src="/images/javascript/prototype/prototype_all.png" alt=""></p>
-<p>注：以上只是自己整理的学习笔记，由于水平有限难免有错误，欢迎指出。随着自己对原型的深入理解，笔记也会做相应的修改，最后放上资料参考来源。</p>
-<ul>
-<li><p><a href="https://github.com/mqyqingfeng/Blog/issues/2" target="_blank" rel="external">https://github.com/mqyqingfeng/Blog/issues/2</a></p>
-</li>
-<li><p>《JavaScript 高级程序设计》（第 3 版）</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1367,7 +1367,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

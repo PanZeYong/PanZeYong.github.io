@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="知识点整理," />
+  <meta name="keywords" content="Vue.js 源码解析," />
 
 
 
@@ -95,16 +95,22 @@
 
 
 
-<meta name="description" content="一、JavaScript 数组（包括元素和对象）去重1、for 循环1234567891011121314151617function unique(array) &amp;#123;    var result = [array[0]];	for (var i = 1, len = array.length; i &amp;lt; len; i++) &amp;#123;		for (var j = 0, result">
+<meta name="description" content="Vue 源码是基于 Rollup 构建的。
+当我们在终端执行命令：npm run build 时，会去加载 package.json 文件，执行字段 script 对应的配置：
+12345scripts: &amp;#123;	&quot;build&quot;: &quot;node scripts/build.js&quot;,    &quot;build:ssr&quot;: &quot;npm run build -- web-runtime-cjs,web-se">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript 问题">
-<meta property="og:url" content="http://panzeyong.com/2018/03/08/JavaScript-问题/index.html">
+<meta property="og:title" content="源码构建流程">
+<meta property="og:url" content="http://panzeyong.com/2020/08/18/源码构建流程/index.html">
 <meta property="og:site_name" content="PANJU's Note">
-<meta property="og:description" content="一、JavaScript 数组（包括元素和对象）去重1、for 循环1234567891011121314151617function unique(array) &amp;#123;    var result = [array[0]];	for (var i = 1, len = array.length; i &amp;lt; len; i++) &amp;#123;		for (var j = 0, result">
-<meta property="og:updated_time" content="2020-08-29T09:07:54.812Z">
+<meta property="og:description" content="Vue 源码是基于 Rollup 构建的。
+当我们在终端执行命令：npm run build 时，会去加载 package.json 文件，执行字段 script 对应的配置：
+12345scripts: &amp;#123;	&quot;build&quot;: &quot;node scripts/build.js&quot;,    &quot;build:ssr&quot;: &quot;npm run build -- web-runtime-cjs,web-se">
+<meta property="og:updated_time" content="2020-09-23T15:19:44.688Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript 问题">
-<meta name="twitter:description" content="一、JavaScript 数组（包括元素和对象）去重1、for 循环1234567891011121314151617function unique(array) &amp;#123;    var result = [array[0]];	for (var i = 1, len = array.length; i &amp;lt; len; i++) &amp;#123;		for (var j = 0, result">
+<meta name="twitter:title" content="源码构建流程">
+<meta name="twitter:description" content="Vue 源码是基于 Rollup 构建的。
+当我们在终端执行命令：npm run build 时，会去加载 package.json 文件，执行字段 script 对应的配置：
+12345scripts: &amp;#123;	&quot;build&quot;: &quot;node scripts/build.js&quot;,    &quot;build:ssr&quot;: &quot;npm run build -- web-runtime-cjs,web-se">
 
 
 
@@ -132,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://panzeyong.com/2018/03/08/JavaScript-问题/"/>
+  <link rel="canonical" href="http://panzeyong.com/2020/08/18/源码构建流程/"/>
 
 
 
 
 
-  <title>JavaScript 问题 | PANJU's Note</title>
+  <title>源码构建流程 | PANJU's Note</title>
   
 
 
@@ -267,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/03/08/JavaScript-问题/">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/08/18/源码构建流程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="PANJU">
@@ -284,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JavaScript 问题</h1>
+          <h1 class="post-title" itemprop="name headline">源码构建流程</h1>
         
 
         <div class="post-meta">
@@ -296,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-08T17:25:35+08:00">
-                2018-03-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-18T21:17:26+08:00">
+                2020-08-18
               </time>
             
 
@@ -319,8 +325,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
                   </a>
                 </span>
 
@@ -337,9 +343,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/03/08/JavaScript-问题/#comments" itemprop="discussionUrl">
+                <a href="/2020/08/18/源码构建流程/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/03/08/JavaScript-问题/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2020/08/18/源码构建流程/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -347,7 +353,7 @@
 
           
           
-             <span id="/2018/03/08/JavaScript-问题/" class="leancloud_visitors" data-flag-title="JavaScript 问题">
+             <span id="/2020/08/18/源码构建流程/" class="leancloud_visitors" data-flag-title="源码构建流程">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -375,26 +381,37 @@
       
 
       
-        <h1 id="一、JavaScript-数组（包括元素和对象）去重"><a href="#一、JavaScript-数组（包括元素和对象）去重" class="headerlink" title="一、JavaScript 数组（包括元素和对象）去重"></a>一、JavaScript 数组（包括元素和对象）去重</h1><h3 id="1、for-循环"><a href="#1、for-循环" class="headerlink" title="1、for 循环"></a>1、for 循环</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">array</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> result = [array[<span class="number">0</span>]];</div><div class="line"></div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>, len = array.length; i &lt; len; i++) &#123;</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>, resultLen = result.length; j &lt; resultLen; j++) &#123;</div><div class="line">			<span class="keyword">if</span> (array[i] === result[j]) &#123;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (j === resultLen) &#123;</div><div class="line">			result.push(array[i]);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="2、indexOf"><a href="#2、indexOf" class="headerlink" title="2、indexOf"></a>2、indexOf</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">array</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> res = [];</div><div class="line">	</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = array.length; i &lt; len; i++) &#123;</div><div class="line">		<span class="keyword">var</span> current = array[i];</div><div class="line">		<span class="keyword">if</span> (res.indexOf(current) === <span class="number">-1</span>) &#123;</div><div class="line">			res.push(current);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> res;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="3、排序后去重"><a href="#3、排序后去重" class="headerlink" title="3、排序后去重"></a>3、排序后去重</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">array</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> res = [];</div><div class="line">    <span class="keyword">var</span> sortedArray = array.concat().sort();</div><div class="line">    <span class="keyword">var</span> seen;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = sortedArray.length; i &lt; len; i++) &#123;</div><div class="line">        <span class="comment">// 如果是第一个元素或者相邻的元素不相同</span></div><div class="line">        <span class="keyword">if</span> (!i || seen !== sortedArray[i]) &#123;</div><div class="line">            res.push(sortedArray[i])</div><div class="line">        &#125;</div><div class="line">        seen = sortedArray[i];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> res;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4、ES6-Set"><a href="#4、ES6-Set" class="headerlink" title="4、ES6 Set"></a>4、ES6 Set</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">unique</span>(<span class="params">array</span>) </span>&#123;</div><div class="line">   <span class="keyword">return</span> <span class="built_in">Array</span>.from(<span class="keyword">new</span> <span class="built_in">Set</span>(array));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="5、根据对象属性的唯一值（针对数组元素是对象）"><a href="#5、根据对象属性的唯一值（针对数组元素是对象）" class="headerlink" title="5、根据对象属性的唯一值（针对数组元素是对象）"></a>5、根据对象属性的唯一值（针对数组元素是对象）</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">unique(score: Score) &#123;</div><div class="line">    <span class="keyword">this</span>.changedScore.some((item, index) =&gt; &#123;</div><div class="line">      <span class="keyword">if</span> (item.questionId === score.questionId) &#123;</div><div class="line">        <span class="keyword">this</span>.changedScore.splice(index, <span class="number">1</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">      &#125;</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">this</span>.changedScore = <span class="keyword">this</span>.changedScore.concat(score);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<h1 id="二、如何防止频繁操作"><a href="#二、如何防止频繁操作" class="headerlink" title="二、如何防止频繁操作"></a>二、如何防止频繁操作</h1><h3 id="1、防抖动"><a href="#1、防抖动" class="headerlink" title="1、防抖动"></a>1、防抖动</h3><ul>
-<li><p>原理：当触发事件时，事件必须在 n 秒后才执行，但是当在这 n 秒内又触发事件，事件执行是以最新触发事件的事件为起点，直到这 n 秒内不再触发事件为止，事件才在 n 秒后被执行。</p>
-</li>
-<li><p>代码实现</p>
-  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait</span>) </span>&#123;</div><div class="line">	    <span class="keyword">var</span> timeout;</div><div class="line">	    </div><div class="line">	    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	        <span class="keyword">var</span> context = <span class="keyword">this</span>;</div><div class="line">	        <span class="keyword">var</span> args = <span class="built_in">arguments</span>;</div><div class="line">	        </div><div class="line">	        clearTimeout(timeout)</div><div class="line">	        timeout = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	            func.apply(context, args)</div><div class="line">	        &#125;, wait);</div><div class="line">	    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="2、节流"><a href="#2、节流" class="headerlink" title="2、节流"></a>2、节流</h3><p>允许一个函数在规定的时间内只执行一次。</p>
-<p>实现方法：</p>
+        <p>Vue 源码是基于 <a href="https://github.com/rollup/rollup" target="_blank" rel="external">Rollup</a> 构建的。</p>
+<p>当我们在终端执行命令：<code>npm run build</code> 时，会去加载 <code>package.json</code> 文件，执行字段 <code>script</code> 对应的配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scripts: &#123;</div><div class="line">	<span class="string">"build"</span>: <span class="string">"node scripts/build.js"</span>,</div><div class="line">    <span class="string">"build:ssr"</span>: <span class="string">"npm run build -- web-runtime-cjs,web-server-renderer"</span>,</div><div class="line">    <span class="string">"build:weex"</span>: <span class="string">"npm run build -- weex"</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即执行命令：<code>&quot;build&quot;: &quot;node scripts/build.js&quot;</code>。也就是说，构建时执行的文件是：<code>scripts/build.js</code>。</p>
+<p>##一、 <code>scripts/build.js</code> 逻辑分析</p>
+<h3 id="1、引入依赖及文件夹创建"><a href="#1、引入依赖及文件夹创建" class="headerlink" title="1、引入依赖及文件夹创建"></a>1、引入依赖及文件夹创建</h3><p>引入相关依赖，并且判断文件夹 <code>dist</code> 是否存在；如果不存在的话，则创建该文件夹。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (!fs.existsSync(<span class="string">'dist'</span>)) &#123;</div><div class="line">    fs.mkdirSync(<span class="string">'dist'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2、获取构建不同版本-vue-配置"><a href="#2、获取构建不同版本-vue-配置" class="headerlink" title="2、获取构建不同版本 vue 配置"></a>2、获取构建不同版本 vue 配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> builds = <span class="built_in">require</span>(<span class="string">'./config'</span>).getAllBuilds()</div></pre></td></tr></table></figure>
+<p>备注：下面再来分析如何获取配置</p>
+<h3 id="3、根据命令行参数过滤配置"><a href="#3、根据命令行参数过滤配置" class="headerlink" title="3、根据命令行参数过滤配置"></a>3、根据命令行参数过滤配置</h3><p>获取所有构建配置 <code>builds</code>，根据命令行参数过滤不需要的构建配置。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// filter builds via command line arg（只需要命令行参数的配置）</span></div><div class="line"><span class="keyword">if</span> (process.argv[<span class="number">2</span>]) &#123;</div><div class="line">    <span class="keyword">const</span> filters = process.argv[<span class="number">2</span>].split(<span class="string">','</span>)</div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> filters.some(f =&gt; b.output.file.indexOf(f) &gt; <span class="number">-1</span> || b._name.indexOf(f) &gt; <span class="number">-1</span>)</div><div class="line">    &#125;)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// filter out weex builds by default（默认过滤 weex 版本）</span></div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> b.output.file.indexOf(<span class="string">'weex'</span>) === <span class="number">-1</span></div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4、调用-rollup-rollup-方法构建，并且输出构建产物"><a href="#4、调用-rollup-rollup-方法构建，并且输出构建产物" class="headerlink" title="4、调用 rollup.rollup 方法构建，并且输出构建产物"></a>4、调用 <code>rollup.rollup</code> 方法构建，并且输出构建产物</h3><p>构建流程如下：</p>
 <ul>
-<li><p>时间戳</p>
-</li>
-<li><p>定时器</p>
+<li><p><code>build</code> 方法：通过计数器 <code>built</code> 循环调用 <code>buildEntry</code> 方法进行构建。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">build</span>(<span class="params">builds</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> built = <span class="number">0</span></div><div class="line">    <span class="keyword">const</span> total = builds.length</div><div class="line">    <span class="keyword">const</span> next = () =&gt; &#123;</div><div class="line">        buildEntry(builds[built]).then(() =&gt; &#123;</div><div class="line">            built++</div><div class="line">            <span class="keyword">if</span> (built &lt; total) &#123;</div><div class="line">                next()</div><div class="line">            &#125;</div><div class="line">        &#125;).catch(logError)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    next()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 </ul>
+<ul>
+<li><p><code>buildEntry</code> 方法：调用方法 <code>rollup.rollup</code> 打包构建，并且输出构建产物。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">buildEntry</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> output = config.output</div><div class="line">    <span class="keyword">const</span> &#123; file, banner &#125; = output</div><div class="line">    <span class="keyword">const</span> isProd = <span class="regexp">/(min|prod)\.js$/</span>.test(file)</div><div class="line">    <span class="keyword">return</span> rollup.rollup(config)</div><div class="line">        .then(bundle =&gt; bundle.generate(output))</div><div class="line">        .then((&#123; output: [&#123; code &#125;] &#125;) =&gt; &#123;</div><div class="line">            <span class="keyword">if</span> (isProd) &#123;</div><div class="line">                <span class="keyword">const</span> minified = (banner ? banner + <span class="string">'\n'</span> : <span class="string">''</span>) + terser.minify(code, &#123;</div><div class="line">                    toplevel: <span class="literal">true</span>,</div><div class="line">                    output: &#123;</div><div class="line">                        ascii_only: <span class="literal">true</span></div><div class="line">                    &#125;,</div><div class="line">                    compress: &#123;</div><div class="line">                        pure_funcs: [<span class="string">'makeMap'</span>]</div><div class="line">                    &#125;</div><div class="line">                &#125;).code</div><div class="line">                <span class="keyword">return</span> write(file, minified, <span class="literal">true</span>)</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> write(file, code)</div><div class="line">            &#125;</div><div class="line">        &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="二、-scripts-config-js-逻辑分析"><a href="#二、-scripts-config-js-逻辑分析" class="headerlink" title="二、 scripts/config.js 逻辑分析"></a>二、 <code>scripts/config.js</code> 逻辑分析</h2><p><code>config.js</code> 文件的作用是根据 <code>rollup</code> 的规范重新组合配置，得到 <code>Vue</code> 构建的所有版本。</p>
+<h3 id="1、声明构建-Vue-所有版本常量-builds。"><a href="#1、声明构建-Vue-所有版本常量-builds。" class="headerlink" title="1、声明构建 Vue 所有版本常量 builds。"></a>1、声明构建 <code>Vue</code> 所有版本常量 <code>builds</code>。</h3><p>举例说明如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Runtime only (CommonJS). Used by bundlers e.g. Webpack &amp; Browserify</span></div><div class="line"><span class="string">'web-runtime-cjs-dev'</span>: &#123;</div><div class="line">    entry: resolve(<span class="string">'web/entry-runtime.js'</span>),</div><div class="line">    dest: resolve(<span class="string">'dist/vue.runtime.common.dev.js'</span>),</div><div class="line">    format: <span class="string">'cjs'</span>,</div><div class="line">    env: <span class="string">'development'</span>,</div><div class="line">    banner</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><code>entry</code>：表示构建的入口 <code>JS</code> 文件地址。</p>
+<p><code>dest</code>：表示构建后的 <code>JS</code> 文件地址。</p>
+<p><code>format</code>：表示构建出来的文件遵循 <code>CommonJS</code> 格式。</p>
+<p><code>env</code>：指定构建环境。</p>
+<p><code>banner</code>：构建说明。</p>
+<h3 id="2、根据-rollup-规范生成配置（genConfig）"><a href="#2、根据-rollup-规范生成配置（genConfig）" class="headerlink" title="2、根据 rollup 规范生成配置（genConfig）"></a>2、根据 <code>rollup</code> 规范生成配置（genConfig）</h3><h3 id="3、导出配置"><a href="#3、导出配置" class="headerlink" title="3、导出配置"></a>3、导出配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (process.env.TARGET) &#123;</div><div class="line">    <span class="built_in">module</span>.exports = genConfig(process.env.TARGET)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    exports.getBuild = genConfig</div><div class="line">    exports.getAllBuilds = () =&gt; <span class="built_in">Object</span>.keys(builds).map(genConfig)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -424,7 +441,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/知识点整理/" rel="tag"># 知识点整理</a>
+            <a href="/tags/Vue-js-源码解析/" rel="tag"># Vue.js 源码解析</a>
           
         </div>
       
@@ -437,8 +454,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/22/插入排序：直接插入排序/" rel="next" title="插入排序：直接插入排序">
-                <i class="fa fa-chevron-left"></i> 插入排序：直接插入排序
+              <a href="/2020/03/29/Vue-入口初始化/" rel="next" title="Vue 入口初始化">
+                <i class="fa fa-chevron-left"></i> Vue 入口初始化
               </a>
             
           </div>
@@ -447,8 +464,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/12/04/《Python3-网络爬虫开发实战》问题汇总/" rel="prev" title="《Python3 网络爬虫开发实战》问题汇总（持续更新......）">
-                《Python3 网络爬虫开发实战》问题汇总（持续更新......） <i class="fa fa-chevron-right"></i>
+              <a href="/2020/08/30/普通节点-patch 过程/" rel="prev" title="普通节点 patch 过程">
+                普通节点 patch 过程 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -603,7 +620,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、JavaScript-数组（包括元素和对象）去重"><span class="nav-number">1.</span> <span class="nav-text">一、JavaScript 数组（包括元素和对象）去重</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、for-循环"><span class="nav-number">1.0.1.</span> <span class="nav-text">1、for 循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、indexOf"><span class="nav-number">1.0.2.</span> <span class="nav-text">2、indexOf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、排序后去重"><span class="nav-number">1.0.3.</span> <span class="nav-text">3、排序后去重</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、ES6-Set"><span class="nav-number">1.0.4.</span> <span class="nav-text">4、ES6 Set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、根据对象属性的唯一值（针对数组元素是对象）"><span class="nav-number">1.0.5.</span> <span class="nav-text">5、根据对象属性的唯一值（针对数组元素是对象）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、如何防止频繁操作"><span class="nav-number">2.</span> <span class="nav-text">二、如何防止频繁操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、防抖动"><span class="nav-number">2.0.1.</span> <span class="nav-text">1、防抖动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、节流"><span class="nav-number">2.0.2.</span> <span class="nav-text">2、节流</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、引入依赖及文件夹创建"><span class="nav-number">1.</span> <span class="nav-text">1、引入依赖及文件夹创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、获取构建不同版本-vue-配置"><span class="nav-number">2.</span> <span class="nav-text">2、获取构建不同版本 vue 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、根据命令行参数过滤配置"><span class="nav-number">3.</span> <span class="nav-text">3、根据命令行参数过滤配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、调用-rollup-rollup-方法构建，并且输出构建产物"><span class="nav-number">4.</span> <span class="nav-text">4、调用 rollup.rollup 方法构建，并且输出构建产物</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、-scripts-config-js-逻辑分析"><span class="nav-number"></span> <span class="nav-text">二、 scripts/config.js 逻辑分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、声明构建-Vue-所有版本常量-builds。"><span class="nav-number">1.</span> <span class="nav-text">1、声明构建 Vue 所有版本常量 builds。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、根据-rollup-规范生成配置（genConfig）"><span class="nav-number">2.</span> <span class="nav-text">2、根据 rollup 规范生成配置（genConfig）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、导出配置"><span class="nav-number">3.</span> <span class="nav-text">3、导出配置</span></a></li></ol></div>
             
 
           </div>
@@ -753,9 +770,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://panzeyong.com/2018/03/08/JavaScript-问题/';
-          this.page.identifier = '2018/03/08/JavaScript-问题/';
-          this.page.title = 'JavaScript 问题';
+          this.page.url = 'http://panzeyong.com/2020/08/18/源码构建流程/';
+          this.page.identifier = '2020/08/18/源码构建流程/';
+          this.page.title = '源码构建流程';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://panzeyong.disqus.com/embed.js';

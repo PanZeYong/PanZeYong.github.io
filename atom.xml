@@ -330,6 +330,60 @@
   </entry>
   
   <entry>
+    <title>源码构建流程</title>
+    <link href="http://panzeyong.com/2020/08/18/%E6%BA%90%E7%A0%81%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B/"/>
+    <id>http://panzeyong.com/2020/08/18/源码构建流程/</id>
+    <published>2020-08-18T13:17:26.000Z</published>
+    <updated>2020-09-23T15:19:44.688Z</updated>
+    
+    <content type="html"><![CDATA[<p>Vue 源码是基于 <a href="https://github.com/rollup/rollup" target="_blank" rel="external">Rollup</a> 构建的。</p>
+<p>当我们在终端执行命令：<code>npm run build</code> 时，会去加载 <code>package.json</code> 文件，执行字段 <code>script</code> 对应的配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scripts: &#123;</div><div class="line">	<span class="string">"build"</span>: <span class="string">"node scripts/build.js"</span>,</div><div class="line">    <span class="string">"build:ssr"</span>: <span class="string">"npm run build -- web-runtime-cjs,web-server-renderer"</span>,</div><div class="line">    <span class="string">"build:weex"</span>: <span class="string">"npm run build -- weex"</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即执行命令：<code>&quot;build&quot;: &quot;node scripts/build.js&quot;</code>。也就是说，构建时执行的文件是：<code>scripts/build.js</code>。</p>
+<p>##一、 <code>scripts/build.js</code> 逻辑分析</p>
+<h3 id="1、引入依赖及文件夹创建"><a href="#1、引入依赖及文件夹创建" class="headerlink" title="1、引入依赖及文件夹创建"></a>1、引入依赖及文件夹创建</h3><p>引入相关依赖，并且判断文件夹 <code>dist</code> 是否存在；如果不存在的话，则创建该文件夹。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (!fs.existsSync(<span class="string">'dist'</span>)) &#123;</div><div class="line">    fs.mkdirSync(<span class="string">'dist'</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2、获取构建不同版本-vue-配置"><a href="#2、获取构建不同版本-vue-配置" class="headerlink" title="2、获取构建不同版本 vue 配置"></a>2、获取构建不同版本 vue 配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> builds = <span class="built_in">require</span>(<span class="string">'./config'</span>).getAllBuilds()</div></pre></td></tr></table></figure>
+<p>备注：下面再来分析如何获取配置</p>
+<h3 id="3、根据命令行参数过滤配置"><a href="#3、根据命令行参数过滤配置" class="headerlink" title="3、根据命令行参数过滤配置"></a>3、根据命令行参数过滤配置</h3><p>获取所有构建配置 <code>builds</code>，根据命令行参数过滤不需要的构建配置。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// filter builds via command line arg（只需要命令行参数的配置）</span></div><div class="line"><span class="keyword">if</span> (process.argv[<span class="number">2</span>]) &#123;</div><div class="line">    <span class="keyword">const</span> filters = process.argv[<span class="number">2</span>].split(<span class="string">','</span>)</div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> filters.some(f =&gt; b.output.file.indexOf(f) &gt; <span class="number">-1</span> || b._name.indexOf(f) &gt; <span class="number">-1</span>)</div><div class="line">    &#125;)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// filter out weex builds by default（默认过滤 weex 版本）</span></div><div class="line">    builds = builds.filter(b =&gt; &#123;</div><div class="line">        <span class="keyword">return</span> b.output.file.indexOf(<span class="string">'weex'</span>) === <span class="number">-1</span></div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4、调用-rollup-rollup-方法构建，并且输出构建产物"><a href="#4、调用-rollup-rollup-方法构建，并且输出构建产物" class="headerlink" title="4、调用 rollup.rollup 方法构建，并且输出构建产物"></a>4、调用 <code>rollup.rollup</code> 方法构建，并且输出构建产物</h3><p>构建流程如下：</p>
+<ul>
+<li><p><code>build</code> 方法：通过计数器 <code>built</code> 循环调用 <code>buildEntry</code> 方法进行构建。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">build</span>(<span class="params">builds</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> built = <span class="number">0</span></div><div class="line">    <span class="keyword">const</span> total = builds.length</div><div class="line">    <span class="keyword">const</span> next = () =&gt; &#123;</div><div class="line">        buildEntry(builds[built]).then(() =&gt; &#123;</div><div class="line">            built++</div><div class="line">            <span class="keyword">if</span> (built &lt; total) &#123;</div><div class="line">                next()</div><div class="line">            &#125;</div><div class="line">        &#125;).catch(logError)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    next()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><code>buildEntry</code> 方法：调用方法 <code>rollup.rollup</code> 打包构建，并且输出构建产物。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">buildEntry</span>(<span class="params">config</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> output = config.output</div><div class="line">    <span class="keyword">const</span> &#123; file, banner &#125; = output</div><div class="line">    <span class="keyword">const</span> isProd = <span class="regexp">/(min|prod)\.js$/</span>.test(file)</div><div class="line">    <span class="keyword">return</span> rollup.rollup(config)</div><div class="line">        .then(bundle =&gt; bundle.generate(output))</div><div class="line">        .then((&#123; output: [&#123; code &#125;] &#125;) =&gt; &#123;</div><div class="line">            <span class="keyword">if</span> (isProd) &#123;</div><div class="line">                <span class="keyword">const</span> minified = (banner ? banner + <span class="string">'\n'</span> : <span class="string">''</span>) + terser.minify(code, &#123;</div><div class="line">                    toplevel: <span class="literal">true</span>,</div><div class="line">                    output: &#123;</div><div class="line">                        ascii_only: <span class="literal">true</span></div><div class="line">                    &#125;,</div><div class="line">                    compress: &#123;</div><div class="line">                        pure_funcs: [<span class="string">'makeMap'</span>]</div><div class="line">                    &#125;</div><div class="line">                &#125;).code</div><div class="line">                <span class="keyword">return</span> write(file, minified, <span class="literal">true</span>)</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> write(file, code)</div><div class="line">            &#125;</div><div class="line">        &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="二、-scripts-config-js-逻辑分析"><a href="#二、-scripts-config-js-逻辑分析" class="headerlink" title="二、 scripts/config.js 逻辑分析"></a>二、 <code>scripts/config.js</code> 逻辑分析</h2><p><code>config.js</code> 文件的作用是根据 <code>rollup</code> 的规范重新组合配置，得到 <code>Vue</code> 构建的所有版本。</p>
+<h3 id="1、声明构建-Vue-所有版本常量-builds。"><a href="#1、声明构建-Vue-所有版本常量-builds。" class="headerlink" title="1、声明构建 Vue 所有版本常量 builds。"></a>1、声明构建 <code>Vue</code> 所有版本常量 <code>builds</code>。</h3><p>举例说明如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Runtime only (CommonJS). Used by bundlers e.g. Webpack &amp; Browserify</span></div><div class="line"><span class="string">'web-runtime-cjs-dev'</span>: &#123;</div><div class="line">    entry: resolve(<span class="string">'web/entry-runtime.js'</span>),</div><div class="line">    dest: resolve(<span class="string">'dist/vue.runtime.common.dev.js'</span>),</div><div class="line">    format: <span class="string">'cjs'</span>,</div><div class="line">    env: <span class="string">'development'</span>,</div><div class="line">    banner</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
+<p><code>entry</code>：表示构建的入口 <code>JS</code> 文件地址。</p>
+<p><code>dest</code>：表示构建后的 <code>JS</code> 文件地址。</p>
+<p><code>format</code>：表示构建出来的文件遵循 <code>CommonJS</code> 格式。</p>
+<p><code>env</code>：指定构建环境。</p>
+<p><code>banner</code>：构建说明。</p>
+<h3 id="2、根据-rollup-规范生成配置（genConfig）"><a href="#2、根据-rollup-规范生成配置（genConfig）" class="headerlink" title="2、根据 rollup 规范生成配置（genConfig）"></a>2、根据 <code>rollup</code> 规范生成配置（genConfig）</h3><h3 id="3、导出配置"><a href="#3、导出配置" class="headerlink" title="3、导出配置"></a>3、导出配置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (process.env.TARGET) &#123;</div><div class="line">    <span class="built_in">module</span>.exports = genConfig(process.env.TARGET)</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    exports.getBuild = genConfig</div><div class="line">    exports.getAllBuilds = () =&gt; <span class="built_in">Object</span>.keys(builds).map(genConfig)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Vue 源码是基于 &lt;a href=&quot;https://github.com/rollup/rollup&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Rollup&lt;/a&gt; 构建的。&lt;/p&gt;
+&lt;p&gt;当我们在终端执行命令：&lt;code&gt;npm run build
+    
+    </summary>
+    
+      <category term="Vue" scheme="http://panzeyong.com/categories/Vue/"/>
+    
+    
+      <category term="Vue.js 源码解析" scheme="http://panzeyong.com/tags/Vue-js-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Vue 入口初始化</title>
     <link href="http://panzeyong.com/2020/03/29/Vue-%E5%85%A5%E5%8F%A3%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
     <id>http://panzeyong.com/2020/03/29/Vue-入口初始化/</id>
@@ -1717,26 +1771,6 @@
     
     
       <category term="Java 集合框架" scheme="http://panzeyong.com/tags/Java-%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Activity</title>
-    <link href="http://panzeyong.com/2017/11/07/Activity/"/>
-    <id>http://panzeyong.com/2017/11/07/Activity/</id>
-    <published>2017-11-06T23:40:09.000Z</published>
-    <updated>2017-11-06T23:49:24.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>Activity 应用组件，是 Android 程序与用户交互的窗口。通常来说，Activity 呈现给用户的是充满整个窗口，但是也有其它方式，比如悬浮窗口（设置 <strong>windowIsFloating</strong>）或者嵌套在另一个 Activity 里面（<strong>ActivityGroup</strong>）。</p>
-<h1 id="二、生命周期"><a href="#二、生命周期" class="headerlink" title="二、生命周期"></a>二、生命周期</h1><p>在 Android 系统中，Android 是由一个叫做任务栈进行管理的；简单来说，当创建新 Activity 时，该 Activity 会压入任务栈里，此时处于前台进程，之前的 Activity 位于新 Activity 下面，直到新 Activity 被 finish 时之前的 Actiivity 才会重新回到前台进程。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;一、概述&quot;&gt;&lt;a href=&quot;#一、概述&quot; class=&quot;headerlink&quot; title=&quot;一、概述&quot;&gt;&lt;/a&gt;一、概述&lt;/h1&gt;&lt;p&gt;Activity 应用组件，是 Android 程序与用户交互的窗口。通常来说，Activity 呈现给用户的是充满整个窗口
-    
-    </summary>
-    
     
   </entry>
   

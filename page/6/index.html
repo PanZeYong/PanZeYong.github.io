@@ -268,6 +268,340 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/09/15/第十一章-DOM-扩展/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/15/第十一章-DOM-扩展/" itemprop="url">第十一章 DOM 扩展</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-15T07:50:33+08:00">
+                2017-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/15/第十一章-DOM-扩展/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/09/15/第十一章-DOM-扩展/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/09/15/第十一章-DOM-扩展/" class="leancloud_visitors" data-flag-title="第十一章 DOM 扩展">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="一、选择符-API（Selectors-API）"><a href="#一、选择符-API（Selectors-API）" class="headerlink" title="一、选择符 API（Selectors API）"></a>一、选择符 API（Selectors API）</h2><p>选择符 API，简单地来说，就是根据 CSS 选择符选择与某个模式匹配的 DOM 元素。</p>
+<h3 id="1、Selectors-API-1-核心方法"><a href="#1、Selectors-API-1-核心方法" class="headerlink" title="1、Selectors API 1 核心方法"></a>1、Selectors API 1 核心方法</h3><ul>
+<li><p><strong>querySelector()</strong>：接收一个参数：CSS 选择符。返回与该模式匹配的第一元素，如果没有找到匹配的元素，返回 null。通过类型 Document 调用 <strong>querySelector()</strong> 方法时，会在文档元素的范围内查找匹配的元素；而通过 Element 类型调用 <strong>querySelector()</strong> 方法时，只会在该元素后代元素的范围内查找匹配的元素。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> body = <span class="built_in">document</span>.querySelector(<span class="string">"body"</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>querySelectorAll()</strong>：接收一个参数：CSS 选择符。返回的是所有匹配的元素，是一个 NodeList 实例。返回的值实际上是带有所有属性和方法的 NodeList，而其底层实现则类似于一组元素的快照，而非不断对文档进行搜索的动态查询。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> lis = <span class="built_in">document</span>.querySelectorAll(<span class="string">"li"</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2、Selector-API-2-方法"><a href="#2、Selector-API-2-方法" class="headerlink" title="2、Selector API 2 方法"></a>2、Selector API 2 方法</h3><p><strong>matchesSelector()</strong>：接收一个参数：CSS 选择符。如果调用元素与该选择符匹配，返回 true；否则返回 false。Selector API 2 w为 Element 类型新增的方法。</p>
+<p>在使用该方法的同时要做到兼容不同浏览器，需要对该方法做处理，示例代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">matchesSelector</span>(<span class="params">element, selector</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (element.matchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.matchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.msMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.msMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.mozMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.mozMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.webkitMatchesSelector) &#123;</div><div class="line">        <span class="keyword">return</span> element.webkitMatchesSelector(selector);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Not Supported."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="二、元素遍历"><a href="#二、元素遍历" class="headerlink" title="二、元素遍历"></a>二、元素遍历</h2><p>对于元素间的空格，不同浏览器对空格的处理是不一样的。有的浏览器在对空格处理时则会返回文本节点，而有的不会。为了解决此现象，Element Traversal 为 DOM 元素新定义一组元素。</p>
+<p>Element Traversal API 为 DOM 元素添加新属性：</p>
+<ul>
+<li><p><strong>childElementCount</strong>：返回子元素（不包括文本节点和注释）的个数。</p>
+</li>
+<li><p><strong>firstElementChild</strong>：指向第一个子元素；firstChild 的元素版。</p>
+</li>
+<li><p><strong>lastElementChild</strong>：指向最后一个子元素；lastChild 的元素版。</p>
+</li>
+<li><p><strong>previousElementSibling</strong>：指向前一个同辈元素；previousSibling 的元素版。</p>
+</li>
+<li><p><strong>nextElementSibling</strong>：指向后一个同辈元素；nextSibling 的元素版。</p>
+</li>
+</ul>
+<h2 id="三、HTML5"><a href="#三、HTML5" class="headerlink" title="三、HTML5"></a>三、HTML5</h2><h3 id="1、方法"><a href="#1、方法" class="headerlink" title="1、方法"></a>1、方法</h3><ul>
+<li><p><strong>getElementsByClassName()</strong>：接收一个参数：一个包含一或多个类名的字符串，返回带有指定类的所有元素的 NodeList。通过 document 对象及所有 HTML 元素调用该方法。在 document 对象上调用  <strong>getElementsByClassName()</strong> 始终会返回与类名匹配的所有元素，在元素上调用该方法就会返回后代元素中匹配的元素。(一个元素指定多个类名)</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> elements = <span class="built_in">document</span>.getElementsByClassName(<span class="string">"title content"</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>hasFocus()</strong>：确定文档是否获得了焦点了。</p>
+</li>
+<li><p><strong>window.toStaticHTML()</strong>：接收一个参数，即一个 HTML 字符串；返回一个经过无害处理后的版本，即从源 HTML 中删除所有脚本节点和事件处理程序属性。</p>
+</li>
+<li><p><strong>insertAdjacentHTML()</strong>：接收两个参数：插入位置和要插入的文本。第一个参数必须是下列值之一：</p>
+<ul>
+<li><p><strong>“beforebegin”</strong>：在当前元素之前插入一个紧邻的同辈元素；</p>
+</li>
+<li><p><strong>“afterbegin”</strong>：在当前元素之下插入一个新的子元素或在第一个子元素之前再插入新的子元素。</p>
+</li>
+<li><p><strong>“beforeend”</strong>：在当前元素之下插入一个新的子元素或在最后一个子元素之后再插入新的子元素；</p>
+</li>
+<li><p><strong>“afterend”</strong>：在当前元素之后插入一个紧邻的同辈元素。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>scrollIntoView()</strong>：传入参数 <strong>true</strong> 或者不传入任何参数表示窗口滚动之后会让调用元素的顶部与视口顶部尽可能平齐；传入 <strong>false</strong> 则表示调用元素会尽可能全部出现在视口中。</li>
+</ul>
+<h3 id="2、属性"><a href="#2、属性" class="headerlink" title="2、属性"></a>2、属性</h3><ul>
+<li><p><strong>classList</strong>：所有 DOM 元素所具有的属性，而且该属性是新集合类型 DOMTokenList 实例，包含 length 属性，并具有以下方法：</p>
+<ul>
+<li><p><strong>item()</strong>：获取每个元素。</p>
+</li>
+<li><p><strong>add(value)</strong>：将给定的字符串值添加到列表中。如果值已经存在，就不添加了。</p>
+</li>
+<li><p><strong>contains(value)</strong>：表示列表中是否存在给定的值，如果存在则返回 true，否则返回 false。</p>
+</li>
+<li><p><strong>remove(value)</strong>：从列表中删除给定的字符串。</p>
+</li>
+<li><p><strong>toggle(value)</strong>：如果列表中已经存在给定的值，删除它；如果列表中没有给定的值，添加它。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"title"</span> <span class="attr">class</span>=<span class="string">"title content user"</span>&gt;</span>JavaScript Practice<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> classList = p.classList;</div><div class="line">classList.remove(<span class="string">"title"</span>);    <span class="comment">// length：2</span></div><div class="line">classList.add(<span class="string">"content"</span>);     <span class="comment">// length：2</span></div><div class="line">classList.toggle(<span class="string">"toggle"</span>);   <span class="comment">// length：3</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.activeElement</strong>：始终引用 DOM 中当前获取焦点的元素。文档刚刚加载完成时，<strong>document.activeElement</strong> 中保存的是 document.body 元素的引用。文档加载期间，<strong>document.activeElement </strong>的值为 null。（焦点管理）</p>
+</li>
+<li><p><strong>document.readyState</strong>：表示文档是否已经加载完成。有两个值：loading（正在加载文档）和 complete（已经加载完文档）</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.readyState == <span class="string">"complete"</span>) &#123;</div><div class="line">    alert(<span class="string">"Complete"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    alert(<span class="string">"Loading"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.compatMode</strong>：检测浏览器采用的模式（标准还是混杂）。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="built_in">document</span>.compatMode == <span class="string">"CSS1Compat"</span>) &#123;</div><div class="line">    alert(<span class="string">"Standards mode"</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    alert(<span class="string">"Quirks mode"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.head</strong>：引用文档的 \<head> 元素。</head></p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> head = <span class="built_in">document</span>.head ||<span class="built_in">document</span>.getElementsByTagName(<span class="string">"head"</span>)[<span class="number">0</span>];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>document.charset</strong>：表示文档中实际使用的字符集，也可以用来指定新字符集。</p>
+</li>
+<li><p><strong>document.defaultCharset</strong>：表示根据默认浏览器及操作系统的设置。</p>
+</li>
+<li><p><strong>dataset</strong>：访问自定义属性（用 data- 作为前缀），是 DOMStringMap 的一个实例，也是一个名值而的映射。</p>
+  <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span> <span class="attr">class</span>=<span class="string">"content"</span> <span class="attr">data-appId</span>=<span class="string">"12345"</span> <span class="attr">data-username</span>=<span class="string">"panju"</span>&gt;</span>Content<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> div = <span class="built_in">document</span>.getElementById(<span class="string">"content"</span>);</div><div class="line">alert(<span class="string">"AppId : "</span> + div.dataset.appId);</div><div class="line">alert(<span class="string">"User Name : "</span> + div.dataset.username);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>innerHTML</strong>：在读模式下，innerHTML 属性返回与调用元素的所有子节点（包括元素、注释和文本节点）对应的 HTML 标记。在写模式下，innerHTML 会根据指定的值创建新的 DOM 树，然后用这个 DMO 树完全替换调用元素原先的所有子节点。</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// index.html</div><div class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">id</span>=<span class="string">"bodys"</span> <span class="attr">class</span>=<span class="string">"page"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"title"</span> <span class="attr">class</span>=<span class="string">"title content user"</span>&gt;</span>JavaScript Practice<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"></div><div class="line">     <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span> <span class="attr">class</span>=<span class="string">"content"</span> <span class="attr">data-appId</span>=<span class="string">"12345"</span> <span class="attr">data-username</span>=<span class="string">"panju"</span>&gt;</span>Content<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">"ui"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"content"</span>&gt;</span>Python<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>JavaScript<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>Java<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div></pre></td></tr></table></figure>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读模式</span></div><div class="line">alert(<span class="built_in">document</span>.body.innerText);</div><div class="line"></div><div class="line"><span class="comment">// 写模式</span></div><div class="line"><span class="built_in">document</span>.body.innerText = <span class="string">"Hello DOM"</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  注：并不是所有元素都支持 <strong>innerHTML</strong> 属性。不支持 <strong>innerHTML</strong> 的元素有：&lt;col&gt;、&lt;colgroup&gt;、&lt;frameset&gt;、&lt;head&gt;、&lt;html&gt;、&lt;style&gt;、&lt;table&gt;、&lt;tbody&gt;、&lt;thead&gt;、&lt;tfoot&gt;、&lt;tr&gt;。</p>
+<ul>
+<li><strong>outerHTML</strong>：与 <strong>innerHTML</strong> 属性类似。区别在于读模式下，<strong>outerHTML</strong> 返回结果包括调用该属性的元素本身。</li>
+</ul>
+<h2 id="四、专有扩展"><a href="#四、专有扩展" class="headerlink" title="四、专有扩展"></a>四、专有扩展</h2><h3 id="1、4-种文档模式"><a href="#1、4-种文档模式" class="headerlink" title="1、4 种文档模式"></a>1、4 种文档模式</h3><ul>
+<li><p><strong>IE5</strong>：以<strong>混杂模式</strong>渲染页面（IE5 的默认模式就是混杂模式）。IE8 及更高版本中的功能都无法使用。</p>
+</li>
+<li><p><strong>IE7</strong>：以 <em>*IE7 标准模式</em>渲染页面。IE8 及更高版本中的功能都无法使用。</p>
+</li>
+<li><p><strong>IE8</strong>：以 <strong>IE8 标准模式</strong>渲染页面。IE9 中的新功能无法使用。</p>
+</li>
+<li><p><strong>IE9</strong>：以 <strong>IE9 标准模式</strong>渲染页面。</p>
+</li>
+</ul>
+<p>要设置浏览器文档类型，可以通过 HTTP 头部信息 <strong>X-UA-Compatible</strong> 或者通过标签 <strong>\<meta></strong> 来设置，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=<span class="string">"X-UA-Compatible"</span> content=<span class="string">"IE=IEVersion"</span> &gt;</div></pre></td></tr></table></figure>
+<p>对于 IE 版本（IEVersion）的取值如下：</p>
+<ul>
+<li><p><strong>Edge</strong>：始终以最新的文档模式来渲染页面。忽略文档类型声明。对于 IE8，始终保持以 IE8 标准模式渲染页面。对于 IE9，则以 IE9 标准模式渲染页面。</p>
+</li>
+<li><p><strong>EmulateIE9</strong>：如果有文档类型声明，则以 IE9 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>EmulateIE8</strong>：如果有文档类型声明，则以 IE8 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>EmulateIE7</strong>：如果有文档类型声明，则以 IE7 标准模式渲染页面，否则将文档模式设置为 IE5。</p>
+</li>
+<li><p><strong>9</strong>：强制以 IE9 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>8</strong>：强制以 IE8 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>7</strong>：强制以 IE7 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+<li><p><strong>5</strong>：强制以 IE5 标准模式渲染页面，忽略文档类型声明。</p>
+</li>
+</ul>
+<h3 id="2、方法"><a href="#2、方法" class="headerlink" title="2、方法"></a>2、方法</h3><ul>
+<li><p><strong>contains()</strong>：检测被测节点是不是参考节点的后代。接收一个参数：即要检测的后代节点。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> contains = <span class="built_in">document</span>.documentElement.contains(<span class="built_in">document</span>.body);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>compareDocumentPosition()</strong>：确定节点之间的关系，返回一个表示该关系的位掩码。（DOM Level 3）</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">    <span class="comment">// 模仿 contains() 方法</span></div><div class="line"><span class="keyword">var</span> position = <span class="built_in">document</span>.documentElement.compareDocumentPosition(<span class="built_in">document</span>.body) &amp; <span class="number">16</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>scrollIntoViewIfNeeded(alignCenter)</strong>：只有当前元素在视口中不可见的情况下，才滚动浏览器窗口或容器元素，最终让它可见。参数 alignCenter 设置为 true 表示尽量将元素显示在视口中部（垂直方向）。（Safari 和 Chrome）</p>
+</li>
+<li><p><strong>scrollByLines(lineCount)</strong>：将元素的内容滚动指定的行高，参数 lineCount 可以为正值或者负值。（Safari 和 Chrome）</p>
+</li>
+<li><p><strong>scrollByPages()</strong>：将元素的内容滚动指定的页面高度，具体高度由元素的高度决定。（Safari 和 Chrome）</p>
+</li>
+</ul>
+<h3 id="3、属性"><a href="#3、属性" class="headerlink" title="3、属性"></a>3、属性</h3><ul>
+<li><p><strong>document.documentMode</strong>：检测文档模式</p>
+</li>
+<li><p><strong>children</strong>：只包含元素中同样还是元素的子节点，忽略空格。该属性是 HTMLCollection 的实例。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> length = ui.children.length;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>innerText</strong>：操作元素中包含的所有文本内容，包括子文档树中的文本。在读模式时，它会将子文档树中所有文本拼接起来；在写模式时，会将元素所有子节点删除，并插入包含文本值的文本子节点。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读模式</span></div><div class="line"><span class="keyword">var</span> innerText = <span class="built_in">document</span>.body.innerText;</div><div class="line"></div><div class="line"><span class="comment">// 写模式</span></div><div class="line"><span class="built_in">document</span>.body.innerText = <span class="string">"Hello JavaScript"</span>;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><strong>textContent</strong>：作用与 <strong>innerText</strong> 类似，DOMLevel 3 规定的一个属性。</p>
+</li>
+<li><p><strong>outerText</strong>：作用与 <strong>innerText</strong> 基本类似。区别在于作用范围扩大到调用它的节点。</p>
+</li>
+</ul>
+<h3 id="4、通用函数"><a href="#4、通用函数" class="headerlink" title="4、通用函数"></a>4、通用函数</h3><p>通用 contains() 函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">contains</span>(<span class="params">refNode, otherNode</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> refNode.contains == <span class="string">"function"</span> &amp;&amp; (!client.engine.webkit || client.engine.webkit &gt;= <span class="number">522</span>)) &#123;</div><div class="line">        <span class="keyword">return</span> refNode.contains(otherNode);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> refNode.compareDocumentPosition == <span class="string">"function"</span>) &#123;</div><div class="line">        retrun !!(refNode.compareDocumentPosition(otherNode) &amp; <span class="number">16</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">var</span> node = otherNode.parentNode;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            <span class="keyword">if</span> (node === refNode) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                node = node.parentNode;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">while</span> (node !== <span class="literal">null</span>);</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跨浏览器使用属性 <strong>innerText</strong> 还是 <strong>textContent</strong> 兼容函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getInnerText</span>(<span class="params">element</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> (<span class="keyword">typeof</span> element.textContent == <span class="string">"string"</span> ? element.textContent : element.innerText);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">setInnerText</span>(<span class="params">element, text</span>) </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">typeof</span> element.textContent == <span class="string">"string"</span>) &#123;</div><div class="line">		element.textContent = text;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		element.innerText = text;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第十一章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/08/29/第十章-DOM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1464,208 +1798,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2017/07/10/第七章-函数表达式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/10/第七章-函数表达式/" itemprop="url">第七章 函数表达式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-10T07:11:07+08:00">
-                2017-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/07/10/第七章-函数表达式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/07/10/第七章-函数表达式/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2017/07/10/第七章-函数表达式/" class="leancloud_visitors" data-flag-title="第七章 函数表达式">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、创建函数方式"><a href="#一、创建函数方式" class="headerlink" title="一、创建函数方式"></a>一、创建函数方式</h2><h3 id="1、函数声明"><a href="#1、函数声明" class="headerlink" title="1、函数声明"></a>1、函数声明</h3><p>声明函数使用的关键字是 function，紧接着是指定函数名及函数体。每个函数都定义一个非标准的 <strong>name</strong> 属性，通过该属性可以访问到给函数指定的名字。对于函数声明来说，有一个重要特征就是<strong>函数提升</strong>，即在执行代码之前会先读取函数声明。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="string">"函数声明"</span>);</div><div class="line">	alert(create.name);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="2、函数表达式（匿名函数、拉姆达函数）"><a href="#2、函数表达式（匿名函数、拉姆达函数）" class="headerlink" title="2、函数表达式（匿名函数、拉姆达函数）"></a>2、函数表达式（匿名函数、拉姆达函数）</h3><p>创建一个函数并将其赋值给一个变量，这样的创建的函数也可以称为匿名函数或者拉达姆函数。匿名函数的 name 属性是空字符串。使用这种方式创建函数时，必须<strong>先赋值才可以使用</strong>，否则会报错。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> create = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	alert(<span class="string">"函数表达式"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="二、闭包"><a href="#二、闭包" class="headerlink" title="二、闭包"></a>二、闭包</h2><p>闭包是指有权访问另一个函数作用域中的变量的函数。而创建闭包的常用方式，就是在一个函数内部创建另一个函数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createComparisonFunction</span>(<span class="params">propertyName</span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"create Comparison Function"</span>);</div><div class="line"></div><div class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">object1, object2</span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"Any"</span>);</div><div class="line">		<span class="keyword">var</span> value1 = object1[propertyName];</div><div class="line">		<span class="keyword">var</span> value2 = object2[propertyName];</div><div class="line"></div><div class="line">		<span class="keyword">if</span> (value1 &lt; value2) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (value1 &gt; value2) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="1、理解作用域链"><a href="#1、理解作用域链" class="headerlink" title="1、理解作用域链"></a>1、理解作用域链</h3><p>当某个函数被调用时，系统会创建一个<strong>执行环境</strong>以及相应的<strong>作用域链</strong>；此时会有一个函数的<strong>活动对象</strong>（变量对象），包含 <strong>arguments</strong> 和其它命名参数。该活动对象会加入到作用域链的前端，并且作用域链的终点是全局执行环境。</p>
-<p>在创建函数时，系统会创建一个预先包含全局变量对象的作用域链，这个作用域链被保存在内部的 [[Scope]] 属性中。当调用该函数时，会为函数创建一个执行环境，然后通过复制函数的 [[Scope]] 属性中的对象构建起执行环境的作用域链。</p>
-<p>作用域链本质上是一个指向变量对象的指针列表，它只引用但不实际包含变量对象。</p>
-<p>函数的执行环境只存在于函数的执行过程中，当执行结束后，活动对象及作用域链被销毁；而全局环境直到程序退出才被销毁。</p>
-<p>对于闭包来说情况则不同，由于匿名函数的作用域包含了外部函数，即引用外部函数活动对象；因此，当外部函数执行完毕后，虽然其作用域链被销毁，但是其活动对象仍然留在内存中；直到匿名内部函数被销毁后，此活动对象才会被销毁。</p>
-<h3 id="2、闭包与变量"><a href="#2、闭包与变量" class="headerlink" title="2、闭包与变量"></a>2、闭包与变量</h3><p>闭包只能取得包含函数中任意变量的最后一个值。记住闭包保存的是整个变量对象，而不是某个特殊的变量。</p>
-<p>先来看一个例子</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"Create Function"</span>);</div><div class="line">	<span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line"></div><div class="line">	<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"i : "</span> + i);</div><div class="line">		result[i] = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"Result"</span>);</div><div class="line">			<span class="keyword">return</span> i;</div><div class="line">		&#125;;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 返回的是函数数组</span></div><div class="line"><span class="keyword">var</span> result = createFunctions();</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; result.length; i++) &#123;</div><div class="line">	alert(result[i]());</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>估计很多人跟我一样以为输出的值应该是 0、1、…、9，然而结果却都是 10。说真的，我一开始也懵逼，不知道为什么，但是经过慢慢地调试，稍微了解原因，简单说下自己的理解吧。</p>
-<p>当调用函数 <strong>createFunctions()</strong> 时，for 循环就会被执行，这时数组 result 保存着每次执行后的函数，等到执行完之后，i 的值已经变为 10 了；而由于每个函数的作用域链包含外部函数 <strong>createFunctions()</strong> 的活动对象，即共享外部函数变量；因此，调用函数数组中每个函数时的返回值都是 10。</p>
-<p>那么如何才能做到每个函数的返回值是其索引呢？见以下例子（ps：书中例子）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"Create Function"</span>);</div><div class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">		result[i] = <span class="function"><span class="keyword">function</span>(<span class="params">num</span>) </span>&#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"i : "</span> + i);</div><div class="line">			<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">				<span class="built_in">console</span>.log(<span class="string">"Number : "</span> + num);</div><div class="line">				<span class="keyword">return</span> num;</div><div class="line">			&#125;</div><div class="line">		&#125;(i);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> result = createFunctions();</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; result.length; i++) &#123;</div><div class="line">	alert(result[i]();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>（ps：由于刚接触闭包这个知识点，对书中的例子还不是很理解，后续补上自己的理解。）</p>
-<h3 id="3、关于-this-对象"><a href="#3、关于-this-对象" class="headerlink" title="3、关于 this 对象"></a>3、关于 this 对象</h3><p>this 对象是在运行时基于函数的执行环境绑定的：在全局函数中，this 等于 window，而当函数被作为某个对象的方法调用时，this 等于那个对象。但是匿名函数的执行环境具有全局性，因此其 this 对象通常指向 window。</p>
-<p>每个函数被调用时自动取得两个特殊变量：this 和 arguments，那么跟 arguments 跟 this 存在同样的问题。如果想访问作用域中的 arguments 或 this 对象时，必须将该对象的引用保存到另一个闭包能够访问的变量中。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> object = &#123;</div><div class="line">	name : <span class="string">"My Object"</span>,</div><div class="line"></div><div class="line">	getNameFunc : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> that = <span class="keyword">this</span>;        <span class="comment">// 关键在这行代码</span></div><div class="line">		<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			<span class="keyword">return</span> that.name;</div><div class="line">		&#125;;</div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h2 id="三、模仿块级作用域"><a href="#三、模仿块级作用域" class="headerlink" title="三、模仿块级作用域"></a>三、模仿块级作用域</h2><p>在函数中定义的局部变量的生命周期只局限于该函数，函数执行完之后，局部变量也就销毁。但是由于 JavaScript 没有块级作用域的概念，即在函数代码块中定义的变量在代码块之外也能访问到，为了解决这种问题，可以使用<strong>匿名函数模仿块级作用域（私有作用域）</strong>来解决。语法如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="comment">// 块级作用域</span></div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
-<p>JavaScript 将 function 关键字当作一个<strong>函数声明</strong>的开始，而<strong>函数声明</strong>后面不能跟圆括号。然而，<strong>函数表达式</strong>的后面可以跟圆括号。要将函数声明转换为函数表达式，只需给它加上一对圆括号。</p>
-<p>私有作用域这种技术经常在全局作用域中被用在函数外部，从而限制向全局作用域中添加过多的变量和函数。一般来说，我们都应该尽量少向全局作用域中添加变量和函数。</p>
-<p>私有作用域这种做法可以减少闭包占用的内存问题，因为没有指向匿名函数的引用。只要函数执行完毕，就可以立即销毁其作用域链。</p>
-<p>引用书中例子，如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">outputNumbers</span>(<span class="params">count</span>) </span>&#123;</div><div class="line">	(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">			alert(i);     </div><div class="line">		&#125;                                  <span class="comment">// 执行完之后 i 销毁</span></div><div class="line">	&#125;)();</div><div class="line">	</div><div class="line">	alert(i);                            <span class="comment">// 报错</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="四、私有变量"><a href="#四、私有变量" class="headerlink" title="四、私有变量"></a>四、私有变量</h2><p>任何在函数中定义的变量，都可以认为是私有变量，因为不能在函数的外部访问这些变量。私有变量一般包括函数的参数、局部变量和在函数内部定义的其它函数。</p>
-<p><strong>特权方法：</strong>有权访问私有变量和私有函数的公有方法。</p>
-<h3 id="1、创建特权方法的方式"><a href="#1、创建特权方法的方式" class="headerlink" title="1、创建特权方法的方式"></a>1、创建特权方法的方式</h3><p>第一种方法：在<strong>构造函数</strong>中定义特权方法（之所以能够在构造函数中定义特权方法，是因为特权方法作为闭包有权访问在构造函数中定义的所以变量和函数。）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyObject</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	</div><div class="line">	<span class="comment">// 私有变量和私有函数</span></div><div class="line">	<span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 特权方法</span></div><div class="line">	<span class="keyword">this</span>.publicMethod = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		privateVariable++;</div><div class="line">		<span class="keyword">return</span> privateFunction();</div><div class="line">	&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用该种方法的缺点是构造函数模式针对每个实例都会创建同样一组新方法，而使用静态私有变量来实现特权方法可以避免这个问题。</p>
-<p>第二种方法：通过在私有作用域中定义私有变量或函数，也可以创建特权方法。（原型模式）</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	</div><div class="line">	<span class="comment">// 私有变量和私有函数</span></div><div class="line">	<span class="keyword">var</span> privateVaribalbe = <span class="number">10</span>;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 构造函数</span></div><div class="line">	MyObject = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	&#125;;</div><div class="line">	</div><div class="line">	<span class="comment">// 特权方法</span></div><div class="line">	MyObject.prototype.publicMethod = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		privateVariable++;</div><div class="line">		<span class="keyword">return</span> privateFunction();</div><div class="line">	&#125;;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
-<p>通过这种方式创建静态私有变量会因为使用原型而增进代码复用，但每个实例都没有自己的私有变量。</p>
-<p>该方法与第一种方法的区别在于：私有变量和函数是由实例共享的。</p>
-<h3 id="2、模块模式（道格拉斯）"><a href="#2、模块模式（道格拉斯）" class="headerlink" title="2、模块模式（道格拉斯）"></a>2、模块模式（道格拉斯）</h3><p>模块模式：为单例创建私有变量和特权方法。</p>
-<p>模块模式使用场景：如果必须创建一个对象并以某些数据对其进行初始化，同时还要公开一些能够访问这些私有数据的方法。</p>
-<p>JavaScript 是以对象字面量的方式来创建单例对象的。</p>
-<p>模块模式模板：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> singleton = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="comment">// 私有变量和私有函数</span></div><div class="line">	<span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 特权方法</span></div><div class="line">	<span class="keyword">return</span> &#123;</div><div class="line">		publicProperty: <span class="literal">true</span>;</div><div class="line">		</div><div class="line">		publicMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			privateVariable++;</div><div class="line">			<span class="keyword">return</span> privateFunction();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;();</div></pre></td></tr></table></figure>
-<p>创建匿名函数并立即调用匿名函数，将对象字面量作为函数返回值，并将其赋值给变量 singleton；由于对象字面量通过特权方法访问匿名函数中私有变量和私有函数，因此变量 singleton 可以其进行访问。以这种方式创建的每个单例都是 Object 的实例。</p>
-<h3 id="3、增强的模块模式"><a href="#3、增强的模块模式" class="headerlink" title="3、增强的模块模式"></a>3、增强的模块模式</h3><p>在返回对象之前加入对其增强的代码。这种增强的模块模式适合那些单例必须是<strong>某种类型的实例</strong>，同时还必须添加某些属性和（或）方法对其加以增强的情况。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> singleton = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="comment">// 私有变量和私有函数</span></div><div class="line">	<span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">// 创建自定义类型对象</span></div><div class="line">	<span class="keyword">var</span> object = <span class="keyword">new</span> CustomType();</div><div class="line">	</div><div class="line">	</div><div class="line">	object.publicProperty: <span class="literal">true</span>;</div><div class="line">		</div><div class="line">	object.publicMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		privateVariable++;</div><div class="line">		<span class="keyword">return</span> privateFunction();</div><div class="line">	&#125;;</div><div class="line">	</div><div class="line">	<span class="keyword">return</span> object;</div><div class="line">&#125;();</div></pre></td></tr></table></figure>
-<p>以上是在学习 《JavaScript 高级程序设计》（第 3 版）这本书第七章的学习笔记，主要把书中讲到的要点记录下来，方便自己查找。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1715,7 +1847,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
