@@ -1,0 +1,970 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Vue.js 源码解析," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="PANJU's Note" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="在 《Vue 实例挂载实现原理》 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：vm._update(vm._render(), hydrating)。那么这篇文章要分析的方法：vm._render()，如何把实例渲染成一个虚拟 Node。该方法的实现在 src/code/instance/render.js 文件里，源码实现如下：
+123456789101112131415">
+<meta property="og:type" content="article">
+<meta property="og:title" content="render 实现原理">
+<meta property="og:url" content="http://panzeyong.com/2020/08/30/render-实现原理/index.html">
+<meta property="og:site_name" content="PANJU's Note">
+<meta property="og:description" content="在 《Vue 实例挂载实现原理》 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：vm._update(vm._render(), hydrating)。那么这篇文章要分析的方法：vm._render()，如何把实例渲染成一个虚拟 Node。该方法的实现在 src/code/instance/render.js 文件里，源码实现如下：
+123456789101112131415">
+<meta property="og:image" content="http://panzeyong.com/images/vue/render.png">
+<meta property="og:updated_time" content="2020-09-23T15:35:17.108Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="render 实现原理">
+<meta name="twitter:description" content="在 《Vue 实例挂载实现原理》 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：vm._update(vm._render(), hydrating)。那么这篇文章要分析的方法：vm._render()，如何把实例渲染成一个虚拟 Node。该方法的实现在 src/code/instance/render.js 文件里，源码实现如下：
+123456789101112131415">
+<meta name="twitter:image" content="http://panzeyong.com/images/vue/render.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://panzeyong.com/2020/08/30/render-实现原理/"/>
+
+
+
+
+
+  <title>render 实现原理 | PANJU's Note</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PANJU's Note</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">故不积跬步，无以至千里；不积小流，无以成江海。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2020/08/30/render-实现原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">render 实现原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-30T15:27:26+08:00">
+                2020-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/30/render-实现原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2020/08/30/render-实现原理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/08/30/render-实现原理/" class="leancloud_visitors" data-flag-title="render 实现原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在 <strong><a href="http://panzeyong.com/2020/08/23/Vue-%E5%AE%9E%E4%BE%8B%E6%8C%82%E8%BD%BD%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">《Vue 实例挂载实现原理》</a></strong> 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：<code>vm._update(vm._render(), hydrating)</code>。那么这篇文章要分析的方法：<code>vm._render()</code>，如何把实例渲染成一个虚拟 Node。该方法的实现在 <code>src/code/instance/render.js</code> 文件里，源码实现如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">Vue.prototype._render = <span class="function"><span class="keyword">function</span> (<span class="params"></span>): <span class="title">VNode</span> </span>&#123;</div><div class="line">   <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">   <span class="keyword">const</span> &#123; render, _parentVnode &#125; = vm.$options</div><div class="line"></div><div class="line">   <span class="keyword">if</span> (_parentVnode) &#123;</div><div class="line">     vm.$scopedSlots = normalizeScopedSlots(</div><div class="line">       _parentVnode.data.scopedSlots,</div><div class="line">       vm.$slots,</div><div class="line">       vm.$scopedSlots</div><div class="line">     )</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   <span class="comment">// set parent vnode. this allows render functions to have access</span></div><div class="line">   <span class="comment">// to the data on the placeholder node.</span></div><div class="line">   vm.$vnode = _parentVnode</div><div class="line">   <span class="comment">// render self</span></div><div class="line">   <span class="keyword">let</span> vnode</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">     <span class="comment">// There's no need to maintain a stack because all render fns are called</span></div><div class="line">     <span class="comment">// separately from one another. Nested component's render fns are called</span></div><div class="line">     <span class="comment">// when parent component is patched.</span></div><div class="line">     currentRenderingInstance = vm</div><div class="line">     vnode = render.call(vm._renderProxy, vm.$createElement)</div><div class="line">   &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">     handleError(e, vm, <span class="string">`render`</span>)</div><div class="line">     <span class="comment">// return error render result,</span></div><div class="line">     <span class="comment">// or previous vnode to prevent render error causing blank component</span></div><div class="line">     <span class="comment">/* istanbul ignore else */</span></div><div class="line">     <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; vm.$options.renderError) &#123;</div><div class="line">       <span class="keyword">try</span> &#123;</div><div class="line">         vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e)</div><div class="line">       &#125; <span class="keyword">catch</span> (e) &#123;</div><div class="line">         handleError(e, vm, <span class="string">`renderError`</span>)</div><div class="line">         vnode = vm._vnode</div><div class="line">       &#125;</div><div class="line">     &#125; <span class="keyword">else</span> &#123;</div><div class="line">       vnode = vm._vnode</div><div class="line">     &#125;</div><div class="line">   &#125; <span class="keyword">finally</span> &#123;</div><div class="line">     currentRenderingInstance = <span class="literal">null</span></div><div class="line">   &#125;</div><div class="line">   <span class="comment">// if the returned array contains only a single node, allow it</span></div><div class="line">   <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(vnode) &amp;&amp; vnode.length === <span class="number">1</span>) &#123;</div><div class="line">     vnode = vnode[<span class="number">0</span>]</div><div class="line">   &#125;</div><div class="line">   <span class="comment">// return empty vnode in case the render function errored out</span></div><div class="line">   <span class="keyword">if</span> (!(vnode <span class="keyword">instanceof</span> VNode)) &#123;</div><div class="line">     <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; <span class="built_in">Array</span>.isArray(vnode)) &#123;</div><div class="line">       warn(</div><div class="line">         <span class="string">'Multiple root nodes returned from render function. Render function '</span> +</div><div class="line">         <span class="string">'should return a single root node.'</span>,</div><div class="line">         vm</div><div class="line">       )</div><div class="line">     &#125;</div><div class="line">     vnode = createEmptyVNode()</div><div class="line">   &#125;</div><div class="line">   <span class="comment">// set parent</span></div><div class="line">   vnode.parent = _parentVnode</div><div class="line">   <span class="keyword">return</span> vnode</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>简述下逻辑实现：</p>
+<ul>
+<li><p>第 <code>3</code> 行从 <code>vm.$options</code> 获取 <code>render</code> 函数；</p>
+</li>
+<li><p>第 <code>5</code> ~ <code>11</code> 行在 <code>_parentVnode</code> 不为空的情况下，对 <code>$scopedSlot</code> 做规范化处理；</p>
+</li>
+<li><p>第 <code>23</code> 行是核心处理逻辑，把实例渲染成虚拟 Node；</p>
+</li>
+<li><p>第 <code>25</code> ~ <code>38</code> 对创建 Node 抛出异常时做处理；</p>
+</li>
+<li><p>返回 vnode。</p>
+</li>
+</ul>
+<p>该方法的实现逻辑中，第 <code>23</code> 行代码，即 <code>vnode = render.call(vm._renderProxy, vm.$createElement)</code> 是核心代码，调用 <code>render</code> 方法，把实例渲染成虚拟 Node。该方法接收两个参数：<code>vm._renderProxy</code> 在生产环境指代的是 vm 实例；<code>vm.$createElement</code> 是创建虚拟 Node 的方法。那么方法 <code>vm.$createElement</code> 又是如何实现的呢？</p>
+<p><code>vm.$createElement</code> 方法在初始化 Vue 时已经定义，即在该方法 <code>initRender</code> 里已经定义了具体实现，从中可以创建有两个版本：</p>
+<p><code>vm._c = (a, b, c, d) =&gt; createElement(vm, a, b, c, d, false)</code>：系统内部将 <code>template</code> 编译成 <code>render</code> 函数时使用；</p>
+<p><code>vm.$createElement = (a, b, c, d) =&gt; createElement(vm, a, b, c, d, true)</code>：用户手动编写 <code>render</code> 函数时使用。</p>
+<p>两个版本最终都调用同一个方法：<code>createElement</code>，传递的参数也一样。</p>
+<p><code>createElement</code> 的具体实现逻辑如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">createElement</span> (<span class="params"></span></span></div><div class="line">  context: Component,</div><div class="line">  tag: any,</div><div class="line">  data: any,</div><div class="line">  children: any,</div><div class="line">  normalizationType: any,</div><div class="line">  alwaysNormalize: boolean</div><div class="line">): <span class="title">VNode</span> | <span class="title">Array</span>&lt;<span class="title">VNode</span>&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(data) || isPrimitive(data)) &#123;</div><div class="line">    normalizationType = children</div><div class="line">    children = data</div><div class="line">    data = <span class="literal">undefined</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (isTrue(alwaysNormalize)) &#123;</div><div class="line">    normalizationType = ALWAYS_NORMALIZE</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> _createElement(context, tag, data, children, normalizationType)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>第 <code>9</code> ~ 第 <code>13</code> 行代码作用是在要创建 vnode 的 data 属性满足条件的情况下，参数补齐处理；（需要更深入理解）</p>
+</li>
+<li><p>第 <code>17</code> 行是真正创建虚拟 Node 的方法。</p>
+</li>
+</ul>
+<p>那么接下来看 <code>_createElement</code> 方法的具体实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">_createElement</span> (<span class="params"></span></span></div><div class="line">  context: Component,</div><div class="line">  tag?: string | Class&lt;Component&gt; | Function | Object,</div><div class="line">  data?: VNodeData,</div><div class="line">  children?: any,</div><div class="line">  normalizationType?: number</div><div class="line">): <span class="title">VNode</span> | <span class="title">Array</span>&lt;<span class="title">VNode</span>&gt; &#123;</div><div class="line">  <span class="keyword">if</span> (isDef(data) &amp;&amp; isDef((data: any).__ob__)) &#123;</div><div class="line">    process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</div><div class="line">      <span class="string">`Avoid using observed data object as vnode data: <span class="subst">$&#123;JSON.stringify(data)&#125;</span>\n`</span> +</div><div class="line">      <span class="string">'Always create fresh vnode data objects in each render!'</span>,</div><div class="line">      context</div><div class="line">    )</div><div class="line">    <span class="keyword">return</span> createEmptyVNode()</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// object syntax in v-bind</span></div><div class="line">  <span class="keyword">if</span> (isDef(data) &amp;&amp; isDef(data.is)) &#123;</div><div class="line">    tag = data.is</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (!tag) &#123;</div><div class="line">    <span class="comment">// in case of component :is set to falsy value</span></div><div class="line">    <span class="keyword">return</span> createEmptyVNode()</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// warn against non-primitive key</span></div><div class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</div><div class="line">    isDef(data) &amp;&amp; isDef(data.key) &amp;&amp; !isPrimitive(data.key)</div><div class="line">  ) &#123;</div><div class="line">    <span class="keyword">if</span> (!__WEEX__ || !(<span class="string">'@binding'</span> <span class="keyword">in</span> data.key)) &#123;</div><div class="line">      warn(</div><div class="line">        <span class="string">'Avoid using non-primitive value as key, '</span> +</div><div class="line">        <span class="string">'use string/number value instead.'</span>,</div><div class="line">        context</div><div class="line">      )</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// support single function children as default scoped slot</span></div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(children) &amp;&amp;</div><div class="line">    <span class="keyword">typeof</span> children[<span class="number">0</span>] === <span class="string">'function'</span></div><div class="line">  ) &#123;</div><div class="line">    data = data || &#123;&#125;</div><div class="line">    data.scopedSlots = &#123; <span class="keyword">default</span>: children[<span class="number">0</span>] &#125;</div><div class="line">    children.length = <span class="number">0</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (normalizationType === ALWAYS_NORMALIZE) &#123;</div><div class="line">    children = normalizeChildren(children)</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (normalizationType === SIMPLE_NORMALIZE) &#123;</div><div class="line">    children = simpleNormalizeChildren(children)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">let</span> vnode, ns</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> tag === <span class="string">'string'</span>) &#123;</div><div class="line">    <span class="keyword">let</span> Ctor</div><div class="line">    ns = (context.$vnode &amp;&amp; context.$vnode.ns) || config.getTagNamespace(tag)</div><div class="line">    <span class="keyword">if</span> (config.isReservedTag(tag)) &#123;</div><div class="line">      <span class="comment">// platform built-in elements</span></div><div class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; isDef(data) &amp;&amp; isDef(data.nativeOn)) &#123;</div><div class="line">        warn(</div><div class="line">          <span class="string">`The .native modifier for v-on is only valid on components but it was used on &lt;<span class="subst">$&#123;tag&#125;</span>&gt;.`</span>,</div><div class="line">          context</div><div class="line">        )</div><div class="line">      &#125;</div><div class="line">      vnode = <span class="keyword">new</span> VNode(</div><div class="line">        config.parsePlatformTagName(tag), data, children,</div><div class="line">        <span class="literal">undefined</span>, <span class="literal">undefined</span>, context</div><div class="line">      )</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((!data || !data.pre) &amp;&amp; isDef(Ctor = resolveAsset(context.$options, <span class="string">'components'</span>, tag))) &#123;</div><div class="line">      <span class="comment">// component</span></div><div class="line">      vnode = createComponent(Ctor, data, context, children, tag)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">// unknown or unlisted namespaced elements</span></div><div class="line">      <span class="comment">// check at runtime because it may get assigned a namespace when its</span></div><div class="line">      <span class="comment">// parent normalizes children</span></div><div class="line">      vnode = <span class="keyword">new</span> VNode(</div><div class="line">        tag, data, children,</div><div class="line">        <span class="literal">undefined</span>, <span class="literal">undefined</span>, context</div><div class="line">      )</div><div class="line">    &#125;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// direct component options / constructor</span></div><div class="line">    vnode = createComponent(tag, data, context, children)</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(vnode)) &#123;</div><div class="line">    <span class="keyword">return</span> vnode</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDef(vnode)) &#123;</div><div class="line">    <span class="keyword">if</span> (isDef(ns)) applyNS(vnode, ns)</div><div class="line">    <span class="keyword">if</span> (isDef(data)) registerDeepBindings(data)</div><div class="line">    <span class="keyword">return</span> vnode</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> createEmptyVNode()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>方法接收 6 参数：</p>
+<ul>
+<li><p><code>context</code>：VNode 的上下文环境，类型是 <code>Component</code>；</p>
+</li>
+<li><p><code>tag</code>：表示标签，可以是任意类型；</p>
+</li>
+<li><p><code>data</code>：表示 VNode 数据，它是一个 <code>VNodeData</code> 类型；</p>
+</li>
+<li><p><code>children</code>：表示当前 VNode 的子节点，它是任意类型，接下来需要被规范为标准的 VNode 数组；</p>
+</li>
+<li><p><code>normalizationType</code>：表示子节点规范的类型，类型不同调用的规范方法也不同；</p>
+</li>
+<li><p><code>alwaysNormalize</code>：规范化类型标志位，<code>true</code> 对应的是 <code>ALWAYS_NORMALIZE</code>；<code>false</code> 对应的是 <code>SIMPLE_NORMALIZE</code>。</p>
+</li>
+</ul>
+<p>简述方法逻辑实现：</p>
+<ul>
+<li><p>第 <code>8</code> ~ <code>13</code> 行检验 VNode 的 <code>data</code> 属性是否是响应性，如果是响应式的话，则抛出警告（<strong>避免把 VNode 的 <code>data</code> 属性设置成响应式，否则始终会在每次渲染时创建新的 Vnode 数据对象。</strong>），并且创建注释节点返回；</p>
+</li>
+<li><p>第 <code>17</code> ~ <code>19</code> 行判断 Vnode 中 <code>data</code> 属性是否包含 <code>v-bind:is</code>，如果是的话则将其赋值给 <code>tag</code>。其作用是用于动态组件，传递已注册组件名称或者组件的选项对象；</p>
+</li>
+<li><p>第 <code>25</code> ~ <code>35</code> 行说明设置 <code>key</code> 时，数据类型为 <code>number</code> 或者 <code>string</code>；</p>
+</li>
+<li><p>第 <code>44</code> ~ <code>48</code> 行是核心代码，主要对子节点进行规范化，类型为 VNode，根据 <code>normalizationType</code> 值的不同调用不同的方法；（稍后分析）</p>
+</li>
+<li><p>第 <code>50</code> ~ <code>80</code> 行根据 <code>tag</code> 类型的不同调用不同的处理逻辑创建虚拟 Node。如果 <code>tag</code> 类型是 <code>string</code>，则接着判断如果是内置的一些节点，则直接创建普通的 VNode；如果是为已注册的组件名，则通过 <strong>createComponent</strong> 创建一个组件类型的 VNode，否则创建一个未知的标签的 VNode。如果 <code>tag</code> 是一个 <code>Component</code> 类型，则直接调用 <code>createComponent</code> 创建一个组件类型的 VNode。</p>
+</li>
+<li><p>返回创建的虚拟节点 node。</p>
+</li>
+</ul>
+<p>那么来看下 <code>simpleNormalizeChildren</code> 方法和 <code>normalizeChildren</code> 方法的具体实现逻辑，位于 <code>src/code/vdom/helper/normalize-children.js</code> 文件中。</p>
+<p><code>simpleNormalizeChildren</code> 这个方法实现比较简单，先看其实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">simpleNormalizeChildren</span> (<span class="params">children: any</span>) </span>&#123;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; children.length; i++) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(children[i])) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="built_in">Array</span>.prototype.concat.apply([], children)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> children</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该函数的使用场景是 <code>render</code> 函数由编译生成的，理论上编译生成的 <code>children</code> 应该是 <code>VNode</code> 类型。但是有个例外，就是<strong>函数式组件</strong>返回的是数组，而不是单个节点，需要调用方法 <code>Array.prototype.concat</code> 将整个 <code>children</code> 数组打平，使其深度只有一层。</p>
+<p><code>normalizeChildren</code> 方法的实现逻辑稍微复杂些，来看其具体实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">normalizeChildren</span> (<span class="params">children: any</span>): ?<span class="title">Array</span>&lt;<span class="title">VNode</span>&gt; </span>&#123;</div><div class="line">  <span class="keyword">return</span> isPrimitive(children)</div><div class="line">    ? [createTextVNode(children)]</div><div class="line">    : <span class="built_in">Array</span>.isArray(children)</div><div class="line">      ? normalizeArrayChildren(children)</div><div class="line">      : <span class="literal">undefined</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法的使用场景有两种：</p>
+<ul>
+<li><p><code>render</code> 函数是用户手写的，当  <code>children</code> 只有一个节点的时候，Vue.js 从接口层面允许用户把 <code>children</code> 写出基础类型用来创建简单的文本节点，此时调用方法 <code>createTextVNode(children)</code> 方法创建一个文本节点的 <code>VNode</code>；</p>
+</li>
+<li><p>当编译 <code>&lt;template&gt;</code>、<code>&lt;slot&gt;</code>、<code>v-for</code> 时会产生嵌套数组，此时会调用方法 <code>normalizeArrayChildren(children)</code> 来创建节点。</p>
+</li>
+</ul>
+<p>看下 <code>normalizeArrayChildren(children)</code> 的具体实现逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">normalizeArrayChildren</span> (<span class="params">children: any, nestedIndex?: string</span>): <span class="title">Array</span>&lt;<span class="title">VNode</span>&gt; </span>&#123;</div><div class="line">  <span class="keyword">const</span> res = []</div><div class="line">  <span class="keyword">let</span> i, c, lastIndex, last</div><div class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; children.length; i++) &#123;</div><div class="line">    c = children[i]</div><div class="line">    <span class="keyword">if</span> (isUndef(c) || <span class="keyword">typeof</span> c === <span class="string">'boolean'</span>) <span class="keyword">continue</span></div><div class="line">    lastIndex = res.length - <span class="number">1</span></div><div class="line">    last = res[lastIndex]</div><div class="line">    <span class="comment">//  nested</span></div><div class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(c)) &#123;</div><div class="line">      <span class="keyword">if</span> (c.length &gt; <span class="number">0</span>) &#123;</div><div class="line">        c = normalizeArrayChildren(c, <span class="string">`<span class="subst">$&#123;nestedIndex || ''&#125;</span>_<span class="subst">$&#123;i&#125;</span>`</span>)</div><div class="line">        <span class="comment">// merge adjacent text nodes</span></div><div class="line">        <span class="keyword">if</span> (isTextNode(c[<span class="number">0</span>]) &amp;&amp; isTextNode(last)) &#123;</div><div class="line">          res[lastIndex] = createTextVNode(last.text + (c[<span class="number">0</span>]: any).text)</div><div class="line">          c.shift()</div><div class="line">        &#125;</div><div class="line">        res.push.apply(res, c)</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isPrimitive(c)) &#123;</div><div class="line">      <span class="keyword">if</span> (isTextNode(last)) &#123;</div><div class="line">        <span class="comment">// merge adjacent text nodes</span></div><div class="line">        <span class="comment">// this is necessary for SSR hydration because text nodes are</span></div><div class="line">        <span class="comment">// essentially merged when rendered to HTML strings</span></div><div class="line">        res[lastIndex] = createTextVNode(last.text + c)</div><div class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (c !== <span class="string">''</span>) &#123;</div><div class="line">        <span class="comment">// convert primitive to vnode</span></div><div class="line">        res.push(createTextVNode(c))</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">if</span> (isTextNode(c) &amp;&amp; isTextNode(last)) &#123;</div><div class="line">        <span class="comment">// merge adjacent text nodes</span></div><div class="line">        res[lastIndex] = createTextVNode(last.text + c.text)</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// default key for nested array children (likely generated by v-for)</span></div><div class="line">        <span class="keyword">if</span> (isTrue(children._isVList) &amp;&amp;</div><div class="line">          isDef(c.tag) &amp;&amp;</div><div class="line">          isUndef(c.key) &amp;&amp;</div><div class="line">          isDef(nestedIndex)) &#123;</div><div class="line">          c.key = <span class="string">`__vlist<span class="subst">$&#123;nestedIndex&#125;</span>_<span class="subst">$&#123;i&#125;</span>__`</span></div><div class="line">        &#125;</div><div class="line">        res.push(c)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> res</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法的核心逻辑是遍历 <code>children</code>，获取节点 <code>c</code>，然后判断 <code>c</code> 的类型。如果 <code>c</code> 的类型是数组，则递归调用 <code>normalizeArrayChildren</code> 方法；如果 <code>c</code> 的类型是基础类型，则调用 <code>createTextVNode</code> 方法转换成 VNode 类型；如果 <code>children</code> 是一个列表并且列表还存在嵌套的情况下，则需要根据 <code>nestedIndex</code> 更新 <code>key</code>。</p>
+<p>在遍历的过程中，有 3 种情况需要注意下：第 <code>14</code> ~ <code>17</code> 行、第 <code>20</code> ~ <code>25</code> 行和第 <code>31</code> ~ <code>33</code> 行，对于连续的两个 <code>text</code> 节点，则将其合并成一个 <code>text</code> 节点，算是一种优化。</p>
+<p>最后返回规范化后 VNode 类型的数组。</p>
+<p>下面通过一张流程图来简单描述其逻辑实现：</p>
+<p><img src="/images/vue/render.png" alt="init 逻辑实现"></p>
+<p>至此，我们对 <code>render</code> 的实现原理进行分析。由于能力有限，对其理解存在一定偏差，欢迎指正。</p>
+<p>参考链接：</p>
+<ul>
+<li><p><a href="https://ustbhuangyi.github.io/vue-analysis/v2/data-driven/render.html" target="_blank" rel="external">render</a></p>
+</li>
+<li><p><a href="https://ustbhuangyi.github.io/vue-analysis/v2/data-driven/create-element.html" target="_blank" rel="external">createElement</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vue-js-源码解析/" rel="tag"># Vue.js 源码解析</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/23/Vue-实例挂载实现原理/" rel="next" title="Vue 实例挂载实现原理">
+                <i class="fa fa-chevron-left"></i> Vue 实例挂载实现原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/30/普通节点-patch 过程/" rel="prev" title="普通节点 patch 过程">
+                普通节点 patch 过程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="PANJU" />
+          <p class="site-author-name" itemprop="name">PANJU</p>
+           
+              <p class="site-description motion-element" itemprop="description">笔记——记录工作和学习中的点点滴滴</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/PanZeYong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">PANJU</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://panzeyong.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://panzeyong.com/2020/08/30/render-实现原理/';
+          this.page.identifier = '2020/08/30/render-实现原理/';
+          this.page.title = 'render 实现原理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://panzeyong.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("b3EUStGjBwcKOJcOMeQXheDT-gzGzoHsz", "xvVsWacpT435FHV1QCcUpx9I");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
