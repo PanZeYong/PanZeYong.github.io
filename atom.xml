@@ -198,7 +198,7 @@
     <link href="http://panzeyong.com/2020/08/30/%E6%99%AE%E9%80%9A%E8%8A%82%E7%82%B9-patch%20%E8%BF%87%E7%A8%8B/"/>
     <id>http://panzeyong.com/2020/08/30/普通节点-patch 过程/</id>
     <published>2020-08-30T09:44:17.000Z</published>
-    <updated>2020-09-11T00:03:02.897Z</updated>
+    <updated>2020-10-16T14:24:33.109Z</updated>
     
     <content type="html"><![CDATA[<p>在 <strong>《Vue 实例挂载实现原理》</strong> 这一节中分析了 Vue 实例挂载实现逻辑中，得知有这么一行核心代码：<code>vm._update(vm._render(), hydrating)</code>。上一节 <strong>《render 实现原理》</strong> 中对 <code>vm._render</code> 进行了分析；那么这一节将要分析 <code>vm._update</code> 的实现原理。</p>
 <p><code>_update</code> 是 Vue 实例的一个私有方法，有两个时机被调用：<strong>一个是首次渲染；一个是数据更新时触发调用。（响应式原理分析涉及）</strong>作用的是将 <code>render</code> 渲染生成的 VNode 转换为真实的 DOM 节点。</p>
@@ -266,9 +266,9 @@
 </ul>
 </li>
 </ul>
-<pre><code>- 第 `69` ~ `77` 调用方法 `createElm` 创建新节点，此方法是核心方法，稍后分析；
+<pre><code>第 `69` ~ `77` 调用方法 `createElm` 创建新节点，此方法是核心方法，稍后分析；
 
-- 第 `110` ~ `112` 行由于创建了新节点，需要将旧节点删除。
+第 `110` ~ `112` 行由于创建了新节点，需要将旧节点删除。
 
  ![](/images/vue/create_vnode.png)
 </code></pre><p>接着再来看核心方法 <code>createElm</code> 的具体实现：</p>
