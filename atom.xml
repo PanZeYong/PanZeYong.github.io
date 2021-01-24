@@ -5,7 +5,7 @@
   <link href="//atom.xml" rel="self"/>
   
   <link href="http://panzeyong.com/"/>
-  <updated>2021-01-24T10:18:33.951Z</updated>
+  <updated>2021-01-24T10:34:17.649Z</updated>
   <id>http://panzeyong.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://panzeyong.com/2021/01/24/%E4%BA%BA%E7%94%9F%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%86%99%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/"/>
     <id>http://panzeyong.com/2021/01/24/人生第一次写单元测试用例/</id>
     <published>2021-01-24T06:52:52.000Z</published>
-    <updated>2021-01-24T10:18:33.951Z</updated>
+    <updated>2021-01-24T10:34:17.649Z</updated>
     
     <content type="html"><![CDATA[<p>说起来也惭愧，从事开发工作到现在将近 5 年，在此之前没有写过任何一行单元测试代码。直到最近，公司在推动每个项目需要写单元测试用例，而且代码覆盖率有一定的指标，目的在于保证代码质量。于是，我成为了整个前端组第一个写单元测试用例，提前踩踩坑，积累经验。如今负责写单元测试用例的项目已完成，抽空把“人生第一次写单元测试用例”所遇到的各种问题整理成笔记，方便日后查阅。</p>
 <p>项目使用的前端框架是 <code>Vue</code>，那么单元测试用例所选的框架也是围绕 <code>Vue</code> 生态来选择的。阅读 <code>Vue</code> 官网教程 <a href="https://cn.vuejs.org/v2/guidetesting.html#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95" target="_blank" rel="external">单元测试</a> 这一小节，最后采用 <a href="https://jestjs.io/zh-Hans/" target="_blank" rel="external">Jest</a> 和 <a href="https://vue-test-utils.vuejs.org/zh/" target="_blank" rel="external">Vue Test Utils</a>。接下来会从如何安装、如何写、怎么写三方面来介绍，带你们走一遍写单元测试用例整个流程。</p>
