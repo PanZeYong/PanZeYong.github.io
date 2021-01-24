@@ -268,6 +268,269 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/03/12/函数的扩展/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="PANJU">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PANJU's Note">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/12/函数的扩展/" itemprop="url">函数的扩展</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-12T20:04:48+08:00">
+                2019-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/12/函数的扩展/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/03/12/函数的扩展/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/03/12/函数的扩展/" class="leancloud_visitors" data-flag-title="函数的扩展">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一、函数参数的默认值"><a href="#一、函数参数的默认值" class="headerlink" title="一、函数参数的默认值"></a>一、函数参数的默认值</h1><h3 id="1、基本用法"><a href="#1、基本用法" class="headerlink" title="1、基本用法"></a>1、基本用法</h3><p>ES6 允许为函数的参数指定默认值，即直接写在参数定义的后面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">default</span> (<span class="params">x, y = 'hello'</span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(x, y);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>需要注意的点： </p>
+<ul>
+<li><p>参数变量是默认声明的，因此不能使用 <code>let</code> 或者 <code>const</code> 再次声明。</p>
+</li>
+<li><p>使用参数默认值时，函数不能有同名参数。</p>
+</li>
+<li><p>参数默认值是惰性求值的。（默认值是表达式求值）。</p>
+</li>
+<li><p>将参数默认值指定为 <code>undefined</code>，表示该参数可以省略。</p>
+</li>
+</ul>
+<h3 id="2、对象的解构赋值与函数参数的默认值"><a href="#2、对象的解构赋值与函数参数的默认值" class="headerlink" title="2、对象的解构赋值与函数参数的默认值"></a>2、对象的解构赋值与函数参数的默认值</h3><p>对象的解构赋值例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">&#123;x, y = 5&#125;</span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(x, y);</div><div class="line">&#125;</div><div class="line"></div><div class="line">foo() <span class="comment">// 报错</span></div></pre></td></tr></table></figure>
+<p>函数 foo 的参数是一个对象，需要传递对象才能对 <code>x</code> 和 <code>y</code> 变量解析；如果不传的参数，那么则会报错。</p>
+<p>函数参数指定默认值例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">&#123;x, y = 5&#125; = &#123;&#125;</span>) </span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(x, y);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3、参数默认值的位置"><a href="#3、参数默认值的位置" class="headerlink" title="3、参数默认值的位置"></a>3、参数默认值的位置</h3><p>通常情况下，指定函数参数的默认值，应该是函数参数的最后一个。</p>
+<h3 id="4、函数的-length-属性"><a href="#4、函数的-length-属性" class="headerlink" title="4、函数的 length 属性"></a>4、函数的 length 属性</h3><p><code>length</code> 属性的定义是预期函数传入参数的个数，如果我们指定了函数参数的默认值，那么该参数就不属于预期参数，不能计算进去。即函数 <code>length</code> 属性的值等于函数参数的个数减去指定默认值参数的个数。</p>
+<p>需要注意的点：</p>
+<ul>
+<li><p><code>rest</code> 参数不会计入 <code>length</code> 属性；</p>
+</li>
+<li><p>如果指定默认值的参数不是尾参数，那么 <code>length</code> 属性的值等于指定默认值参数之前参数的个数。</p>
+</li>
+</ul>
+<h3 id="5、作用域"><a href="#5、作用域" class="headerlink" title="5、作用域"></a>5、作用域</h3><p>当函数参数指定默认值时，函数进行声明初始化时，参数会形成一个单独的作用域；直到初始化结束后，作用域才会消失。</p>
+<h1 id="二、rest（…test）"><a href="#二、rest（…test）" class="headerlink" title="二、rest（…test）"></a>二、rest（…test）</h1><p>用于获取函数多余的参数，并将参数存放于数组。<code>rest</code> 参数可以替代 <code>arguments</code>，因为 <code>arguments</code> 是一个类数组的对象，需要使用 <code>Array.prototype.slice.call()</code> 方法将其转为真正的数组；而 <code>rest</code> 参数本身是真正的数组，使用起来很方便。</p>
+<p><code>rest</code> 参数必须是函数参数列表中的最后一个参数，否则使用起来会报错。</p>
+<h1 id="三、严格模式"><a href="#三、严格模式" class="headerlink" title="三、严格模式"></a>三、严格模式</h1><p>ES6 规定：只要函数使用了<strong>默认值</strong>、<strong>解构赋值</strong>或者<strong>扩展运算符</strong>，函数内部就不能显示设定为严格模式；否则使用起来会报错。</p>
+<h3 id="规避这种限制的两种方法："><a href="#规避这种限制的两种方法：" class="headerlink" title="规避这种限制的两种方法："></a>规避这种限制的两种方法：</h3><ul>
+<li><p>设定全局的严格模式；</p>
+</li>
+<li><p>把函数包含在一个无参数的立即执行函数里面。（IIF）</p>
+</li>
+</ul>
+<h1 id="四、name-属性"><a href="#四、name-属性" class="headerlink" title="四、name 属性"></a>四、name 属性</h1><p>函数 <code>name</code> 属性，返回函数的名称。但是在 ES6 和 ES5 稍微有点区别，具体表现在：</p>
+<ul>
+<li><p>如果将一个匿名函数赋值给变量，那么在 ES5 中 <code>name</code> 属性会返回<strong>空字符串</strong>；而 ES6 则会返回实际的函数名称。</p>
+</li>
+<li><p>如果将一个有具体名称的函数赋值给一个变量，那么在 ES5 和 ES6 中，<code>name</code> 属性返回的值是一样，都是具体的函数名字。</p>
+</li>
+</ul>
+<h1 id="五、箭头函数"><a href="#五、箭头函数" class="headerlink" title="五、箭头函数"></a>五、箭头函数</h1><h3 id="1、基本用法-1"><a href="#1、基本用法-1" class="headerlink" title="1、基本用法"></a>1、基本用法</h3><p>ES6 允许使用 “箭头”（<code>=&gt;</code>）定义函数，称为箭头函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = x =&gt; x;</div><div class="line"></div><div class="line">等同于</div><div class="line"><span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span> (<span class="params">x</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> x;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// foo(5)</span></div></pre></td></tr></table></figure>
+<p>使用时需要注意的点：</p>
+<ul>
+<li><p>如果箭头函数不需要参数或者需要多个参数，可以使用<strong>圆括号</strong>代表参数一部分。</p>
+</li>
+<li><p>如果箭头函数的代码块语句多于一行代码的话，则需要使用大括号将代码块括起来，并且使用 <code>return</code> 语句返回。</p>
+</li>
+<li><p>如果箭头函数直接返回一个对象，则需要在对象使用<strong>圆括号</strong>将其括起来，否则会报错；或者在对象外使用<strong>大括号</strong>并且 <code>return</code> 语句。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> getTempItem = id =&gt; (&#123; id: id, name: <span class="string">"Temp"</span> &#125;);</div><div class="line"></div><div class="line"><span class="keyword">let</span> getTempItem = id =&gt; &#123;</div><div class="line">	<span class="keyword">return</span> &#123;</div><div class="line">		id: id,</div><div class="line">		name: <span class="string">"Temp"</span></div><div class="line">	&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>函数体内的 <code>this</code> 对象，就是<strong>定义时</strong>所在的对象，而<strong>不是使用时</strong>所在的对象。</p>
+</li>
+<li><p><strong>不可以</strong>当作<strong>构造函数</strong>，也就是说，不可以使用 <code>new</code> 命令，否则会抛出一个错误。</p>
+</li>
+<li><p><strong>不可以</strong>使用 <code>arguments</code> 对象，该对象在函数体内<strong>不存在</strong>。如果要用，可以用 <code>rest</code> 参数代替。</p>
+</li>
+<li><p><strong>不可以</strong>使用 <code>yield</code> 命令，因此箭头函数不能用作 <code>Generator</code> 函数。</p>
+</li>
+<li><p><code>arguments</code>、<code>super</code>、<code>new.target</code> 这三个变量在箭头函数中是不存在的，而是指向外层函数的变量。</p>
+</li>
+<li><p>由于箭头函数没有自己的 <code>this</code>，因此也就无法使用 <code>call()</code>、<code>apply()</code> 和 <code>bind()</code> 改变 <code>this</code> 指向。</p>
+</li>
+<li><p>在箭头函数中，<code>this</code> 的指向是固定的。原因是因为箭头函数内部没有自己的 <code>this</code>，导致内部的 <code>this</code> 就是外部代码块的 <code>this</code>。</p>
+</li>
+</ul>
+<h3 id="2、应用"><a href="#2、应用" class="headerlink" title="2、应用"></a>2、应用</h3><ul>
+<li>简化回调函数</li>
+</ul>
+<h3 id="3、不适合使用场景"><a href="#3、不适合使用场景" class="headerlink" title="3、不适合使用场景"></a>3、不适合使用场景</h3><ul>
+<li><p>定义函数的方法，且该方法内部包括 <code>this</code>。</p>
+</li>
+<li><p>需要动态使用 <code>this</code>。</p>
+</li>
+</ul>
+<h1 id="六、双冒号运算符（提案）"><a href="#六、双冒号运算符（提案）" class="headerlink" title="六、双冒号运算符（提案）"></a>六、双冒号运算符（提案）</h1><p>函数绑定运算符是使用并排的两个冒号 <code>::</code>，双冒号的左边是一个对象，而右边是一个函数。该运算符会自动将左边的对象，作为上下文环境（<code>this</code>），绑定到右边的函数上。</p>
+<h1 id="七、尾调用优化"><a href="#七、尾调用优化" class="headerlink" title="七、尾调用优化"></a>七、尾调用优化</h1><h3 id="1、尾调用"><a href="#1、尾调用" class="headerlink" title="1、尾调用"></a>1、尾调用</h3><p>某个函数的最后一步是调用另一个函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span> (<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> g();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用函数时，会在内存中开辟一块内存空间来存储函数信息，比如变量、调用位置之类的，我们可以称之为 “调用记录”，或者称为 “调用帧”；如果函数内部又调用其它函数，类似的也会有自己的 “调用帧”，以此类推，所有的 “调用帧” 会形成 “调用栈”。</p>
+<p>而尾调用是函数最后一步操作，因此不需要外层函数的信息，即不需要保留外层函数的 “调用帧”，而只需要保留内层函数的 “调用帧”，即只保存一条记录，称为 “尾调用优化”。</p>
+<h3 id="2、尾递归"><a href="#2、尾递归" class="headerlink" title="2、尾递归"></a>2、尾递归</h3><p>某个函数的最后一步是调用自身函数，称为尾递归。</p>
+<p>柯里化：将多参数的函数改为单参数的形式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">currying</span>(<span class="params">fn, n</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">m</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> fn.call(<span class="keyword">this</span>, m, n);</div><div class="line">  &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">tailFactorial</span>(<span class="params">n, total</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (n === <span class="number">1</span>) <span class="keyword">return</span> total;</div><div class="line">  <span class="keyword">return</span> tailFactorial(n - <span class="number">1</span>, n * total);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> factorial = currying(tailFactorial, <span class="number">1</span>);</div><div class="line"></div><div class="line">factorial(<span class="number">5</span>) <span class="comment">// 120</span></div></pre></td></tr></table></figure>
+<h3 id="3、严格模式"><a href="#3、严格模式" class="headerlink" title="3、严格模式"></a>3、严格模式</h3><p>ES6 规定尾调用递归只在严格模式下生效，正常模式时无效的。</p>
+<p>正常模式下，函数内部有两个变量可以跟踪函数调用栈：</p>
+<ul>
+<li><p><code>func.arguments</code>：返回调用时函数的参数。</p>
+</li>
+<li><p><code>func.caller</code>：返回调用当前函数的那个函数。</p>
+</li>
+</ul>
+<p>但是在严格模式下禁用这两个变量。</p>
+<h3 id="4、尾递归优化的实现"><a href="#4、尾递归优化的实现" class="headerlink" title="4、尾递归优化的实现"></a>4、尾递归优化的实现</h3><ul>
+<li><p>为了减少调用栈，可以使用<strong>循环</strong>替代递归。</p>
+</li>
+<li><p>蹦床函数：每一步返回一个函数。</p>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">trampoline</span>(<span class="params">fun <span class="comment">/*, args */</span></span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> result = fun.apply(fun, _.rest(<span class="built_in">arguments</span>));</div><div class="line">  		<span class="keyword">while</span> (_.isFunction(result)) &#123;</div><div class="line">  			result = result();</div><div class="line">  		&#125;</div><div class="line">  		<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="八、函数参数的尾逗号"><a href="#八、函数参数的尾逗号" class="headerlink" title="八、函数参数的尾逗号"></a>八、函数参数的尾逗号</h1><p>ES7 允许函数的最后一个参数可以有尾逗号。</p>
+<p>以上是在学习 <a href="https://es6.ruanyifeng.com/" target="_blank" rel="external">《ECMAScript 6 入门》</a> 一书时整理的学习笔记，方便日后查阅。</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="http://es6.ruanyifeng.com/#docs/function" target="_blank" rel="external">函数的扩展</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2019/03/03/数值的扩展/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1177,247 +1440,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://panzeyong.com/2018/12/19/Vue 源码目录结构/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="PANJU">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="PANJU's Note">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/19/Vue 源码目录结构/" itemprop="url">Vue.js 源码目录结构</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-19T22:33:04+08:00">
-                2018-12-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/12/19/Vue 源码目录结构/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/12/19/Vue 源码目录结构/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2018/12/19/Vue 源码目录结构/" class="leancloud_visitors" data-flag-title="Vue.js 源码目录结构">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>今年 4 月份开始使用 Vue.js，到现在差不多有 8 个月了，参与了两三个项目，对 Vue.js 的用法有了一定的了解。但是我觉得会使用是学习框架的第一步，第二步是研究框架是怎么实现的，学习其设计思想。所以给自己制定了计划来学习 Vue.js 框架源码，打算把自己学习到的知识作为一个系列记录下来。</p>
-<p>在学习源码之前，先来学习下 Vue.js 目录结构设计，从整体上了解 Vue.js 的结构。</p>
-<p>注：Vue.js 的版本为 2.6.11</p>
-<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><ul>
-<li><p><code>.circleci</code>：Vue.js 使用了持续集成工具 CircleCI，要在项目中使用该工具，需要在项目根目录创建文件夹 <code>.circleci</code>，并在其目录下创建文件 <code>config.yml</code> 编写构建脚本。</p>
-<ul>
-<li><code>config.yml</code>：编写 CircleCI 构建脚本。</li>
-</ul>
-</li>
-<li><p><code>.github</code>：项目相关说明文档，比如开发者参与项目的规则、要求之类的。</p>
-<p>  <code>CODE_OF_CONDUCT.md</code>：贡献代码的行为准则。</p>
-<p>  <code>COMMIT_CONVENTION.md</code>：git 提交代码时添加提交信息的约定。</p>
-<p>  <code>CONTRIBUTING.md</code>：参与项目指南。</p>
-<p>  <code>ISSUE_TEMPLATE.md</code>：提交 issue 的模板。</p>
-<p>  <code>PULL_REQUEST_TEMPLATE.md</code>：拉取代码指南。</p>
-</li>
-<li><p><code>benchmarks</code>：性能测试相关文件。</p>
-</li>
-<li><p><code>dist</code>：包含不同分发版本的构建文件。要注意的是，这个目录只有在发布新版本时才会更新，开发分支更新的新特性不会影响到该目录。</p>
-</li>
-<li><p><code>example</code>：官方提供的示例。</p>
-</li>
-<li><p><code>flow</code>：包含使用Flow（静态类型检查工具）声明的类型，供全局使用。</p>
-<ul>
-<li><p><code>compiler.js</code>：编译相关。</p>
-</li>
-<li><p><code>component.js</code>：组件数据结构。</p>
-</li>
-<li><p><code>global-api.js</code>：Global API 结构。</p>
-</li>
-<li><p><code>modules.js</code>：第三方库定义。</p>
-</li>
-<li><p><code>options.js</code>：选项相关。</p>
-</li>
-<li><p><code>ssr.js</code>：服务端渲染相关。</p>
-</li>
-<li><p><code>vnode.js</code>：虚拟 node 相关。</p>
-</li>
-<li><p><code>weex.js</code>：weex 平台相关。</p>
-</li>
-</ul>
-</li>
-<li><p><code>packages</code>：包含服务端渲染和模板编译器两种不同 NPM 包，供不同场景使用。</p>
-<ul>
-<li><p><code>vue-server-render</code>：服务端渲染。</p>
-</li>
-<li><p><code>vue-template-compiler</code>：vue 模板编译器。</p>
-</li>
-<li><p><code>weex-template-compiler</code>：weex 模板编译器。</p>
-</li>
-<li><p><code>weex-vue-framework</code>：weex vue 框架。</p>
-</li>
-</ul>
-</li>
-<li><p><code>scripts</code>：包含构建相关脚本和配置文件，大多数情况下不需要关注该目录。</p>
-<ul>
-<li><p><code>alias.js</code>：所有源代码和测试中使用的模块导入别名。</p>
-</li>
-<li><p><code>config</code>：包含 <code>dist</code> 目录下所有文件的配置信息。</p>
-</li>
-</ul>
-</li>
-<li><p><code>src</code>：vue.js 源代码，代码用 ES6 实现的并采用 JavaScript 静态类型检查工具。</p>
-<ul>
-<li><p><code>compiler</code>：该目录包含 Vue.js 编译的相关代码，包括将模板字符串解析成 AST 语法树的<strong>解析器</strong>、检测用于 vdom 渲染优化的静态树的<strong>优化器</strong>和将 AST 语法树生成渲染函数的<strong>代码生成器</strong>。</p>
-</li>
-<li><p><code>core</code>：Vue.js 核心代码，包含通用、跨平台的代码。主要有观察者、虚拟 dom、vue 实例化、全局 api 和内置组件。</p>
-</li>
-<li><p><code>server</code>：包含与服务端渲染相关的代码。</p>
-</li>
-<li><p><code>platform</code>：Vue.js 是一个跨平台的 MVVM 框架，可以在 web 上运行，也可以配合 weex 在 native 客户端上运行。每个平台都有一个入口，都位于该目录下。</p>
-</li>
-<li><p><code>sfc</code>：包含将 .vue 单文件解析为 JavaScript 对象的代码，用于 <code>vue-template-compiler</code> 包。</p>
-</li>
-<li><p><code>shared</code>：包含通用的工具方法，用于浏览器端的 vue.js 和服务器端的 vue.js。</p>
-</li>
-</ul>
-</li>
-<li><p><code>tests</code>：所有测试代码，单元测试代码是用 <a href="https://jasmine.github.io/2.3/introduction.html" target="_blank" rel="external">Jasmine</a> 实现并与 <a href="http://karma-runner.github.io/0.13/index.html" target="_blank" rel="external">Karma</a> 一起运行。e2e 测试是为 <a href="http://nightwatchjs.org/" target="_blank" rel="external">Nightwatch.js</a> 编写并与之一起运行。</p>
-</li>
-<li><p><code>types</code>：使用 TypeScript 类型注释，并且包含了测试代码。</p>
-</li>
-</ul>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure" target="_blank" rel="external">https://github.com/vuejs/vue/blob/dev/.github/CONTRIBUTING.md#project-structure</a></p>
-<p><a href="https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler" target="_blank" rel="external">https://ustbhuangyi.github.io/vue-analysis/prepare/directory.html#compiler</a></p>
-<p><a href="https://segmentfault.com/a/1190000016426470" target="_blank" rel="external">https://segmentfault.com/a/1190000016426470</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1467,7 +1489,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1489,7 +1511,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1538,7 +1560,7 @@
         <div class="copyright" >
   
   &copy;  2017 - 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
